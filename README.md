@@ -1,0 +1,2 @@
+# FlashMora
+CRYPTO
