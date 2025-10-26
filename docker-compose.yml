@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  flashmorcoin:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && npm run dev"

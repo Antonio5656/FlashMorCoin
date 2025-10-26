@@ -3,69 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin - Liquidez Instantánea</title>
+    <title>FlashMorCoin - Protocolo DeFi</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            color: white; 
+            font-family: Arial, sans-serif;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
         }
-        .container {
-            max-width: 600px;
-            padding: 2rem;
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
         }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+        header { 
+            display: flex; 
+            justify-content: between; 
+            align-items: center; 
+            padding: 20px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.2);
         }
-        .status {
-            background: rgba(255,255,255,0.2);
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin: 2rem 0;
+        .card { 
+            background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(10px);
+            padding: 30px; 
+            border-radius: 15px; 
+            margin: 20px 0; 
         }
-        button {
-            background: white;
-            color: #667eea;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
-            margin: 0.5rem;
+        button { 
+            background: white; 
+            color: #667eea; 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 5px;
+            font-weight: bold;
+        }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 FlashMorCoin</h1>
-        <p style="font-size: 1.2rem;">Liquidez Instantánea para Yield Farming</p>
-        
-        <div class="status">
-            <h2>Modo de Emergencia</h2>
-            <p>Esta es una página HTML estática porque Next.js no está funcionando.</p>
-            <p>El protocolo FlashMorCoin está en desarrollo.</p>
-        </div>
-        
-        <div>
-            <button onclick="alert('¡FlashMorCoin pronto estará disponible!')">
-                Conectar Wallet (Próximamente)
-            </button>
-            <button onclick="alert('Protocolo en desarrollo - Testnet pronto')">
-                Ver Demo
-            </button>
-        </div>
-        
-        <p style="margin-top: 2rem; opacity: 0.8;">
-            ⚠️ Next.js no está cargando correctamente. Se necesita configuración adicional.
-        </p>
+        <header>
+            <h1>🚀 FlashMorCoin</h1>
+            <div id="wallet-section">
+                <button onclick="connectWallet()">🔗 Conectar Wallet</button>
+                <span id="wallet-info" style="display:none;"></span>
+            </div>
+        </header>
+
+        <main>
+            <div class="card">
+                <h2>💎 Protocolo FlashMorCoin</h2>
+                <p>Liquidez instantánea para Yield Farming</p>
+                
+                <div class="grid" style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>📊 Tu Portfolio</h3>
+                        <p id="portfolio">Conecta tu wallet para ver</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>🔄 Acciones Rápidas</h3>
+                        <button onclick="showDeposit()">Depositar</button>
+                        <button onclick="showWithdraw()">Retirar</button>
+                        <button onclick="showSwap()">Intercambiar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de instalación de wallets -->
+            <div class="card">
+                <h3>📲 Instalar Wallet</h3>
+                <div class="grid">
+                    <button onclick="installWallet('metamask')">🦊 MetaMask</button>
+                    <button onclick="installWallet('trust')">🔷 Trust Wallet</button>
+                    <button onclick="installWallet('coinbase')">📱 Coinbase</button>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <script>
+        let web3;
+        let userAddress;
+
+        async function connectWallet() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    web3 = new Web3(window.ethereum);
+                    const accounts = await window.ethereum.request({ 
+                        method: 'eth_requestAccounts' 
+                    });
+                    userAddress = accounts[0];
+                    
+                    document.getElementById('wallet-info').innerHTML = 
+                        `Conectado: ${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+                    document.getElementById('wallet-info').style.display = 'inline';
+                    
+                    updatePortfolio();
+                    
+                } catch (error) {
+                    alert('Error conectando wallet: ' + error.message);
+                }
+            } else {
+                alert('¡Instala MetaMask primero!');
+                installWallet('metamask');
+            }
+        }
+
+        function updatePortfolio() {
+            document.getElementById('portfolio').innerHTML = 
+                `Wallet: ${userAddress.slice(0,8)}...<br>
+                 FMC: 0.00<br>
+                 Colateral: $0.00`;
+        }
+
+        function installWallet(wallet) {
+            const urls = {
+                metamask: 'https://metamask.io/download/',
+                trust: 'https://trustwallet.com/download/',
+                coinbase: 'https://www.coinbase.com/wallet/downloads'
+            };
+            window.open(urls[wallet], '_blank');
+        }
+
+        function showDeposit() {
+            alert('🚧 Función en desarrollo - Próximamente');
+        }
+
+        function showWithdraw() {
+            alert('🚧 Función en desarrollo - Próximamente');
+        }
+
+        function showSwap() {
+            alert('🚧 Función en desarrollo - Próximamente');
+        }
+
+        // Detectar si MetaMask está instalado
+        if (typeof window.ethereum !== 'undefined') {
+            document.getElementById('wallet-section').innerHTML = 
+                '<button onclick="connectWallet()">🔗 Conectar MetaMask</button>';
+        }
+    </script>
 </body>
 </html>
