@@ -1,12 +1,10 @@
-export const SUPPORTED_TOKENS = {
-  // LP Tokens
-  'QUICKSWAP_USDC_WETH': '0x...',
-  'QUICKSWAP_MATIC_USDC': '0x...',
-  
-  // Stablecoins
-  'USDC': '0x5774808c2856f7FDF1A0a8F375A41559794BeF6B',
-  'DAI': '0x5774808c2856f7FDF1A0a8F375A41559794BeF6B',
-  
-  // Token nativo
-  'FMC': '0x5774808c2856f7FDF1A0a8F375A41559794BeF6B' // Tu dirección FMC
+require('@nomiclabs/hardhat-waffle');
+
+module.exports = {
+  networks: {
+    mumbai: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
+      accounts: [process.env.PRIVATE_KEY]
+    }
+  }
 };
