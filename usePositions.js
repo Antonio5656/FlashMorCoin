@@ -16,7 +16,7 @@ export const usePositions = (address) => {
         setPosition({
           collateral: "100000000000000000000", // 100 LP tokens
           debt: "30000000000000000000", // 30 FMC
-          collateralToken: "0xMockLP",
+          collateralToken: "0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64",
           lastUpdate: Date.now()
         });
         setHealthFactor(2.5);

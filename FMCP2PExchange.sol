@@ -51,8 +51,8 @@ contract FMCP2PExchange is ReentrancyGuard, Ownable {
         feeWallet = _feeWallet;
         
         // Tokens de pago permitidos (USDC, DAI, etc.)
-        allowedPaymentTokens[0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174] = true; // USDC
-        allowedPaymentTokens[0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063] = true; // DAI
+        allowedPaymentTokens[0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64] = true; // USDC
+        allowedPaymentTokens[0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64] = true; // DAI
     }
     
     function createTrade(

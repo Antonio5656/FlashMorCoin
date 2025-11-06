@@ -37,9 +37,9 @@ export default function P2PPayments() {
   };
 
   const recentContacts = [
-    { address: '0x742d35Cc6634C0532925a3b8D6B6fB6F7A55Bd99', name: 'Carlos M.' },
-    { address: '0x8ba1f109551bD432803012645Ac136ddd64DBA72', name: 'Ana R.' },
-    { address: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4', name: 'Miguel T.' }
+    { address: '0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64', name: 'Carlos M.' },
+    { address: '0x5774808c2856f7FDF1A0a8F375A41559794BeF6B', name: 'Ana R.' },
+    { address: '0x5774808c2856f7FDF1A0a8F375A41559794BeF6B', name: 'Miguel T.' }
   ];
 
   const transactionHistory = [
