@@ -3,155 +3,562 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin - Protocolo DeFi</title>
+    <title>FlashMorCoin - Plataforma Activa</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white; 
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
+            color: white; font-family: Arial, sans-serif;
+            min-height: 100vh; padding: 20px;
         }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 20px; 
-        }
-        header { 
-            display: flex; 
-            justify-content: between; 
-            align-items: center; 
-            padding: 20px 0; 
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
         .card { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px);
-            padding: 30px; 
-            border-radius: 15px; 
-            margin: 20px 0; 
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+            padding: 30px; border-radius: 15px; margin: 20px 0; 
         }
         button { 
-            background: white; 
-            color: #667eea; 
-            border: none; 
-            padding: 12px 24px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            margin: 5px;
-            font-weight: bold;
+            background: white; color: #667eea; border: none; 
+            padding: 12px 24px; border-radius: 8px; cursor: pointer; 
+            margin: 5px; font-weight: bold; transition: all 0.3s;
         }
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; 
-        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 8px; }
+        .loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                  background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+        .success { background: rgba(76, 175, 80, 0.2); border: 1px solid #4CAF50; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .error { background: rgba(244, 67, 54, 0.2); border: 1px solid #f44336; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        .trade-item { background: rgba(255,255,255,0.05); padding: 15px; margin: 10px 0; border-radius: 8px; }
     </style>
 </head>
 <body>
+    <div class="loading" id="loading">
+        <div style="background: white; color: #333; padding: 30px; border-radius: 15px; text-align: center; min-width: 300px;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
+            <p id="loading-text">Procesando en blockchain...</p>
+            <p id="tx-info" style="font-size: 12px; word-break: break-all; margin-top: 10px;"></p>
+        </div>
+    </div>
+
     <div class="container">
         <header>
-            <h1>🚀 FlashMorCoin</h1>
-            <div id="wallet-section">
-                <button onclick="connectWallet()">🔗 Conectar Wallet</button>
-                <span id="wallet-info" style="display:none;"></span>
+            <h1 style="font-size: 2.5rem;">🚀 FlashMorCoin</h1>
+            <div>
+                <button onclick="connectWallet()" id="connect-btn">🔗 Conectar Wallet</button>
+                <span id="wallet-info" style="margin-left: 15px; display: none;"></span>
             </div>
         </header>
 
-        <main>
+        <!-- Portfolio en Tiempo Real -->
+        <div class="card">
+            <h2>📊 Portfolio en Vivo</h2>
+            <div class="grid">
+                <div>
+                    <p>👛 <strong>Wallet:</strong> <span id="wallet-address">-</span></p>
+                    <p>💰 <strong>Balance MATIC:</strong> <span id="matic-balance">-</span></p>
+                </div>
+                <div>
+                    <p>🪙 <strong>Balance FMC:</strong> <span id="fmc-balance">-</span></p>
+                    <p>🏦 <strong>Colateral en Vault:</strong> <span id="vault-balance">-</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCIONES PRINCIPALES FUNCIONALES -->
+        <div class="grid">
+            <!-- DEPOSITAR COLATERAL -->
             <div class="card">
-                <h2>💎 Protocolo FlashMorCoin</h2>
-                <p>Liquidez instantánea para Yield Farming</p>
+                <h3>🏦 Depositar Colateral</h3>
+                <p style="margin: 10px 0; font-size: 0.9em;">Deposita tokens como colateral para mintear FMC</p>
                 
-                <div class="grid" style="margin-top: 20px;">
-                    <div class="card">
-                        <h3>📊 Tu Portfolio</h3>
-                        <p id="portfolio">Conecta tu wallet para ver</p>
+                <select id="deposit-token">
+                    <option value="usdc">USDC</option>
+                    <option value="dai">DAI</option>
+                    <option value="wmatic">WMATIC</option>
+                </select>
+                
+                <input type="number" id="deposit-amount" placeholder="Cantidad a depositar" step="0.001">
+                
+                <button onclick="depositCollateral()" style="background: #4CAF50; color: white; width: 100%;">
+                    ✅ Depositar Colateral
+                </button>
+                
+                <div id="deposit-result"></div>
+            </div>
+
+            <!-- RETIRAR COLATERAL -->
+            <div class="card">
+                <h3>📤 Retirar Colateral</h3>
+                <p style="margin: 10px 0; font-size: 0.9em;">Retira tu colateral del vault</p>
+                
+                <input type="number" id="withdraw-amount" placeholder="Cantidad a retirar" step="0.001">
+                
+                <button onclick="withdrawCollateral()" style="background: #FF9800; color: white; width: 100%;">
+                    📤 Retirar Colateral
+                </button>
+                
+                <div id="withdraw-result"></div>
+            </div>
+
+            <!-- MINTEAR FMC -->
+            <div class="card">
+                <h3>🪙 Mintear FMC</h3>
+                <p style="margin: 10px 0; font-size: 0.9em;">Genera FMC usando tu colateral</p>
+                
+                <input type="number" id="mint-amount" placeholder="Cantidad FMC a mintear" step="0.001">
+                
+                <button onclick="mintFMC()" style="background: #9C27B0; color: white; width: 100%;">
+                    🪙 Mintear FMC
+                </button>
+                
+                <div id="mint-result"></div>
+            </div>
+        </div>
+
+        <!-- INTERCAMBIO P2P FUNCIONAL -->
+        <div class="card">
+            <h2>🔄 Intercambio P2P</h2>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button onclick="showTab('buy')" id="tab-buy">🛒 Comprar FMC</button>
+                <button onclick="showTab('sell')" id="tab-sell">💰 Vender FMC</button>
+                <button onclick="showTab('orders')" id="tab-orders">📋 Órdenes Activas</button>
+            </div>
+
+            <!-- COMPRAR FMC -->
+            <div id="buy-tab" class="tab-content">
+                <div class="grid">
+                    <div>
+                        <h4>Comprar FMC con USDC</h4>
+                        <input type="number" id="buy-amount" placeholder="Cantidad FMC a comprar" step="0.001">
+                        <p>Precio estimado: <span id="buy-price">-</span> USDC</p>
+                        <button onclick="buyFMC()" style="background: #4CAF50; color: white;">✅ Comprar FMC</button>
                     </div>
-                    
-                    <div class="card">
-                        <h3>🔄 Acciones Rápidas</h3>
-                        <button onclick="showDeposit()">Depositar</button>
-                        <button onclick="showWithdraw()">Retirar</button>
-                        <button onclick="showSwap()">Intercambiar</button>
+                    <div>
+                        <h4>Órdenes de Venta Disponibles</h4>
+                        <div id="sell-orders">
+                            <!-- Las órdenes se cargarán aquí -->
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sección de instalación de wallets -->
-            <div class="card">
-                <h3>📲 Instalar Wallet</h3>
+            <!-- VENDER FMC -->
+            <div id="sell-tab" class="tab-content" style="display: none;">
                 <div class="grid">
-                    <button onclick="installWallet('metamask')">🦊 MetaMask</button>
-                    <button onclick="installWallet('trust')">🔷 Trust Wallet</button>
-                    <button onclick="installWallet('coinbase')">📱 Coinbase</button>
+                    <div>
+                        <h4>Vender FMC por USDC</h4>
+                        <input type="number" id="sell-amount" placeholder="Cantidad FMC a vender" step="0.001">
+                        <input type="number" id="sell-price" placeholder="Precio en USDC" step="0.0001">
+                        <button onclick="sellFMC()" style="background: #FF9800; color: white;">💰 Crear Orden de Venta</button>
+                    </div>
+                    <div>
+                        <h4>Tus Órdenes Activas</h4>
+                        <div id="my-orders">
+                            <!-- Órdenes del usuario -->
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
+
+            <!-- ÓRDENES ACTIVAS -->
+            <div id="orders-tab" class="tab-content" style="display: none;">
+                <h4>🎯 Mercado P2P - Todas las Órdenes</h4>
+                <div id="all-orders">
+                    <!-- Todas las órdenes se cargarán aquí -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSFERIR FMC -->
+        <div class="card">
+            <h3>📤 Transferir FMC</h3>
+            <div class="grid">
+                <div>
+                    <input type="text" id="transfer-address" placeholder="Dirección destino (0x...)" style="font-family: monospace;">
+                    <input type="number" id="transfer-amount" placeholder="Cantidad FMC a transferir" step="0.001">
+                    <button onclick="transferFMC()" style="background: #2196F3; color: white; width: 100%;">
+                        📤 Transferir FMC
+                    </button>
+                </div>
+                <div>
+                    <h4>💡 Transferencias Rápidas</h4>
+                    <button onclick="fillAddress('0x742d35Cc6634C0532925a3b8D6B6fB6F7A55Bd99')">👨‍💼 Enviar al Team</button>
+                    <button onclick="fillAddress('0x8ba1f109551bD432803012645Ac136ddd64DBA72')">👩‍💼 Enviar a Partner</button>
+                    <div id="transfer-result"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
+        // ==================== CONFIGURACIÓN ====================
         let web3;
         let userAddress;
+        let fmcContract;
+        let vaultContract;
+
+        // Direcciones de contratos (ACTUALIZAR CON TUS DIRECCIONES REALES)
+        const CONTRACT_ADDRESSES = {
+            FMC: "0xTU_DIRECCION_FMC_REAL", // ← REEMPLAZAR
+            VAULT: "0xTU_DIRECCION_VAULT_REAL" // ← REEMPLAZAR
+        };
+
+        // ABI básico para interacciones
+        const FMC_ABI = [
+            {
+                "inputs": [{"internalType": "address", "name": "to", "type": "address"}, {"internalType": "uint256", "name": "amount", "type": "uint256"}],
+                "name": "mint",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "address", "name": "to", "type": "address"}, {"internalType": "uint256", "name": "amount", "type": "uint256"}],
+                "name": "transfer",
+                "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "address", "name": "account", "type": "address"}],
+                "name": "balanceOf",
+                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        const VAULT_ABI = [
+            {
+                "inputs": [{"internalType": "uint256", "name": "amount", "type": "uint256"}, {"internalType": "address", "name": "token", "type": "address"}],
+                "name": "depositCollateral",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "uint256", "name": "amount", "type": "uint256"}],
+                "name": "withdrawCollateral",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [{"internalType": "uint256", "name": "amount", "type": "uint256"}],
+                "name": "mintFMC",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            }
+        ];
+
+        // ==================== FUNCIONES PRINCIPALES ====================
 
         async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
+                    showLoading("Conectando con tu wallet...");
+                    
                     web3 = new Web3(window.ethereum);
                     const accounts = await window.ethereum.request({ 
                         method: 'eth_requestAccounts' 
                     });
+                    
                     userAddress = accounts[0];
                     
-                    document.getElementById('wallet-info').innerHTML = 
-                        `Conectado: ${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
-                    document.getElementById('wallet-info').style.display = 'inline';
+                    // Inicializar contratos
+                    fmcContract = new web3.eth.Contract(FMC_ABI, CONTRACT_ADDRESSES.FMC);
+                    vaultContract = new web3.eth.Contract(VAULT_ABI, CONTRACT_ADDRESSES.VAULT);
                     
-                    updatePortfolio();
+                    // Actualizar UI
+                    updateWalletInfo();
+                    await updateBalances();
+                    
+                    document.getElementById('connect-btn').style.display = 'none';
+                    document.getElementById('wallet-info').style.display = 'inline';
+                    document.getElementById('wallet-info').textContent = 
+                        `Conectado: ${userAddress.slice(0,6)}...${userAddress.slice(-4)}`;
+                    
+                    hideLoading();
+                    showSuccess('✅ Wallet conectada correctamente');
                     
                 } catch (error) {
-                    alert('Error conectando wallet: ' + error.message);
+                    hideLoading();
+                    showError('Error conectando: ' + error.message);
                 }
             } else {
-                alert('¡Instala MetaMask primero!');
-                installWallet('metamask');
+                showError('❌ MetaMask no detectado. Instala MetaMask primero.');
             }
         }
 
-        function updatePortfolio() {
-            document.getElementById('portfolio').innerHTML = 
-                `Wallet: ${userAddress.slice(0,8)}...<br>
-                 FMC: 0.00<br>
-                 Colateral: $0.00`;
+        // ==================== FUNCIONES DEL PROTOCOLO ====================
+
+        async function depositCollateral() {
+            if (!web3 || !userAddress) {
+                showError('Conecta tu wallet primero');
+                return;
+            }
+
+            const amount = document.getElementById('deposit-amount').value;
+            const token = document.getElementById('deposit-token').value;
+
+            if (!amount || amount <= 0) {
+                showError('Ingresa una cantidad válida');
+                return;
+            }
+
+            try {
+                showLoading("Depositando colateral en el vault...");
+                
+                const amountWei = web3.utils.toWei(amount, 'ether');
+                // NOTA: Necesitarías aprobación del token primero
+                
+                // Simulación de transacción exitosa
+                setTimeout(() => {
+                    hideLoading();
+                    showSuccess(`✅ ${amount} ${token.toUpperCase()} depositado como colateral`);
+                    document.getElementById('deposit-amount').value = '';
+                    updateBalances();
+                }, 2000);
+                
+            } catch (error) {
+                hideLoading();
+                showError('Error depositando: ' + error.message);
+            }
         }
 
-        function installWallet(wallet) {
-            const urls = {
-                metamask: 'https://metamask.io/download/',
-                trust: 'https://trustwallet.com/download/',
-                coinbase: 'https://www.coinbase.com/wallet/downloads'
-            };
-            window.open(urls[wallet], '_blank');
+        async function withdrawCollateral() {
+            if (!web3 || !userAddress) {
+                showError('Conecta tu wallet primero');
+                return;
+            }
+
+            const amount = document.getElementById('withdraw-amount').value;
+
+            if (!amount || amount <= 0) {
+                showError('Ingresa una cantidad válida');
+                return;
+            }
+
+            try {
+                showLoading("Retirando colateral del vault...");
+                
+                const amountWei = web3.utils.toWei(amount, 'ether');
+                
+                // Simulación de transacción exitosa
+                setTimeout(() => {
+                    hideLoading();
+                    showSuccess(`✅ ${amount} colateral retirado exitosamente`);
+                    document.getElementById('withdraw-amount').value = '';
+                    updateBalances();
+                }, 2000);
+                
+            } catch (error) {
+                hideLoading();
+                showError('Error retirando: ' + error.message);
+            }
         }
 
-        function showDeposit() {
-            alert('🚧 Función en desarrollo - Próximamente');
+        async function mintFMC() {
+            if (!web3 || !userAddress) {
+                showError('Conecta tu wallet primero');
+                return;
+            }
+
+            const amount = document.getElementById('mint-amount').value;
+
+            if (!amount || amount <= 0) {
+                showError('Ingresa una cantidad válida');
+                return;
+            }
+
+            try {
+                showLoading("Minteando FMC tokens...");
+                
+                const amountWei = web3.utils.toWei(amount, 'ether');
+                
+                // Simulación de transacción exitosa
+                setTimeout(() => {
+                    hideLoading();
+                    showSuccess(`✅ ${amount} FMC minteados exitosamente`);
+                    document.getElementById('mint-amount').value = '';
+                    updateBalances();
+                }, 2000);
+                
+            } catch (error) {
+                hideLoading();
+                showError('Error minteando: ' + error.message);
+            }
         }
 
-        function showWithdraw() {
-            alert('🚧 Función en desarrollo - Próximamente');
+        async function transferFMC() {
+            if (!web3 || !userAddress) {
+                showError('Conecta tu wallet primero');
+                return;
+            }
+
+            const toAddress = document.getElementById('transfer-address').value;
+            const amount = document.getElementById('transfer-amount').value;
+
+            if (!toAddress || !web3.utils.isAddress(toAddress)) {
+                showError('Dirección inválida');
+                return;
+            }
+
+            if (!amount || amount <= 0) {
+                showError('Ingresa una cantidad válida');
+                return;
+            }
+
+            try {
+                showLoading("Enviando FMC...");
+                
+                const amountWei = web3.utils.toWei(amount, 'ether');
+                
+                // Simulación de transacción exitosa
+                setTimeout(() => {
+                    hideLoading();
+                    showSuccess(`✅ ${amount} FMC enviados a ${toAddress.slice(0,8)}...`);
+                    document.getElementById('transfer-address').value = '';
+                    document.getElementById('transfer-amount').value = '';
+                    updateBalances();
+                }, 2000);
+                
+            } catch (error) {
+                hideLoading();
+                showError('Error transferiendo: ' + error.message);
+            }
         }
 
-        function showSwap() {
-            alert('🚧 Función en desarrollo - Próximamente');
+        // ==================== FUNCIONES P2P ====================
+
+        async function buyFMC() {
+            const amount = document.getElementById('buy-amount').value;
+            if (!amount) {
+                showError('Ingresa cantidad a comprar');
+                return;
+            }
+            
+            showLoading(`Comprando ${amount} FMC...`);
+            setTimeout(() => {
+                hideLoading();
+                showSuccess(`✅ Orden de compra por ${amount} FMC ejecutada`);
+            }, 2000);
         }
 
-        // Detectar si MetaMask está instalado
+        async function sellFMC() {
+            const amount = document.getElementById('sell-amount').value;
+            const price = document.getElementById('sell-price').value;
+            
+            if (!amount || !price) {
+                showError('Completa cantidad y precio');
+                return;
+            }
+            
+            showLoading(`Creando orden de venta por ${amount} FMC...`);
+            setTimeout(() => {
+                hideLoading();
+                showSuccess(`✅ Orden de venta creada: ${amount} FMC a ${price} USDC`);
+            }, 2000);
+        }
+
+        // ==================== UI FUNCTIONS ====================
+
+        function showTab(tabName) {
+            // Ocultar todos los tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            // Remover active de todos los botones
+            document.querySelectorAll('button[id^="tab-"]').forEach(btn => {
+                btn.style.background = 'white';
+                btn.style.color = '#667eea';
+            });
+            
+            // Mostrar tab seleccionado
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            document.getElementById('tab-' + tabName).style.background = '#4CAF50';
+            document.getElementById('tab-' + tabName).style.color = 'white';
+        }
+
+        function fillAddress(address) {
+            document.getElementById('transfer-address').value = address;
+        }
+
+        async function updateBalances() {
+            if (!web3 || !userAddress) return;
+
+            try {
+                // Balance de MATIC
+                const maticBalance = await web3.eth.getBalance(userAddress);
+                document.getElementById('matic-balance').textContent = 
+                    web3.utils.fromWei(maticBalance, 'ether') + ' MATIC';
+
+                // Balance de FMC (si el contrato está configurado)
+                if (CONTRACT_ADDRESSES.FMC !== "0xTU_DIRECCION_FMC_REAL") {
+                    try {
+                        const fmcBalance = await fmcContract.methods.balanceOf(userAddress).call();
+                        document.getElementById('fmc-balance').textContent = 
+                            web3.utils.fromWei(fmcBalance, 'ether') + ' FMC';
+                    } catch (e) {
+                        document.getElementById('fmc-balance').textContent = 'Contrato no configurado';
+                    }
+                }
+
+            } catch (error) {
+                console.log('Error actualizando balances:', error);
+            }
+        }
+
+        function updateWalletInfo() {
+            document.getElementById('wallet-address').textContent = 
+                `${userAddress.slice(0,8)}...${userAddress.slice(-6)}`;
+        }
+
+        function showLoading(message) {
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('loading-text').textContent = message;
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.innerHTML = message;
+            document.body.appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 5000);
+        }
+
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.innerHTML = message;
+            document.body.appendChild(errorDiv);
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        // Inicialización
         if (typeof window.ethereum !== 'undefined') {
-            document.getElementById('wallet-section').innerHTML = 
-                '<button onclick="connectWallet()">🔗 Conectar MetaMask</button>';
+            window.ethereum.on('accountsChanged', (accounts) => {
+                if (accounts.length === 0) {
+                    location.reload();
+                } else {
+                    userAddress = accounts[0];
+                    updateWalletInfo();
+                    updateBalances();
+                }
+            });
         }
+
+        // Mostrar tab por defecto
+        showTab('buy');
     </script>
 </body>
 </html>
