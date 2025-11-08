@@ -17,5 +17,5 @@ export const SUPPORTED_TOKENS = {
 // Agregar al CONTRACT_ADDRESSES
 export const CONTRACT_ADDRESSES = {
   // ... contratos existentes
-  P2P_EXCHANGE: "0x...", // Actualizar después del deployment
+  P2P_EXCHANGE: "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb", // Actualizar después del deployment
 };

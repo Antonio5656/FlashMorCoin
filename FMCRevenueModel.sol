@@ -4,16 +4,16 @@
 ### Depositar Colateral
 POST /api/v1/deposit
 {
-  "lpToken": "0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64",
+  "lpToken": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb",
   "amount": "1000000000000000000",
-  "user": "0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64"
+  "user": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
 }
 
 ### Mint FMC
 POST /api/v1/mint
 {
   "amount": "300000000000000000",
-  "user": "0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64"
+  "user": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
 }
 
 ### Obtener Posición

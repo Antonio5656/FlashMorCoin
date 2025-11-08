@@ -5,8 +5,8 @@ import "./interfaces/IPriceFeed.sol";
 import "./interfaces/IUniswapV2.sol";
 
 contract FMCOracle is IPriceFeed {
-    address public constant USDC = 0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64;
-    address public constant WMATIC = 0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64;
+    address public constant USDC = 0xfb146E2601c5F77743E4888E75D6577C2F56bAbb;
+    address public constant WMATIC = 0xfb146E2601c5F77743E4888E75D6577C2F56bAbb;
     
     mapping(address => address) public priceFeeds;
     
