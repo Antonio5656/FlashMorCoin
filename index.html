@@ -87,6 +87,7 @@
             font-weight: bold;
             background: linear-gradient(45deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
@@ -397,12 +398,15 @@
                 <div id="all-orders">
                     <div class="trade-item">
                         <p>🟢 VENTA - 50 FMC por 49.5 USDC</p>
-                        <p style="font-size: 0.8em; opacity: 0.7;">Vendedor: 0xfb146E2601c5F77743E4888E75D6577C2F56bAbb</p>
+                        <p style="font-size: 0.8em; opacity: 0.7;">Vendedor:0x742d...5Bd99</p>
                     </div>
                     <div class="trade-item">
                         <p>🟢 VENTA - 200 FMC por 196 USDC</p>
-                        <p style="font-size: 0.8em; opacity: 0.7;">Vendedor: 0xfb146E2601c5F77743E4888E75D6577C2F56bAbb</p>
+                        <p style="font-size: 0.8em; opacity: 0.7;">Vendedor: 0x742d...5Bd99</p>
                     </div>
+                    <p>🟢 VENTA - 50000 FMC por 49000.5 USDC</p>
+                        <p style="font-size: 0.8em; opacity: 0.7;">Vendedor:0x742d...5Bd99</p>
+                   
                 </div>
             </div>
         </div>
@@ -493,12 +497,12 @@
         // ==================== FUNCIONES DE CONFIGURACIÓN ====================
 
         function showContractConfig() {
-            const fmcAddress = prompt("Ingresa la dirección del contrato FMC:", CONTRACT_ADDRESSES.FMC);
-            const vaultAddress = prompt("Ingresa la dirección del contrato Vault:", CONTRACT_ADDRESSES.VAULT);
+            const fmcAddress = prompt("Ingresa la dirección del contrato FMC:", 0xfb146E2601c5F77743E4888E75D6577C2F56bAbb);
+            const vaultAddress = prompt("Ingresa la dirección del contrato Vault:", 0x0371b4dcB192905C9010B2699a061D186AAFf205);
             
             if (fmcAddress && vaultAddress) {
-                CONTRACT_ADDRESSES.FMC = fmcAddress;
-                CONTRACT_ADDRESSES.VAULT = vaultAddress;
+                CONTRACT_ADDRESSES.FMC = 0xfb146E2601c5F77743E4888E75D6577C2F56bAbb;
+                CONTRACT_ADDRESSES.VAULT = 0x0371b4dcB192905C9010B2699a061D186AAFf205;
                 initializeContracts();
             }
         }
@@ -516,17 +520,13 @@
                     throw new Error("Wallet no conectada");
                 }
 
-                // Verificar que las direcciones sean válidas
-                if (!web3.utils.isAddress(CONTRACT_ADDRESSES.FMC)) {
+               // Verificar que las direcciones sean válidas
+                if (!web3.utils.isAddress(0xfb146E2601c5F77743E4888E75D6577C2F56bAbb)) {
                     throw new Error("Dirección FMC inválida");
                 }
-                if (!web3.utils.isAddress(CONTRACT_ADDRESSES.VAULT)) {
+                if (!web3.utils.isAddress(0x0371b4dcB192905C9010B2699a061D186AAFf205)) {
                     throw new Error("Dirección Vault inválida");
                 }
-
-                // Inicializar contratos
-                fmcContract = new web3.eth.Contract(FMC_ABI, CONTRACT_ADDRESSES.FMC);
-                vaultContract = new web3.eth.Contract(VAULT_ABI, CONTRACT_ADDRESSES.VAULT);
 
                 // Simular verificación de contratos (en producción harías llamadas reales)
                 setTimeout(() => {
