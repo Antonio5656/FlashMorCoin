@@ -58,8 +58,8 @@ contract FMCP2PExchange is ReentrancyGuard, Ownable {
         platformFeeBasisPoints = 25; // 0.25%
 
         // Tokens permitidos (Polygon USDC y DAI como ejemplo)
-        allowedPaymentTokens[0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174] = true; // USDC (6 decimales)
-        allowedPaymentTokens[0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063] = true; // DAI (18 decimales)
+        allowedPaymentTokens[0x5774808c2856f7FDF1A0a8F375A41559794BeF6B] = true; // USDC (6 decimales)
+        allowedPaymentTokens[0x5774808c2856f7FDF1A0a8F375A41559794BeF6B] = true; // DAI (18 decimales)
     }
 
     function createTrade(
