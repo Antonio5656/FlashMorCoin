@@ -4,169 +4,155 @@ pragma solidity ^0.8.19;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
+// Asumimos que FlashMorCoin es un ERC20 estándar (18 decimales)
 import "./FlashMorCoin.sol";
 
 contract FMCP2PExchange is ReentrancyGuard, Ownable {
-    FlashMorCoin public fmcToken;
-    
+    using SafeERC20 for IERC20;
+
+    FlashMorCoin public immutable fmcToken;
+    address public feeWallet;
+    uint256 public platformFeeBasisPoints; // 25 = 0.25%, 100 = 1%
+
     struct Trade {
         uint256 id;
         address seller;
         address buyer;
-        uint256 amount;
-        uint256 price; // Precio en USDC o token base
-        address paymentToken;
+        uint256 fmcAmount;          // En unidades de FMC (18 decimales)
+        uint256 pricePerFmcInPaymentToken; // Precio por 1 FMC, en unidades del token de pago (ej. 1.5 USDC = 1_500_000 si USDC tiene 6 decimales)
+        address paymentToken;       // Ej: USDC, DAI
         bool isActive;
         bool isCompleted;
         uint256 createdAt;
-        uint256 completedAt;
     }
-    
+
     uint256 public tradeCounter;
     mapping(uint256 => Trade) public trades;
     mapping(address => bool) public allowedPaymentTokens;
-    
-    uint256 public platformFee = 25; // 0.25%
-    address public feeWallet;
-    
+
     event TradeCreated(
         uint256 indexed tradeId,
         address indexed seller,
-        uint256 amount,
-        uint256 price,
+        uint256 fmcAmount,
+        uint256 pricePerFmcInPaymentToken,
         address paymentToken
     );
-    
+
     event TradeCompleted(
         uint256 indexed tradeId,
         address indexed buyer,
-        uint256 amount,
-        uint256 totalPrice
+        uint256 fmcAmount,
+        uint256 totalPaymentSent,
+        uint256 platformFee
     );
-    
+
     event TradeCancelled(uint256 indexed tradeId);
-    
+
     constructor(address _fmcToken, address _feeWallet) {
+        require(_fmcToken != address(0), "Invalid FMC token");
+        require(_feeWallet != address(0), "Invalid fee wallet");
         fmcToken = FlashMorCoin(_fmcToken);
         feeWallet = _feeWallet;
-        
-        // Tokens de pago permitidos (USDC, DAI, etc.)
-        allowedPaymentTokens[0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64] = true; // USDC
-        allowedPaymentTokens[0x5e82fFB6D411dbd1962103867bAfc6f7D8304D64] = true; // DAI
+        platformFeeBasisPoints = 25; // 0.25%
+
+        // Tokens permitidos (Polygon USDC y DAI como ejemplo)
+        allowedPaymentTokens[0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174] = true; // USDC (6 decimales)
+        allowedPaymentTokens[0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063] = true; // DAI (18 decimales)
     }
-    
+
     function createTrade(
-        uint256 amount,
-        uint256 price,
+        uint256 fmcAmount,
+        uint256 pricePerFmcInPaymentToken,
         address paymentToken
     ) external nonReentrant {
-        require(amount > 0, "Amount must be greater than 0");
-        require(price > 0, "Price must be greater than 0");
+        require(fmcAmount > 0, "FMC amount must be > 0");
+        require(pricePerFmcInPaymentToken > 0, "Price must be > 0");
         require(allowedPaymentTokens[paymentToken], "Payment token not allowed");
-        
-        // Transferir FMC del vendedor al contrato (escrow)
+
+        // El vendedor debe tener y aprobar FMC al contrato
         require(
-            fmcToken.transferFrom(msg.sender, address(this), amount),
+            fmcToken.transferFrom(msg.sender, address(this), fmcAmount),
             "FMC transfer failed"
         );
-        
+
         tradeCounter++;
         trades[tradeCounter] = Trade({
             id: tradeCounter,
             seller: msg.sender,
             buyer: address(0),
-            amount: amount,
-            price: price,
+            fmcAmount: fmcAmount,
+            pricePerFmcInPaymentToken: pricePerFmcInPaymentToken,
             paymentToken: paymentToken,
             isActive: true,
             isCompleted: false,
-            createdAt: block.timestamp,
-            completedAt: 0
+            createdAt: block.timestamp
         });
-        
-        emit TradeCreated(tradeCounter, msg.sender, amount, price, paymentToken);
+
+        emit TradeCreated(tradeCounter, msg.sender, fmcAmount, pricePerFmcInPaymentToken, paymentToken);
     }
-    
+
     function executeTrade(uint256 tradeId) external nonReentrant {
         Trade storage trade = trades[tradeId];
         require(trade.isActive, "Trade not active");
-        require(!trade.isCompleted, "Trade already completed");
         require(msg.sender != trade.seller, "Cannot buy your own trade");
-        
-        uint256 totalPrice = trade.amount * trade.price / 1e18;
-        uint256 fee = totalPrice * platformFee / 10000;
-        uint256 sellerAmount = totalPrice - fee;
-        
-        // Transferir token de pago del comprador al vendedor
+
+        // Calcular el total en token de pago que el comprador debe pagar
+        // total = (fmcAmount * pricePerFmc) / 1e18   → porque FMC tiene 18 decimales
+        uint256 totalPayment = (trade.fmcAmount * trade.pricePerFmcInPaymentToken) / 1e18;
+        require(totalPayment > 0, "Total payment must be > 0");
+
+        uint256 fee = (totalPayment * platformFeeBasisPoints) / 10_000;
+        uint256 sellerAmount = totalPayment - fee;
+
         IERC20 paymentToken = IERC20(trade.paymentToken);
-        require(
-            paymentToken.transferFrom(msg.sender, trade.seller, sellerAmount),
-            "Payment transfer failed"
-        );
-        
-        // Transferir fee a la wallet de fees
+
+        // El comprador debe aprobar TOTAL al contrato
+        paymentToken.safeTransferFrom(msg.sender, trade.seller, sellerAmount);
         if (fee > 0) {
-            require(
-                paymentToken.transferFrom(msg.sender, feeWallet, fee),
-                "Fee transfer failed"
-            );
+            paymentToken.safeTransferFrom(msg.sender, feeWallet, fee);
         }
-        
-        // Transferir FMC al comprador
-        require(
-            fmcToken.transfer(msg.sender, trade.amount),
-            "FMC transfer to buyer failed"
-        );
-        
+
+        // Entregar FMC al comprador
+        fmcToken.safeTransfer(msg.sender, trade.fmcAmount);
+
         trade.buyer = msg.sender;
         trade.isActive = false;
         trade.isCompleted = true;
-        trade.completedAt = block.timestamp;
-        
-        emit TradeCompleted(tradeId, msg.sender, trade.amount, totalPrice);
+
+        emit TradeCompleted(tradeId, msg.sender, trade.fmcAmount, totalPayment, fee);
     }
-    
+
     function cancelTrade(uint256 tradeId) external nonReentrant {
         Trade storage trade = trades[tradeId];
         require(trade.isActive, "Trade not active");
         require(msg.sender == trade.seller, "Only seller can cancel");
-        
-        // Devolver FMC al vendedor
-        require(
-            fmcToken.transfer(trade.seller, trade.amount),
-            "FMC return failed"
-        );
-        
+
+        fmcToken.safeTransfer(trade.seller, trade.fmcAmount);
         trade.isActive = false;
-        
+
         emit TradeCancelled(tradeId);
     }
-    
-    function getActiveTrades() external view returns (Trade[] memory) {
-        uint256 activeCount = 0;
-        for (uint256 i = 1; i <= tradeCounter; i++) {
-            if (trades[i].isActive) {
-                activeCount++;
-            }
-        }
-        
-        Trade[] memory activeTrades = new Trade[](activeCount);
-        uint256 currentIndex = 0;
-        for (uint256 i = 1; i <= tradeCounter; i++) {
-            if (trades[i].isActive) {
-                activeTrades[currentIndex] = trades[i];
-                currentIndex++;
-            }
-        }
-        return activeTrades;
-    }
-    
+
     function addPaymentToken(address token) external onlyOwner {
+        require(token != address(0), "Invalid token");
         allowedPaymentTokens[token] = true;
     }
-    
-    function setPlatformFee(uint256 _fee) external onlyOwner {
-        require(_fee <= 100, "Fee too high"); // Máximo 1%
-        platformFee = _fee;
+
+    function setPlatformFee(uint256 basisPoints) external onlyOwner {
+        require(basisPoints <= 1000, "Max 10%"); // 1000 = 10%
+        platformFeeBasisPoints = basisPoints;
+    }
+
+    function setFeeWallet(address _feeWallet) external onlyOwner {
+        require(_feeWallet != address(0), "Invalid wallet");
+        feeWallet = _feeWallet;
+    }
+
+    function getActiveTradesCount() external view returns (uint256) {
+        // Si necesitas eficiencia, podrías usar un array gestionado
+        // Pero para simplicidad, devuelve tradeCounter y filtra en frontend
+        return tradeCounter;
     }
 }
