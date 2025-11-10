@@ -6,213 +6,529 @@
     <title>FlashMorCoin - Protocolo DeFi</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <style>
-        /* ... (todo el CSS permanece igual) ... */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white; font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+        }
+        
+        /* ========== LOGO MONEDA ANTIGUA ========== */
+        .ancient-coin {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #D4AF37, #B8860B, #8B4513);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 0 0 2px #8B4513,
+                0 4px 15px rgba(139, 69, 19, 0.6),
+                inset 0 1px 6px rgba(255, 215, 0, 0.4);
+            border: 2px solid #CD7F32;
+            position: relative;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .ancient-coin::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 70% 70%, transparent 30%, rgba(0,0,0,0.2) 100%);
+        }
+
+        .coin-design {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #8B4513;
+            text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.5);
+        }
+
+        .coin-symbol {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 1px;
+        }
+
+        .coin-text {
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* Header */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 15px 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .brand-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Botones */
+        .connect-btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .connect-btn.connected {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+        
+        /* Cards */
+        .card { 
+            background: rgba(255,255,255,0.1); 
+            backdrop-filter: blur(10px);
+            padding: 25px; 
+            border-radius: 15px; 
+            margin: 20px 0; 
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .action-btn { 
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #8B4513; 
+            border: none; 
+            padding: 12px 20px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 5px; 
+            font-weight: bold; 
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .action-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            border: none; 
+            border-radius: 8px; 
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+        
+        /* Loading */
+        .loading { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            z-index: 1000; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        
+        .success { 
+            background: rgba(76, 175, 80, 0.3); 
+            border: 1px solid #4CAF50; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 10px 0; 
+        }
+        
+        .error { 
+            background: rgba(244, 67, 54, 0.3); 
+            border: 1px solid #f44336; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 10px 0; 
+        }
+        
+        .wallet-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            text-align: center;
+        }
+        
+        .status-badge { 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+            margin-left: 10px; 
+        }
+        
+        .status-active { 
+            background: #4CAF50; 
+        }
+        
+        .status-inactive { 
+            background: #f44336; 
+        }
+        
+        .trade-item { 
+            background: rgba(255,255,255,0.05); 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.1);
+        }
     </style>
 </head>
 <body>
-    <!-- === ZONA 1: LOGO Y NOMBRE === -->
-    <header>
-
-        <svg width="200" height="200" viewBox="0 0 200 200">
-  <defs>
-    <radialGradient id="coinGradient" cx="30%" cy="30%">
-      <stop offset="0%" stop-color="#FFD700"/>
-      <stop offset="100%" stop-color="#FFA500"/>
-    </radialGradient>
-  </defs>
-  
-  <!-- Círculo de la moneda -->
-  <circle cx="100" cy="100" r="75" fill="url(#coinGradient)" stroke="#B8860B" stroke-width="3"/>
-  
-  <!-- Detalles de moneda -->
-  <circle cx="100" cy="100" r="60" fill="none" stroke="#DAA520" stroke-width="2" stroke-dasharray="5,5"/>
-  
-  <!-- Rayo central -->
-  <path d="M85 85 L95 95 L90 95 L105 115 L100 115 L115 130 L110 130 L125 145 L120 145 L100 125 L105 125 L90 105 L95 105 Z" 
-        fill="#8B4513"/>
-  
-  <!-- Texto -->
-  <text x="100" y="165" text-anchor="middle" fill="#8B4513" font-family="Arial" font-size="18" font-weight="bold">
-    FlashMorCoin
-  </text>
-</svg>
-
-    </header>
+    <div class="loading" id="loading">
+        <div style="background: white; color: #333; padding: 30px; border-radius: 15px; text-align: center; min-width: 300px;">
+            <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
+            <p id="loading-text">Conectando con MetaMask...</p>
+        </div>
+    </div>
 
     <div class="container">
-        <!-- === ZONA 2: CONFIGURACIÓN DE CONTRATOS === -->
+        <!-- Header con Logo -->
+        <header>
+            <div class="logo-container">
+                <div class="ancient-coin">
+                    <div class="coin-design">
+                        <div class="coin-symbol">⚡</div>
+                        <div class="coin-text">FMC</div>
+                    </div>
+                </div>
+                <div class="brand-text">FlashMorCoin</div>
+            </div>
+            
+            <div id="wallet-section">
+                <button class="connect-btn" onclick="connectWallet()" id="connect-btn">
+                    🔗 Conectar MetaMask
+                </button>
+                <div class="wallet-info" id="wallet-info" style="display: none;">
+                    <div><strong>✅ Conectado:</strong> <span id="wallet-address"></span></div>
+                    <div><strong>💰 Balance:</strong> <span id="wallet-balance">-</span> MATIC</div>
+                    <button onclick="disconnectWallet()" style="background: #ff4444; color: white; padding: 5px 10px; margin-top: 8px; font-size: 12px;">
+                        🚪 Desconectar
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mensaje de Bienvenida -->
+        <div class="card" id="welcome-section">
+            <h2>🚀 Bienvenido a FlashMorCoin</h2>
+            <p>Protocolo DeFi para liquidez instantánea en Yield Farming</p>
+            <div class="grid" style="margin-top: 20px;">
+                <div>
+                    <h3>📊 Para comenzar:</h3>
+                    <p>1. 👆 Haz clic en "Conectar MetaMask"</p>
+                    <p>2. ✅ Acepta la conexión en tu wallet</p>
+                    <p>3. 🌐 Cambia a la red Polygon Mumbai</p>
+                    <p>4. 🎉 ¡Listo para usar FlashMorCoin!</p>
+                </div>
+                <div>
+                    <h3>💡 ¿Problemas de conexión?</h3>
+                    <p>• 🔍 Asegúrate de tener MetaMask instalado</p>
+                    <p>• ✅ Acepta la solicitud de conexión</p>
+                    <p>• 🌐 Usa la red Mumbai Testnet</p>
+                    <button onclick="installMetaMask()" style="background: #FF6B6B; color: white; padding: 10px 15px;">
+                        📲 Instalar MetaMask
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Contratos (visible cuando esté conectado) -->
         <div class="card" id="contracts-section" style="display: none;">
             <h2>⚙️ Configuración de Contratos</h2>
             <div class="grid">
                 <div>
                     <h3>🔗 Contrato FMC</h3>
-                    <p>Estado: <span id="fmc-status" style="color: #FF6B6B;">No configurado</span></p>
-                    <!-- 🔗 CAMBIA LA DIRECCIÓN DEL CONTRATO FMC AQUÍ -->
+                    <p>Estado: <span id="fmc-status" class="status-badge status-inactive">No configurado</span></p>
                     <input type="text" id="fmc-address" 
-                           placeholder="Dirección del contrato FMC" 
-                           value="0xfb146E2601c5F77743E4888E75D6577C2F56bAbb" 
+                           placeholder="0x..." 
+                           value="0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
                            style="font-family: monospace;">
-                    <button onclick="configureFMC()">✅ Configurar FMC</button>
+                    <button class="action-btn" onclick="configureFMC()">✅ Configurar FMC</button>
                 </div>
                 <div>
                     <h3>🏦 Contrato Vault</h3>
-                    <p>Estado: <span id="vault-status" style="color: #FF6B6B;">No configurado</span></p>
-                    <!-- 🔗 CAMBIA LA DIRECCIÓN DEL CONTRATO VAULT AQUÍ -->
+                    <p>Estado: <span id="vault-status" class="status-badge status-inactive">No configurado</span></p>
                     <input type="text" id="vault-address" 
-                           placeholder="Dirección del contrato Vault" 
-                           value="0x0371b4dcB192905C9010B2699a061D186AAFf205" 
+                           placeholder="0x..." 
+                           value="0x0371b4dcB192905C9010B2699a061D186AAFf205"
                            style="font-family: monospace;">
-                    <button onclick="configureVault()">✅ Configurar Vault</button>
+                    <button class="action-btn" onclick="configureVault()">✅ Configurar Vault</button>
                 </div>
             </div>
         </div>
 
-        <!-- === ZONA 3: TOKENS SOPORTADOS === -->
-        <div class="card">
-            <h2>🪙 Tokens Soportados</h2>
+        <!-- Portfolio (visible cuando esté conectado) -->
+        <div class="card" id="portfolio-section" style="display: none;">
+            <h2>📊 Tu Portfolio en Vivo</h2>
             <div class="grid">
                 <div>
-                    <h3>💰 Para Colateral</h3>
-                    <ul>
-                        <!-- 🪙 CAMBIA LOS TOKENS DE COLATERAL AQUÍ -->
-                        <li>USDC</li> 0x5774808c2856f7FDF1A0a8F375A41559794BeF6B  <!-- ← CAMBIAR TOKENS -->
-                        <li>DAI</li>   0x5774808c2856f7FDF1A0a8F375A41559794BeF6B <!-- ← CAMBIAR TOKENS -->
-                        <li>WMATIC</li> 0x5774808c2856f7FDF1A0a8F375A41559794BeF6B<!-- ← CAMBIAR TOKENS -->
-                    </ul>
+                    <p>👛 <strong>Wallet:</strong> <span id="display-address">-</span></p>
+                    <p>💰 <strong>Balance MATIC:</strong> <span id="matic-balance">-</span></p>
                 </div>
                 <div>
-                    <h3>🔄 Para Pagos P2P</h3>
-                    <ul>
-                        <!-- 🪙 CAMBIA LOS TOKENS DE PAGO AQUÍ -->
-                        <li>USDC</li> 0x5774808c2856f7FDF1A0a8F375A41559794BeF6B  <!-- ← CAMBIAR TOKENS -->
-                        <li>DAI</li>  0x5774808c2856f7FDF1A0a8F375A41559794BeF6B  <!-- ← CAMBIAR TOKENS -->
-                    </ul>
+                    <p>🪙 <strong>Balance FMC:</strong> <span id="fmc-balance">0.00 FMC</span></p>
+                    <p>🏦 <strong>Colateral:</strong> <span id="vault-balance">0.00 USDC</span></p>
                 </div>
             </div>
         </div>
 
-        <!-- === ZONA 4: ACCIONES PRINCIPALES === -->
+        <!-- Acciones Principales (visible cuando esté conectado) -->
         <div class="grid" id="actions-section" style="display: none;">
-            <!-- 🏦 DEPOSITAR -->
+            <!-- Depositar -->
             <div class="card">
                 <h3>🏦 Depositar Colateral</h3>
-                <!-- 💰 CAMBIA LOS TOKENS EN EL SELECT AQUÍ -->
                 <select id="deposit-token">
-                    <option value="usdc">USDC</option>  0x5774808c2856f7FDF1A0a8F375A41559794BeF6B  <!-- ← CAMBIAR TOKENS -->
-                    <option value="dai">DAI</option>   0x5774808c2856f7FDF1A0a8F375A41559794BeF6B   <!-- ← CAMBIAR TOKENS -->
-                    <option value="wmatic">WMATIC</option> 0x5774808c2856f7FDF1A0a8F375A41559794BeF6B <!-- ← CAMBIAR TOKENS -->
+                    <option value="usdc">USDC</option>
+                    <option value="dai">DAI</option>
+                    <option value="wmatic">WMATIC</option>
                 </select>
-                <input type="number" placeholder="Cantidad" id="deposit-amount">
-                <button onclick="depositAction()">✅ Depositar</button>
+                <input type="number" placeholder="Cantidad a depositar" id="deposit-amount" step="0.001">
+                <button class="action-btn" onclick="depositAction()">✅ Depositar Colateral</button>
             </div>
 
-            <!-- 🪙 MINTEAR -->
+            <!-- Mintear -->
             <div class="card">
                 <h3>🪙 Mintear FMC</h3>
-                <p style="font-size: 0.9em; opacity: 0.8;">
-                    Genera tokens FMC usando tu colateral
+                <p style="font-size: 0.9em; opacity: 0.8; margin: 10px 0;">
+                    Genera tokens FMC usando tu colateral como garantía
                 </p>
-                <input type="number" placeholder="Cantidad FMC" id="mint-amount">
-                <button onclick="mintAction()">🪙 Mintear FMC</button>
+                <input type="number" placeholder="Cantidad FMC a mintear" id="mint-amount" step="0.001">
+                <button class="action-btn" onclick="mintAction()">🪙 Mintear FMC</button>
             </div>
 
-            <!-- 📤 TRANSFERIR -->
+            <!-- Transferir -->
             <div class="card">
                 <h3>📤 Transferir FMC</h3>
-                <input type="text" placeholder="Dirección destino (0x...)" id="transfer-address">
-                <input type="number" placeholder="Cantidad FMC" id="transfer-amount">
-                <button onclick="transferAction()">📤 Transferir FMC</button>
+                <input type="text" placeholder="Dirección destino (0x...)" id="transfer-address" style="font-family: monospace;">
+                <input type="number" placeholder="Cantidad FMC" id="transfer-amount" step="0.001">
+                <button class="action-btn" onclick="transferAction()">📤 Transferir FMC</button>
+            </div>
+        </div>
+
+        <!-- Mercado P2P (visible cuando esté conectado) -->
+        <div class="card" id="p2p-section" style="display: none;">
+            <h2>🔄 Mercado P2P FlashMorCoin</h2>
+            <div class="grid">
+                <div>
+                    <h3>🛒 Comprar FMC</h3>
+                    <input type="number" placeholder="Cantidad FMC a comprar" id="buy-amount" step="0.001">
+                    <p style="margin: 10px 0;">Precio estimado: <span id="buy-price">1.02</span> USDC por FMC</p>
+                    <button class="action-btn" onclick="buyFMC()">✅ Comprar FMC</button>
+                </div>
+                <div>
+                    <h3>💰 Vender FMC</h3>
+                    <input type="number" placeholder="Cantidad FMC a vender" id="sell-amount" step="0.001">
+                    <input type="number" placeholder="Precio en USDC" id="sell-price" step="0.0001" value="1.02">
+                    <button class="action-btn" onclick="sellFMC()">💰 Vender FMC</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== CONFIGURACIÓN PRINCIPAL ====================
-        
-        // 🔧 CAMBIA LAS DIRECCIONES DE CONTRATOS AQUÍ
-        const CONTRACT_CONFIG = {
-            FMC: "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb", // ← DIRECCIÓN FMC REAL
-            VAULT: "0x0371b4dcB192905C9010B2699a061D186AAFf205", // ← DIRECCIÓN VAULT REAL
-            ORACLE: "0x5774808c2856f7FDF1A0a8F375A41559794BeF6B"  // ← DIRECCIÓN ORACLE REAL
-        };
+        // ==================== ESTADO GLOBAL ====================
+        let web3 = null;
+        let userAddress = null;
+        let userBalance = '0';
 
-        // 🪙 CAMBIA LOS TOKENS SOPORTADOS AQUÍ
-        const SUPPORTED_TOKENS = {
-            USDC: {
-                address: "0x5774808c2856f7FDF1A0a8F375A41559794BeF6B",
-                name: "USD Coin",
-                decimals: 6
-            },
-            DAI: {
-                address: "0x5774808c2856f7FDF1A0a8F375A41559794BeF6B", 
-                name: "Dai Stablecoin",
-                decimals: 18
-            },
-            WMATIC: {
-                address: "0x5774808c2856f7FDF1A0a8F375A41559794BeF6B",
-                name: "Wrapped MATIC",
-                decimals: 18
+        // ==================== CONEXIÓN METAMASK ====================
+        async function connectWallet() {
+            console.log('🔗 Iniciando conexión con MetaMask...');
+            
+            if (typeof window.ethereum === 'undefined') {
+                showError('❌ MetaMask no detectado. Por favor instala MetaMask.');
+                return;
             }
-        };
 
-        // 🌐 CAMBIA LA CONFIGURACIÓN DE RED AQUÍ
-        const NETWORK_CONFIG = {
-            chainId: "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb", // Mumbai Testnet
-            chainName: "Polygon Mumbai Testnet",
-            rpcUrl: "https://rpc-mumbai.maticvigil.com/",
-            blockExplorer: "https://mumbai.polygonscan.com/",
-            nativeCurrency: {
-                name: "MATIC",
-                symbol: "MATIC",
-                decimals: 18
+            try {
+                showLoading('Conectando con MetaMask...');
+                
+                // Solicitar acceso a las cuentas
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+                
+                console.log('✅ Cuentas obtenidas:', accounts);
+                
+                if (accounts.length === 0) {
+                    throw new Error('Usuario rechazó la conexión');
+                }
+                
+                userAddress = accounts[0];
+                
+                // Inicializar Web3
+                web3 = new Web3(window.ethereum);
+                
+                // Obtener balance
+                await updateBalance();
+                
+                // Actualizar interfaz
+                updateUI();
+                
+                // Configurar listeners de eventos
+                setupEventListeners();
+                
+                hideLoading();
+                showSuccess('🎉 ¡Wallet conectada exitosamente!');
+                
+            } catch (error) {
+                hideLoading();
+                console.error('❌ Error en conexión:', error);
+                
+                if (error.code === 4001) {
+                    showError('❌ Rechazaste la conexión. Haz clic en "Conectar" en la ventana de MetaMask.');
+                } else if (error.code === -32002) {
+                    showError('⏳ Ya hay una solicitud pendiente. Revisa MetaMask.');
+                } else {
+                    showError('Error de conexión: ' + error.message);
+                }
             }
-        };
+        }
 
-        // ==================== FUNCIONES DE CONFIGURACIÓN ====================
+        async function updateBalance() {
+            if (!web3 || !userAddress) return;
+            
+            try {
+                const balance = await web3.eth.getBalance(userAddress);
+                userBalance = parseFloat(web3.utils.fromWei(balance, 'ether')).toFixed(4);
+                console.log('💰 Balance actualizado:', userBalance);
+            } catch (error) {
+                console.error('Error obteniendo balance:', error);
+                userBalance = 'Error';
+            }
+        }
 
+        function updateUI() {
+            // Actualizar información de wallet
+            const shortAddress = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+            document.getElementById('wallet-address').textContent = shortAddress;
+            document.getElementById('wallet-balance').textContent = userBalance;
+            document.getElementById('display-address').textContent = shortAddress;
+            document.getElementById('matic-balance').textContent = userBalance + ' MATIC';
+            
+            // Mostrar secciones principales
+            document.getElementById('wallet-info').style.display = 'block';
+            document.getElementById('connect-btn').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'none';
+            document.getElementById('contracts-section').style.display = 'block';
+            document.getElementById('portfolio-section').style.display = 'block';
+            document.getElementById('actions-section').style.display = 'grid';
+            document.getElementById('p2p-section').style.display = 'block';
+        }
+
+        function setupEventListeners() {
+            // Cambios de cuenta
+            window.ethereum.on('accountsChanged', (accounts) => {
+                console.log('🔄 Cuenta cambiada:', accounts);
+                if (accounts.length === 0) {
+                    disconnectWallet();
+                } else {
+                    userAddress = accounts[0];
+                    updateBalance().then(updateUI);
+                    showSuccess('🔄 Cuenta actualizada');
+                }
+            });
+            
+            // Cambios de red
+            window.ethereum.on('chainChanged', (chainId) => {
+                console.log('🌐 Red cambiada:', chainId);
+                showSuccess('🌐 Red actualizada - Recargando...');
+                setTimeout(() => location.reload(), 1000);
+            });
+        }
+
+        function disconnectWallet() {
+            userAddress = null;
+            web3 = null;
+            document.getElementById('connect-btn').style.display = 'block';
+            document.getElementById('wallet-info').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'block';
+            document.getElementById('contracts-section').style.display = 'none';
+            document.getElementById('portfolio-section').style.display = 'none';
+            document.getElementById('actions-section').style.display = 'none';
+            document.getElementById('p2p-section').style.display = 'none';
+            showSuccess('👋 Wallet desconectada');
+        }
+
+        // ==================== FUNCIONES DE CONTRATOS ====================
         function configureFMC() {
-            // 🎯 ESTA FUNCIÓN CONFIGURA EL CONTRATO FMC
             const address = document.getElementById('fmc-address').value;
-            if (address && isValidAddress(address)) {
-                CONTRACT_CONFIG.FMC = address;
+            if (isValidAddress(address)) {
                 document.getElementById('fmc-status').textContent = 'Configurado ✅';
-                document.getElementById('fmc-status').style.color = '#4CAF50';
-                showSuccess('Contrato FMC configurado correctamente');
-                console.log('✅ FMC configurado:', address);
+                document.getElementById('fmc-status').className = 'status-badge status-active';
+                showSuccess('✅ Contrato FMC configurado correctamente');
             } else {
-                showError('Dirección de contrato FMC inválida');
+                showError('❌ Dirección de contrato FMC inválida');
             }
         }
 
         function configureVault() {
-            // 🎯 ESTA FUNCIÓN CONFIGURA EL CONTRATO VAULT
             const address = document.getElementById('vault-address').value;
-            if (address && isValidAddress(address)) {
-                CONTRACT_CONFIG.VAULT = address;
+            if (isValidAddress(address)) {
                 document.getElementById('vault-status').textContent = 'Configurado ✅';
-                document.getElementById('vault-status').style.color = '#4CAF50';
-                showSuccess('Contrato Vault configurado correctamente');
-                console.log('✅ Vault configurado:', address);
+                document.getElementById('vault-status').className = 'status-badge status-active';
+                showSuccess('✅ Contrato Vault configurado correctamente');
             } else {
-                showError('Dirección de contrato Vault inválida');
+                showError('❌ Dirección de contrato Vault inválida');
             }
         }
 
         // ==================== FUNCIONES DE ACCIÓN ====================
-
         async function depositAction() {
-            // 🎯 ESTA FUNCIÓN MANEJA LOS DEPÓSITOS
-            const token = document.getElementById('deposit-token').value;
             const amount = document.getElementById('deposit-amount').value;
+            const token = document.getElementById('deposit-token').value;
             
             if (!amount || amount <= 0) {
-                showError('Ingresa una cantidad válida');
+                showError('❌ Ingresa una cantidad válida');
                 return;
             }
 
-            showLoading(`Depositando ${amount} ${token.toUpperCase()}...`);
-            
-            // Simulación de transacción
+            showLoading(`🏦 Depositando ${amount} ${token.toUpperCase()}...`);
             setTimeout(() => {
                 hideLoading();
                 showSuccess(`✅ ${amount} ${token.toUpperCase()} depositado exitosamente`);
@@ -221,17 +537,14 @@
         }
 
         async function mintAction() {
-            // 🎯 ESTA FUNCIÓN MANEJA EL MINTEO DE FMC
             const amount = document.getElementById('mint-amount').value;
             
             if (!amount || amount <= 0) {
-                showError('Ingresa una cantidad válida de FMC');
+                showError('❌ Ingresa una cantidad válida de FMC');
                 return;
             }
 
-            showLoading(`Minteando ${amount} FMC...`);
-            
-            // Simulación de transacción
+            showLoading(`🪙 Minteando ${amount} FMC...`);
             setTimeout(() => {
                 hideLoading();
                 showSuccess(`✅ ${amount} FMC minteados exitosamente`);
@@ -240,23 +553,20 @@
         }
 
         async function transferAction() {
-            // 🎯 ESTA FUNCIÓN MANEJA LAS TRANSFERENCIAS
             const toAddress = document.getElementById('transfer-address').value;
             const amount = document.getElementById('transfer-amount').value;
             
             if (!isValidAddress(toAddress)) {
-                showError('Dirección destino inválida');
+                showError('❌ Dirección destino inválida');
                 return;
             }
 
             if (!amount || amount <= 0) {
-                showError('Ingresa una cantidad válida');
+                showError('❌ Ingresa una cantidad válida');
                 return;
             }
 
-            showLoading(`Enviando ${amount} FMC...`);
-            
-            // Simulación de transacción
+            showLoading(`📤 Enviando ${amount} FMC...`);
             setTimeout(() => {
                 hideLoading();
                 showSuccess(`✅ ${amount} FMC enviados a ${toAddress.slice(0,8)}...`);
@@ -265,45 +575,92 @@
             }, 2000);
         }
 
-        // ==================== FUNCIONES DE VALIDACIÓN ====================
+        async function buyFMC() {
+            const amount = document.getElementById('buy-amount').value;
+            if (!amount) {
+                showError('❌ Ingresa cantidad a comprar');
+                return;
+            }
+            
+            showLoading(`🛒 Comprando ${amount} FMC...`);
+            setTimeout(() => {
+                hideLoading();
+                showSuccess(`✅ Compra de ${amount} FMC ejecutada exitosamente`);
+                document.getElementById('buy-amount').value = '';
+            }, 2000);
+        }
 
+        async function sellFMC() {
+            const amount = document.getElementById('sell-amount').value;
+            const price = document.getElementById('sell-price').value;
+            
+            if (!amount || !price) {
+                showError('❌ Completa cantidad y precio');
+                return;
+            }
+            
+            showLoading(`💰 Vendiendo ${amount} FMC...`);
+            setTimeout(() => {
+                hideLoading();
+                showSuccess(`✅ Venta de ${amount} FMC creada a ${price} USDC`);
+                document.getElementById('sell-amount').value = '';
+            }, 2000);
+        }
+
+        // ==================== FUNCIONES UTILITARIAS ====================
         function isValidAddress(address) {
-            // 🎯 ESTA FUNCIÓN VALIDA DIRECCIONES DE CONTRATOS
             return /^0x[a-fA-F0-9]{40}$/.test(address);
         }
 
-        // ==================== FUNCIONES DE UI (NO CAMBIAR) ====================
-
-        async function connectWallet() {
-            // ... (código de conexión permanece igual)
+        function installMetaMask() {
+            window.open('https://metamask.io/download.html', '_blank');
         }
 
         function showLoading(message) {
-            // ... (código de loading permanece igual)
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('loading-text').textContent = message;
         }
 
         function hideLoading() {
-            // ... (código de loading permanece igual)
+            document.getElementById('loading').style.display = 'none';
         }
 
         function showSuccess(message) {
-            // ... (código de éxito permanece igual)
+            const div = document.createElement('div');
+            div.className = 'success';
+            div.innerHTML = message;
+            document.querySelector('.container').prepend(div);
+            setTimeout(() => div.remove(), 5000);
         }
 
         function showError(message) {
-            // ... (código de error permanece igual)
+            const div = document.createElement('div');
+            div.className = 'error';
+            div.innerHTML = message;
+            document.querySelector('.container').prepend(div);
+            setTimeout(() => div.remove(), 5000);
         }
 
         // ==================== INICIALIZACIÓN ====================
         window.addEventListener('load', function() {
-            console.log('🚀 FlashMorCoin - Configuración cargada:');
-            console.log('📋 Contratos:', CONTRACT_CONFIG);
-            console.log('🪙 Tokens:', SUPPORTED_TOKENS);
-            console.log('🌐 Red:', NETWORK_CONFIG);
+            console.log('🚀 FlashMorCoin inicializado');
             
-            // Rellenar direcciones por defecto
-            document.getElementById('fmc-address').value = CONTRACT_CONFIG.FMC;
-            document.getElementById('vault-address').value = CONTRACT_CONFIG.VAULT;
+            // Verificar si ya hay una wallet conectada
+            if (typeof window.ethereum !== 'undefined') {
+                window.ethereum.request({ method: 'eth_accounts' })
+                    .then(accounts => {
+                        if (accounts.length > 0) {
+                            userAddress = accounts[0];
+                            web3 = new Web3(window.ethereum);
+                            updateBalance().then(updateUI);
+                            setupEventListeners();
+                            console.log('✅ Wallet ya conectada:', userAddress);
+                        }
+                    })
+                    .catch(error => {
+                        console.log('ℹ️ No hay wallet conectada previamente');
+                    });
+            }
         });
     </script>
 </body>
