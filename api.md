@@ -6,14 +6,22 @@ POST /api/v1/deposit
 {
   "lpToken": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb",
   "amount": "1000000000000000000",
-  "user": "0x5774808c2856f7FDF1A0a8F375A41559794BeF6B"
+<<<<<<< HEAD
+  "user": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
+=======
+  "user": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
+>>>>>>> 10f4d652cec9351e20b8ce1abef6b12d8a6ae76e
 }
 
 ### Mint FMC
 POST /api/v1/mint
 {
   "amount": "300000000000000000",
-  "user": "0x5774808c2856f7FDF1A0a8F375A41559794BeF6B"
+<<<<<<< HEAD
+  "user": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
+=======
+  "user": "0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
+>>>>>>> 10f4d652cec9351e20b8ce1abef6b12d8a6ae76e
 }
 
 ### Obtener Posición

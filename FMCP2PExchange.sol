@@ -55,11 +55,18 @@ contract FMCP2PExchange is ReentrancyGuard, Ownable {
         require(_feeWallet != address(0), "Invalid fee wallet");
         fmcToken = FlashMorCoin(_fmcToken);
         feeWallet = _feeWallet;
+<<<<<<< HEAD
+        
+        // Tokens de pago permitidos (USDC, DAI, etc.)
+        allowedPaymentTokens[0x5774808c2856f7FDF1A0a8F375A41559794BeF6B] = true; // USDC
+        allowedPaymentTokens[0x5774808c2856f7FDF1A0a8F375A41559794BeF6B] = true; // DAI
+=======
         platformFeeBasisPoints = 25; // 0.25%
 
         // Tokens permitidos (Polygon USDC y DAI como ejemplo)
         allowedPaymentTokens[0x5774808c2856f7FDF1A0a8F375A41559794BeF6B] = true; // USDC (6 decimales)
         allowedPaymentTokens[0x5774808c2856f7FDF1A0a8F375A41559794BeF6B] = true; // DAI (18 decimales)
+>>>>>>> 10f4d652cec9351e20b8ce1abef6b12d8a6ae76e
     }
 
     function createTrade(
