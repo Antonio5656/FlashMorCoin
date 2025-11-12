@@ -1,16 +1,44 @@
 {
-  "name": "flashmorcoin-frontend",
-  "version": "1.0.0", 
+  "name": "farmusd-protocol-auto",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "vite --host --force",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "deploy:testnet": "npx hardhat run scripts/deploy.js --network mumbai",
+    "deploy:mainnet": "npx hardhat run scripts/deploy.js --network polygon",
+    "verify:contracts": "npx hardhat verify --network mumbai",
+    "test:auto": "node scripts/autoTest.js",
+    "setup:auto": "node scripts/autoSetup.js",
+    "lint": "eslint . --ext js,jsx --fix",
+    "clean": "rm -rf dist node_modules/.vite"
   },
   "dependencies": {
-    "next": "13.5.6",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ethers": "^6.8.0",
+    "wagmi": "^1.4.7",
+    "@tanstack/react-query": "^4.32.0",
+    "viem": "^1.15.0",
+    "buffer": "^6.0.3"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.45.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.3",
+    "postcss": "^8.4.27",
+    "tailwindcss": "^3.3.0",
+    "vite": "^4.4.5",
+    "vite-plugin-node-polyfills": "^0.7.0",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@nomiclabs/hardhat-etherscan": "^3.1.7",
+    "hardhat": "^2.19.0"
+  }
 }
