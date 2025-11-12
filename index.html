@@ -3,619 +3,1347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin - Protocolo DeFi</title>
+    <title>FlashMorCoin - Wallet DeFi Completa</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white; font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #2a5298, #1e3c72);
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* ========== LAYOUT PRINCIPAL ========== */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
             min-height: 100vh;
         }
         
-        /* ========== LOGO MONEDA ANTIGUA ========== */
-        .ancient-coin {
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle at 30% 30%, #D4AF37, #B8860B, #8B4513);
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            position: fixed;
+            width: 280px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 
-                0 0 0 2px #8B4513,
-                0 4px 15px rgba(139, 69, 19, 0.6),
-                inset 0 1px 6px rgba(255, 215, 0, 0.4);
-            border: 2px solid #CD7F32;
-            position: relative;
-            font-family: 'Times New Roman', serif;
-        }
-
-        .ancient-coin::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 70% 70%, transparent 30%, rgba(0,0,0,0.2) 100%);
-        }
-
-        .coin-design {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: #8B4513;
-            text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.5);
-        }
-
-        .coin-symbol {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 1px;
-        }
-
-        .coin-text {
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
-        /* Header */
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
         }
         
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .brand-text {
-            font-size: 1.8rem;
+        .brand {
+            font-size: 1.4rem;
             font-weight: bold;
             background: linear-gradient(45deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
         
-        /* Botones */
+        .nav-section {
+            margin-bottom: 30px;
+        }
+        
+        .nav-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+            border-left: 3px solid #FFD700;
+        }
+        
+        /* ========== CONTENIDO PRINCIPAL ========== */
+        .main-content {
+            grid-column: 2;
+            padding: 20px;
+            margin-left: 280px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        /* ========== WALLET CONNECTION ========== */
+        .wallet-connect {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
         .connect-btn {
             background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
             color: white;
             border: none;
             padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 10px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         
         .connect-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        
-        .connect-btn.connected {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-        }
-        
-        /* Cards */
-        .card { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px);
-            padding: 25px; 
-            border-radius: 15px; 
-            margin: 20px 0; 
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .action-btn { 
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #8B4513; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            margin: 5px; 
-            font-weight: bold; 
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .action-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-        
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; 
-        }
-        
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 8px 0; 
-            border: none; 
-            border-radius: 8px; 
-            background: rgba(255,255,255,0.9);
-            color: #333;
-        }
-        
-        /* Loading */
-        .loading { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.8); 
-            z-index: 1000; 
-            justify-content: center; 
-            align-items: center; 
-        }
-        
-        .success { 
-            background: rgba(76, 175, 80, 0.3); 
-            border: 1px solid #4CAF50; 
-            padding: 15px; 
-            border-radius: 8px; 
-            margin: 10px 0; 
-        }
-        
-        .error { 
-            background: rgba(244, 67, 54, 0.3); 
-            border: 1px solid #f44336; 
-            padding: 15px; 
-            border-radius: 8px; 
-            margin: 10px 0; 
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
         
         .wallet-info {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px 20px;
             border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .wallet-address {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .network-badge {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* ========== CARDS Y GRIDS ========== */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .balance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .balance-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
         }
         
-        .status-badge { 
-            padding: 4px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            margin-left: 10px; 
+        .balance-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 8px;
         }
         
-        .status-active { 
-            background: #4CAF50; 
+        .balance-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
         
-        .status-inactive { 
-            background: #f44336; 
+        .balance-change {
+            font-size: 0.8rem;
+            color: #4CAF50;
         }
         
-        .trade-item { 
-            background: rgba(255,255,255,0.05); 
-            padding: 15px; 
-            margin: 10px 0; 
-            border-radius: 8px; 
-            border: 1px solid rgba(255,255,255,0.1);
+        /* ========== FORM ELEMENTS ========== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #8B4513;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #4ECDC4, #44A08D);
+            color: white;
+        }
+        
+        /* ========== WALLET SPECIFIC STYLES ========== */
+        .wallet-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .wallet-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .wallet-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .token-list {
+            margin-top: 20px;
+        }
+        
+        .token-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .token-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .token-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .token-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .token-name {
+            font-weight: bold;
+        }
+        
+        .token-symbol {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .token-balance {
+            text-align: right;
+        }
+        
+        .token-amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .token-value {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        /* ========== NETWORK SELECTOR ========== */
+        .network-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .network-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .network-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .network-option.active {
+            background: linear-gradient(45deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.2));
+            border-color: #FFD700;
+        }
+        
+        /* ========== LOADING Y ESTADOS ========== */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-content {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 300px;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            z-index: 1001;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .notification.success {
+            background: rgba(76, 175, 80, 0.9);
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .notification.error {
+            background: rgba(244, 67, 54, 0.9);
+            border-left: 4px solid #f44336;
+        }
+        
+        .notification.info {
+            background: rgba(33, 150, 243, 0.9);
+            border-left: 4px solid #2196F3;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                grid-column: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .wallet-connect {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wallet-actions {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loading" id="loading">
-        <div style="background: white; color: #333; padding: 30px; border-radius: 15px; text-align: center; min-width: 300px;">
-            <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
-            <p id="loading-text">Conectando con MetaMask...</p>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo-section">
+                <div class="logo">⚡</div>
+                <div class="brand">FlashMorCoin</div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Principal</div>
+                <div class="nav-item active" data-page="dashboard">
+                    📊 Dashboard
+                </div>
+                <div class="nav-item" data-page="wallet">
+                    👛 Mi Wallet
+                </div>
+                <div class="nav-item" data-page="staking">
+                    🔒 Staking
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">DeFi</div>
+                <div class="nav-item" data-page="swap">
+                    🔄 Swap
+                </div>
+                <div class="nav-item" data-page="farming">
+                    🌾 Farming
+                </div>
+                <div class="nav-item" data-page="liquidity">
+                    💧 Liquidez
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-title">Blockchain</div>
+                <div class="nav-item" data-page="networks">
+                    🌐 Redes
+                </div>
+                <div class="nav-item" data-page="bridge">
+                    🌉 Bridge
+                </div>
+                <div class="nav-item" data-page="history">
+                    📋 Historial
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1 class="page-title" id="page-title">Dashboard Principal</h1>
+                <div class="wallet-connect">
+                    <button class="connect-btn" id="connect-btn" onclick="connectWallet()">
+                        🔗 Conectar Wallet
+                    </button>
+                    <div class="wallet-info" id="wallet-info" style="display: none;">
+                        <div class="wallet-address" id="wallet-address"></div>
+                        <div class="network-badge" id="network-badge">Polygon</div>
+                        <button class="connect-btn" onclick="disconnectWallet()" style="padding: 8px 15px; background: #ff4444;">
+                            🚪
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div class="page-content" id="dashboard-page">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h2 class="card-title">💰 Balance Total</h2>
+                        <div class="balance-value" id="total-balance">$0.00</div>
+                        <div class="balance-change" id="balance-change">+0.00% (24h)</div>
+                        
+                        <div class="balance-grid">
+                            <div class="balance-item">
+                                <div class="balance-label">FMC</div>
+                                <div class="balance-value" id="fmc-balance">0.00</div>
+                                <div class="balance-change" id="fmc-value">$0.00</div>
+                            </div>
+                            <div class="balance-item">
+                                <div class="balance-label">MATIC</div>
+                                <div class="balance-value" id="matic-balance">0.00</div>
+                                <div class="balance-change" id="matic-value">$0.00</div>
+                            </div>
+                            <div class="balance-item">
+                                <div class="balance-label">USDC</div>
+                                <div class="balance-value" id="usdc-balance">0.00</div>
+                                <div class="balance-change" id="usdc-value">$0.00</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title">📈 Rendimientos</h2>
+                        <div class="balance-grid">
+                            <div class="balance-item">
+                                <div class="balance-label">APY Staking</div>
+                                <div class="balance-value" style="color: #4CAF50;">12.5%</div>
+                            </div>
+                            <div class="balance-item">
+                                <div class="balance-label">APY Farming</div>
+                                <div class="balance-value" style="color: #4CAF50;">18.3%</div>
+                            </div>
+                            <div class="balance-item">
+                                <div class="balance-label">Rewards</div>
+                                <div class="balance-value" id="rewards-balance">0.00 FMC</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h2 class="card-title">🚀 Acciones Rápidas</h2>
+                        <div class="form-group">
+                            <button class="btn" onclick="showPage('swap')">
+                                🔄 Comprar FMC
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-secondary" onclick="showPage('staking')">
+                                🔒 Hacer Staking
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn" onclick="showPage('farming')">
+                                🌾 Iniciar Farming
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title">🌐 Estado de Red</h2>
+                        <div class="form-group">
+                            <div class="form-label">Red Conectada:</div>
+                            <div class="network-badge" id="current-network">Desconectado</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">Último Block:</div>
+                            <div id="last-block">-</div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-label">Gas Price:</div>
+                            <div id="gas-price">-</div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="refreshNetworkInfo()">
+                            🔄 Actualizar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wallet Page -->
+            <div class="page-content" id="wallet-page" style="display: none;">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h2 class="card-title">👛 Mi Wallet</h2>
+                        
+                        <div class="wallet-actions">
+                            <div class="wallet-action-btn" onclick="showSendModal()">
+                                📤 Enviar
+                            </div>
+                            <div class="wallet-action-btn" onclick="showReceiveModal()">
+                                📥 Recibir
+                            </div>
+                            <div class="wallet-action-btn" onclick="showSwapModal()">
+                                🔄 Swap
+                            </div>
+                            <div class="wallet-action-btn" onclick="showBridgeModal()">
+                                🌉 Bridge
+                            </div>
+                        </div>
+
+                        <div class="token-list">
+                            <h3 style="margin-bottom: 15px;">💼 Tokens</h3>
+                            <div class="token-item">
+                                <div class="token-info">
+                                    <div class="token-icon">⚡</div>
+                                    <div class="token-details">
+                                        <div class="token-name">FlashMorCoin</div>
+                                        <div class="token-symbol">FMC</div>
+                                    </div>
+                                </div>
+                                <div class="token-balance">
+                                    <div class="token-amount" id="wallet-fmc-balance">0.00</div>
+                                    <div class="token-value" id="wallet-fmc-value">$0.00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="token-item">
+                                <div class="token-info">
+                                    <div class="token-icon" style="background: linear-gradient(45deg, #8247E5, #6B34D8);">M</div>
+                                    <div class="token-details">
+                                        <div class="token-name">Polygon</div>
+                                        <div class="token-symbol">MATIC</div>
+                                    </div>
+                                </div>
+                                <div class="token-balance">
+                                    <div class="token-amount" id="wallet-matic-balance">0.00</div>
+                                    <div class="token-value" id="wallet-matic-value">$0.00</div>
+                                </div>
+                            </div>
+                            
+                            <div class="token-item">
+                                <div class="token-info">
+                                    <div class="token-icon" style="background: linear-gradient(45deg, #2775CA, #1E5AAF);">U</div>
+                                    <div class="token-details">
+                                        <div class="token-name">USD Coin</div>
+                                        <div class="token-symbol">USDC</div>
+                                    </div>
+                                </div>
+                                <div class="token-balance">
+                                    <div class="token-amount" id="wallet-usdc-balance">0.00</div>
+                                    <div class="token-value" id="wallet-usdc-value">$0.00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 class="card-title">🔗 Conexiones</h2>
+                        
+                        <div class="form-group">
+                            <div class="form-label">Wallet Conectada:</div>
+                            <div class="wallet-address" id="wallet-details-address">No conectada</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="form-label">Balance Total:</div>
+                            <div class="balance-value" id="wallet-total-balance">$0.00</div>
+                        </div>
+                        
+                        <h3 style="margin: 20px 0 15px 0;">🌐 Redes Disponibles</h3>
+                        <div class="network-selector">
+                            <div class="network-option" data-network="polygon" onclick="switchNetwork('polygon')">
+                                Polygon
+                            </div>
+                            <div class="network-option" data-network="ethereum" onclick="switchNetwork('ethereum')">
+                                Ethereum
+                            </div>
+                            <div class="network-option" data-network="bsc" onclick="switchNetwork('bsc')">
+                                BSC
+                            </div>
+                            <div class="network-option" data-network="avalanche" onclick="switchNetwork('avalanche')">
+                                Avalanche
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="exportPrivateKey()" style="margin-top: 20px;">
+                            📋 Exportar Clave
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Networks Page -->
+            <div class="page-content" id="networks-page" style="display: none;">
+                <div class="card">
+                    <h2 class="card-title">🌐 Gestión de Redes</h2>
+                    
+                    <div class="network-selector" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                        <div class="network-option active" data-network="polygon">
+                            <div style="font-weight: bold;">Polygon</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Mainnet</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">✅ Conectado</div>
+                        </div>
+                        
+                        <div class="network-option" data-network="ethereum">
+                            <div style="font-weight: bold;">Ethereum</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Mainnet</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">🔗 Conectar</div>
+                        </div>
+                        
+                        <div class="network-option" data-network="bsc">
+                            <div style="font-weight: bold;">BSC</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Mainnet</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">🔗 Conectar</div>
+                        </div>
+                        
+                        <div class="network-option" data-network="avalanche">
+                            <div style="font-weight: bold;">Avalanche</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">C-Chain</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">🔗 Conectar</div>
+                        </div>
+                        
+                        <div class="network-option" data-network="arbitrum">
+                            <div style="font-weight: bold;">Arbitrum</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">One</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">🔗 Conectar</div>
+                        </div>
+                        
+                        <div class="network-option" data-network="optimism">
+                            <div style="font-weight: bold;">Optimism</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">Mainnet</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">🔗 Conectar</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <h3>🔧 Configuración RPC</h3>
+                        <div class="form-group">
+                            <label class="form-label">URL RPC Personalizada:</label>
+                            <input type="text" class="form-input" placeholder="https://..." id="custom-rpc">
+                        </div>
+                        <button class="btn" onclick="addCustomRPC()">
+                            ➕ Agregar Red Personalizada
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add more pages as needed -->
         </div>
     </div>
 
-    <div class="container">
-        <!-- Header con Logo -->
-        <header>
-            <div class="logo-container">
-                <div class="ancient-coin">
-                    <div class="coin-design">
-                        <div class="coin-symbol">⚡</div>
-                        <div class="coin-text">FMC</div>
-                    </div>
-                </div>
-                <div class="brand-text">FlashMorCoin</div>
-            </div>
-            
-            <div id="wallet-section">
-                <button class="connect-btn" onclick="connectWallet()" id="connect-btn">
-                    🔗 Conectar MetaMask
-                </button>
-                <div class="wallet-info" id="wallet-info" style="display: none;">
-                    <div><strong>✅ Conectado:</strong> <span id="wallet-address"></span></div>
-                    <div><strong>💰 Balance:</strong> <span id="wallet-balance">-</span> MATIC</div>
-                    <button onclick="disconnectWallet()" style="background: #ff4444; color: white; padding: 5px 10px; margin-top: 8px; font-size: 12px;">
-                        🚪 Desconectar
-                    </button>
-                </div>
-            </div>
-        </header>
-
-        <!-- Mensaje de Bienvenida -->
-        <div class="card" id="welcome-section">
-            <h2>🚀 Bienvenido a FlashMorCoin</h2>
-            <p>Protocolo DeFi para liquidez instantánea en Yield Farming</p>
-            <div class="grid" style="margin-top: 20px;">
-                <div>
-                    <h3>📊 Para comenzar:</h3>
-                    <p>1. 👆 Haz clic en "Conectar MetaMask"</p>
-                    <p>2. ✅ Acepta la conexión en tu wallet</p>
-                    <p>3. 🌐 Cambia a la red Polygon Mumbai</p>
-                    <p>4. 🎉 ¡Listo para usar FlashMorCoin!</p>
-                </div>
-                <div>
-                    <h3>💡 ¿Problemas de conexión?</h3>
-                    <p>• 🔍 Asegúrate de tener MetaMask instalado</p>
-                    <p>• ✅ Acepta la solicitud de conexión</p>
-                    <p>• 🌐 Usa la red Mumbai Testnet</p>
-                    <button onclick="installMetaMask()" style="background: #FF6B6B; color: white; padding: 10px 15px;">
-                        📲 Instalar MetaMask
-                    </button>
-                </div>
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="loading-content">
+            <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
+            <p id="loading-text">Conectando con la blockchain...</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
             </div>
         </div>
+    </div>
 
-        <!-- Sección de Contratos (visible cuando esté conectado) -->
-        <div class="card" id="contracts-section" style="display: none;">
-            <h2>⚙️ Configuración de Contratos</h2>
-            <div class="grid">
-                <div>
-                    <h3>🔗 Contrato FMC</h3>
-                    <p>Estado: <span id="fmc-status" class="status-badge status-inactive">No configurado</span></p>
-                    <input type="text" id="fmc-address" 
-                           placeholder="0xfb146E2601c5F77743E4888E75D6577C2F56bAbb" 
-                           value="0xfb146E2601c5F77743E4888E75D6577C2F56bAbb"
-                           style="font-family: monospace;">
-                    <button class="action-btn" onclick="configureFMC()">✅ Configurar FMC</button>
-                </div>
-                <div>
-                    <h3>🏦 Contrato Vault</h3>
-                    <p>Estado: <span id="vault-status" class="status-badge status-inactive">No configurado</span></p>
-                    <input type="text" id="vault-address" 
-                           placeholder="0x0371b4dcB192905C9010B2699a061D186AAFf205" 
-                           value="0x0371b4dcB192905C9010B2699a061D186AAFf205"
-                           style="font-family: monospace;">
-                    <button class="action-btn" onclick="configureVault()">✅ Configurar Vault</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Portfolio (visible cuando esté conectado) -->
-        <div class="card" id="portfolio-section" style="display: none;">
-            <h2>📊 Tu Portfolio en Vivo</h2>
-            <div class="grid">
-                <div>
-                    <p>👛 <strong>Wallet:</strong> <span id="display-address">-</span></p>
-                    <p>💰 <strong>Balance MATIC:</strong> <span id="matic-balance">-</span></p>
-                </div>
-                <div>
-                    <p>🪙 <strong>Balance FMC:</strong> <span id="fmc-balance">0.00 FMC</span></p>
-                    <p>🏦 <strong>Colateral:</strong> <span id="vault-balance">0.00 USDC</span></p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Acciones Principales (visible cuando esté conectado) -->
-        <div class="grid" id="actions-section" style="display: none;">
-            <!-- Depositar -->
-            <div class="card">
-                <h3>🏦 Depositar Colateral</h3>
-                <select id="deposit-token">
+    <!-- Send Modal -->
+    <div class="modal" id="send-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="card" style="max-width: 400px; width: 90%;">
+            <h2 class="card-title">📤 Enviar Tokens</h2>
+            <div class="form-group">
+                <label class="form-label">Token:</label>
+                <select class="form-select" id="send-token">
+                    <option value="fmc">FMC</option>
+                    <option value="matic">MATIC</option>
                     <option value="usdc">USDC</option>
-                    <option value="dai">DAI</option>
-                    <option value="wmatic">WMATIC</option>
                 </select>
-                <input type="number" placeholder="Cantidad a depositar" id="deposit-amount" step="0.001">
-                <button class="action-btn" onclick="depositAction()">✅ Depositar Colateral</button>
             </div>
-
-            <!-- Mintear -->
-            <div class="card">
-                <h3>🪙 Mintear FMC</h3>
-                <p style="font-size: 0.9em; opacity: 0.8; margin: 10px 0;">
-                    Genera tokens FMC usando tu colateral como garantía
-                </p>
-                <input type="number" placeholder="Cantidad FMC a mintear" id="mint-amount" step="0.001">
-                <button class="action-btn" onclick="mintAction()">🪙 Mintear FMC</button>
+            <div class="form-group">
+                <label class="form-label">Dirección Destino:</label>
+                <input type="text" class="form-input" placeholder="0x..." id="send-address">
             </div>
-
-            <!-- Transferir -->
-            <div class="card">
-                <h3>📤 Transferir FMC</h3>
-                <input type="text" placeholder="Dirección destino (0x...)" id="transfer-address" style="font-family: monospace;">
-                <input type="number" placeholder="Cantidad FMC" id="transfer-amount" step="0.001">
-                <button class="action-btn" onclick="transferAction()">📤 Transferir FMC</button>
+            <div class="form-group">
+                <label class="form-label">Cantidad:</label>
+                <input type="number" class="form-input" placeholder="0.00" id="send-amount">
             </div>
-        </div>
-
-        <!-- Mercado P2P (visible cuando esté conectado) -->
-        <div class="card" id="p2p-section" style="display: none;">
-            <h2>🔄 Mercado P2P FlashMorCoin</h2>
-            <div class="grid">
-                <div>
-                    <h3>🛒 Comprar FMC</h3>
-                    <input type="number" placeholder="Cantidad FMC a comprar" id="buy-amount" step="0.001">
-                    <p style="margin: 10px 0;">Precio estimado: <span id="buy-price">1.02</span> USDC por FMC</p>
-                    <button class="action-btn" onclick="buyFMC()">✅ Comprar FMC</button>
-                </div>
-                <div>
-                    <h3>💰 Vender FMC</h3>
-                    <input type="number" placeholder="Cantidad FMC a vender" id="sell-amount" step="0.001">
-                    <input type="number" placeholder="Precio en USDC" id="sell-price" step="0.0001" value="1.02">
-                    <button class="action-btn" onclick="sellFMC()">💰 Vender FMC</button>
-                </div>
-            </div>
+            <button class="btn" onclick="sendTokens()">📤 Enviar</button>
+            <button class="btn btn-secondary" onclick="hideModal('send-modal')" style="margin-top: 10px;">Cancelar</button>
         </div>
     </div>
 
     <script>
+        // ==================== CONFIGURACIÓN DE BLOCKCHAINS ====================
+        const BLOCKCHAIN_NETWORKS = {
+            'ethereum': {
+                name: 'Ethereum Mainnet',
+                chainId: '0x1',
+                rpcUrls: ['https://mainnet.infura.io/v3/'],
+                blockExplorer: 'https://etherscan.io/',
+                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                enabled: true
+            },
+            'polygon': {
+                name: 'Polygon Mainnet',
+                chainId: '0x89',
+                rpcUrls: ['https://polygon-rpc.com/'],
+                blockExplorer: 'https://polygonscan.com/',
+                nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+                enabled: true
+            },
+            'bsc': {
+                name: 'Binance Smart Chain',
+                chainId: '0x38',
+                rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                blockExplorer: 'https://bscscan.com/',
+                nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+                enabled: true
+            },
+            'avalanche': {
+                name: 'Avalanche C-Chain',
+                chainId: '0xa86a',
+                rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
+                blockExplorer: 'https://snowtrace.io/',
+                nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+                enabled: true
+            },
+            'arbitrum': {
+                name: 'Arbitrum One',
+                chainId: '0xa4b1',
+                rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+                blockExplorer: 'https://arbiscan.io/',
+                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                enabled: true
+            },
+            'optimism': {
+                name: 'Optimism',
+                chainId: '0xa',
+                rpcUrls: ['https://mainnet.optimism.io'],
+                blockExplorer: 'https://optimistic.etherscan.io/',
+                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                enabled: true
+            }
+        };
+
         // ==================== ESTADO GLOBAL ====================
         let web3 = null;
+        let currentWeb3Provider = null;
         let userAddress = null;
-        let userBalance = '0';
+        let currentNetwork = null;
+        let walletConnected = false;
+        let userBalances = {
+            fmc: 0,
+            matic: 0,
+            usdc: 0
+        };
 
-        // ==================== CONEXIÓN METAMASK ====================
+        // ==================== INICIALIZACIÓN ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 FlashMorCoin Wallet inicializando...');
+            
+            // Configurar event listeners de navegación
+            setupNavigation();
+            
+            // Intentar conexión automática
+            initializeWallet();
+            
+            // Configurar listeners de blockchain
+            setupBlockchainListeners();
+            
+            // Iniciar actualizaciones de datos
+            startDataUpdates();
+        });
+
+        // ==================== CONEXIÓN AUTOMÁTICA ====================
+        async function initializeWallet() {
+            console.log('🔧 Inicializando conexión automática...');
+            
+            // Verificar si hay una wallet conectada previamente
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    // Verificar si ya estamos autorizados
+                    const accounts = await window.ethereum.request({ 
+                        method: 'eth_accounts' 
+                    });
+                    
+                    if (accounts.length > 0) {
+                        console.log('✅ Wallet encontrada, conectando automáticamente...');
+                        await connectWallet();
+                    } else {
+                        console.log('ℹ️ No hay wallet conectada previamente');
+                        showNotification('👋 Conecta tu wallet para comenzar', 'info');
+                    }
+                } catch (error) {
+                    console.error('Error en conexión automática:', error);
+                }
+            } else {
+                showNotification('⚠️ Instala MetaMask para usar todas las funciones', 'error');
+            }
+        }
+
+        // ==================== CONEXIÓN PRINCIPAL ====================
         async function connectWallet() {
-            console.log('🔗 Iniciando conexión con MetaMask...');
+            console.log('🔗 Iniciando conexión de wallet...');
             
             if (typeof window.ethereum === 'undefined') {
-                showError('❌ MetaMask no detectado. Por favor instala MetaMask.');
+                showNotification('❌ MetaMask no detectado. Por favor instálalo.', 'error');
                 return;
             }
 
             try {
-                showLoading('Conectando con MetaMask...');
+                showLoading('Conectando con tu wallet...');
+                updateProgress(20);
                 
                 // Solicitar acceso a las cuentas
                 const accounts = await window.ethereum.request({
                     method: 'eth_requestAccounts'
                 });
                 
-                console.log('✅ Cuentas obtenidas:', accounts);
-                
                 if (accounts.length === 0) {
                     throw new Error('Usuario rechazó la conexión');
                 }
                 
                 userAddress = accounts[0];
+                updateProgress(50);
                 
                 // Inicializar Web3
                 web3 = new Web3(window.ethereum);
+                currentWeb3Provider = window.ethereum;
                 
-                // Obtener balance
-                await updateBalance();
+                // Detectar red actual
+                await detectCurrentNetwork();
+                updateProgress(80);
                 
-                // Actualizar interfaz
-                updateUI();
+                // Configurar conexión
+                walletConnected = true;
                 
-                // Configurar listeners de eventos
-                setupEventListeners();
+                // Actualizar UI
+                updateWalletUI();
+                updateProgress(100);
                 
                 hideLoading();
-                showSuccess('🎉 ¡Wallet conectada exitosamente!');
+                showNotification('🎉 ¡Wallet conectada exitosamente!', 'success');
+                
+                // Cargar datos iniciales
+                loadWalletData();
                 
             } catch (error) {
                 hideLoading();
-                console.error('❌ Error en conexión:', error);
+                console.error('❌ Error conectando wallet:', error);
                 
                 if (error.code === 4001) {
-                    showError('❌ Rechazaste la conexión. Haz clic en "Conectar" en la ventana de MetaMask.');
-                } else if (error.code === -32002) {
-                    showError('⏳ Ya hay una solicitud pendiente. Revisa MetaMask.');
+                    showNotification('❌ Rechazaste la conexión de la wallet', 'error');
                 } else {
-                    showError('Error de conexión: ' + error.message);
+                    showNotification('Error de conexión: ' + error.message, 'error');
                 }
             }
         }
 
-        async function updateBalance() {
-            if (!web3 || !userAddress) return;
+        // ==================== DETECCIÓN DE RED ====================
+        async function detectCurrentNetwork() {
+            if (!web3) return;
             
             try {
-                const balance = await web3.eth.getBalance(userAddress);
-                userBalance = parseFloat(web3.utils.fromWei(balance, 'ether')).toFixed(4);
-                console.log('💰 Balance actualizado:', userBalance);
+                const chainId = await web3.eth.getChainId();
+                const chainIdHex = '0x' + chainId.toString(16);
+                
+                // Encontrar la red en nuestra configuración
+                currentNetwork = Object.values(BLOCKCHAIN_NETWORKS).find(
+                    network => network.chainId === chainIdHex
+                );
+                
+                if (!currentNetwork) {
+                    currentNetwork = {
+                        name: `Red Desconocida (${chainIdHex})`,
+                        chainId: chainIdHex,
+                        nativeCurrency: { symbol: 'ETH' }
+                    };
+                }
+                
+                updateNetworkUI();
+                console.log('🌐 Red detectada:', currentNetwork.name);
+                
             } catch (error) {
-                console.error('Error obteniendo balance:', error);
-                userBalance = 'Error';
+                console.error('Error detectando red:', error);
+                currentNetwork = null;
             }
         }
 
-        function updateUI() {
-            // Actualizar información de wallet
-            const shortAddress = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
-            document.getElementById('wallet-address').textContent = shortAddress;
-            document.getElementById('wallet-balance').textContent = userBalance;
-            document.getElementById('display-address').textContent = shortAddress;
-            document.getElementById('matic-balance').textContent = userBalance + ' MATIC';
-            
-            // Mostrar secciones principales
-            document.getElementById('wallet-info').style.display = 'block';
-            document.getElementById('connect-btn').style.display = 'none';
-            document.getElementById('welcome-section').style.display = 'none';
-            document.getElementById('contracts-section').style.display = 'block';
-            document.getElementById('portfolio-section').style.display = 'block';
-            document.getElementById('actions-section').style.display = 'grid';
-            document.getElementById('p2p-section').style.display = 'block';
+        // ==================== CAMBIO DE RED AUTOMÁTICO ====================
+        async function switchNetwork(networkKey) {
+            const network = BLOCKCHAIN_NETWORKS[networkKey];
+            if (!network) {
+                showNotification('❌ Red no soportada', 'error');
+                return;
+            }
+
+            try {
+                showLoading(`Cambiando a ${network.name}...`);
+                
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: network.chainId }],
+                });
+                
+                hideLoading();
+                showNotification(`✅ Cambiado a ${network.name}`, 'success');
+                
+            } catch (error) {
+                hideLoading();
+                
+                if (error.code === 4902) {
+                    // La red no está agregada, intentar agregarla
+                    try {
+                        await addNetworkToWallet(network);
+                    } catch (addError) {
+                        showNotification('❌ Error agregando la red', 'error');
+                    }
+                } else {
+                    showNotification('❌ Error cambiando de red', 'error');
+                }
+            }
         }
 
-        function setupEventListeners() {
-            // Cambios de cuenta
-            window.ethereum.on('accountsChanged', (accounts) => {
-                console.log('🔄 Cuenta cambiada:', accounts);
-                if (accounts.length === 0) {
-                    disconnectWallet();
-                } else {
-                    userAddress = accounts[0];
-                    updateBalance().then(updateUI);
-                    showSuccess('🔄 Cuenta actualizada');
-                }
-            });
+        async function addNetworkToWallet(network) {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [{
+                        chainId: network.chainId,
+                        chainName: network.name,
+                        rpcUrls: network.rpcUrls,
+                        blockExplorerUrls: [network.blockExplorer],
+                        nativeCurrency: network.nativeCurrency
+                    }],
+                });
+                
+                showNotification(`✅ ${network.name} agregada a tu wallet`, 'success');
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        // ==================== GESTIÓN DE DATOS ====================
+        async function loadWalletData() {
+            if (!walletConnected || !web3) return;
             
-            // Cambios de red
-            window.ethereum.on('chainChanged', (chainId) => {
-                console.log('🌐 Red cambiada:', chainId);
-                showSuccess('🌐 Red actualizada - Recargando...');
-                setTimeout(() => location.reload(), 1000);
+            try {
+                // Obtener balance nativo
+                const balance = await web3.eth.getBalance(userAddress);
+                const balanceEth = web3.utils.fromWei(balance, 'ether');
+                
+                // Actualizar balances
+                userBalances.matic = parseFloat(balanceEth);
+                updateBalancesUI();
+                
+                // Obtener información de red
+                await updateNetworkInfo();
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+            }
+        }
+
+        function updateBalancesUI() {
+            // Actualizar dashboard
+            document.getElementById('matic-balance').textContent = userBalances.matic.toFixed(4);
+            document.getElementById('fmc-balance').textContent = userBalances.fmc.toFixed(2);
+            document.getElementById('usdc-balance').textContent = userBalances.usdc.toFixed(2);
+            
+            // Actualizar página wallet
+            document.getElementById('wallet-matic-balance').textContent = userBalances.matic.toFixed(4);
+            document.getElementById('wallet-fmc-balance').textContent = userBalances.fmc.toFixed(2);
+            document.getElementById('wallet-usdc-balance').textContent = userBalances.usdc.toFixed(2);
+            
+            // Calcular valores en USD (simulado)
+            const maticValue = userBalances.matic * 1.5;
+            const fmcValue = userBalances.fmc * 1.02;
+            const usdcValue = userBalances.usdc;
+            const totalValue = maticValue + fmcValue + usdcValue;
+            
+            document.getElementById('total-balance').textContent = '$' + totalValue.toFixed(2);
+            document.getElementById('wallet-total-balance').textContent = '$' + totalValue.toFixed(2);
+            
+            document.getElementById('matic-value').textContent = '$' + maticValue.toFixed(2);
+            document.getElementById('fmc-value').textContent = '$' + fmcValue.toFixed(2);
+            document.getElementById('usdc-value').textContent = '$' + usdcValue.toFixed(2);
+            
+            document.getElementById('wallet-matic-value').textContent = '$' + maticValue.toFixed(2);
+            document.getElementById('wallet-fmc-value').textContent = '$' + fmcValue.toFixed(2);
+            document.getElementById('wallet-usdc-value').textContent = '$' + usdcValue.toFixed(2);
+        }
+
+        async function updateNetworkInfo() {
+            if (!web3) return;
+            
+            try {
+                const blockNumber = await web3.eth.getBlockNumber();
+                const gasPrice = await web3.eth.getGasPrice();
+                const gasPriceGwei = web3.utils.fromWei(gasPrice, 'gwei');
+                
+                document.getElementById('last-block').textContent = blockNumber.toLocaleString();
+                document.getElementById('gas-price').textContent = parseFloat(gasPriceGwei).toFixed(2) + ' Gwei';
+                
+            } catch (error) {
+                console.error('Error actualizando info de red:', error);
+            }
+        }
+
+        // ==================== FUNCIONES DE WALLET ====================
+        async function sendTokens() {
+            const token = document.getElementById('send-token').value;
+            const address = document.getElementById('send-address').value;
+            const amount = document.getElementById('send-amount').value;
+            
+            if (!address || !amount) {
+                showNotification('❌ Completa todos los campos', 'error');
+                return;
+            }
+            
+            if (!web3.utils.isAddress(address)) {
+                showNotification('❌ Dirección inválida', 'error');
+                return;
+            }
+            
+            try {
+                showLoading('Enviando transacción...');
+                
+                // Simular envío (en producción sería una transacción real)
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                hideLoading();
+                hideModal('send-modal');
+                showNotification('✅ Transacción enviada exitosamente', 'success');
+                
+                // Actualizar balances
+                userBalances[token] -= parseFloat(amount);
+                updateBalancesUI();
+                
+            } catch (error) {
+                hideLoading();
+                showNotification('❌ Error enviando transacción', 'error');
+            }
+        }
+
+        function exportPrivateKey() {
+            showNotification('⚠️ Esta función no está disponible en modo seguro', 'info');
+        }
+
+        // ==================== UI UPDATES ====================
+        function updateWalletUI() {
+            if (walletConnected && userAddress) {
+                const shortAddress = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+                
+                document.getElementById('wallet-address').textContent = shortAddress;
+                document.getElementById('wallet-details-address').textContent = shortAddress;
+                document.getElementById('wallet-info').style.display = 'flex';
+                document.getElementById('connect-btn').style.display = 'none';
+                
+                if (currentNetwork) {
+                    document.getElementById('network-badge').textContent = currentNetwork.name;
+                    document.getElementById('current-network').textContent = currentNetwork.name;
+                    
+                    // Actualizar red activa en selector
+                    document.querySelectorAll('.network-option').forEach(option => {
+                        option.classList.remove('active');
+                        if (option.dataset.network === getNetworkKeyByName(currentNetwork.name)) {
+                            option.classList.add('active');
+                        }
+                    });
+                }
+            } else {
+                document.getElementById('wallet-info').style.display = 'none';
+                document.getElementById('connect-btn').style.display = 'block';
+            }
+        }
+
+        function updateNetworkUI() {
+            if (currentNetwork) {
+                document.getElementById('network-badge').textContent = currentNetwork.name;
+                document.getElementById('current-network').textContent = currentNetwork.name;
+            }
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        function setupBlockchainListeners() {
+            if (typeof window.ethereum !== 'undefined') {
+                // Cambios de cuenta
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    console.log('🔄 Cuenta cambiada:', accounts);
+                    if (accounts.length === 0) {
+                        disconnectWallet();
+                    } else {
+                        userAddress = accounts[0];
+                        updateWalletUI();
+                        loadWalletData();
+                        showNotification('🔄 Cuenta actualizada', 'info');
+                    }
+                });
+                
+                // Cambios de red
+                window.ethereum.on('chainChanged', (chainId) => {
+                    console.log('🌐 Red cambiada:', chainId);
+                    showNotification('🌐 Red actualizada - Recargando datos...', 'info');
+                    setTimeout(() => {
+                        detectCurrentNetwork();
+                        loadWalletData();
+                    }, 1000);
+                });
+            }
+        }
+
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const page = this.getAttribute('data-page');
+                    showPage(page);
+                    
+                    // Actualizar active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                });
             });
+        }
+
+        // ==================== FUNCIONES UTILITARIAS ====================
+        function showPage(page) {
+            // Ocultar todas las páginas
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(p => p.style.display = 'none');
+            
+            // Mostrar página seleccionada
+            const targetPage = document.getElementById(page + '-page');
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                document.getElementById('page-title').textContent = 
+                    document.querySelector(`[data-page="${page}"]`).textContent;
+            }
+        }
+
+        function showSendModal() {
+            document.getElementById('send-modal').style.display = 'flex';
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
         }
 
         function disconnectWallet() {
             userAddress = null;
             web3 = null;
-            document.getElementById('connect-btn').style.display = 'block';
-            document.getElementById('wallet-info').style.display = 'none';
-            document.getElementById('welcome-section').style.display = 'block';
-            document.getElementById('contracts-section').style.display = 'none';
-            document.getElementById('portfolio-section').style.display = 'none';
-            document.getElementById('actions-section').style.display = 'none';
-            document.getElementById('p2p-section').style.display = 'none';
-            showSuccess('👋 Wallet desconectada');
-        }
-
-        // ==================== FUNCIONES DE CONTRATOS ====================
-        function configureFMC() {
-            const address = document.getElementById('fmc-address').value;
-            if (isValidAddress(address)) {
-                document.getElementById('fmc-status').textContent = 'Configurado ✅';
-                document.getElementById('fmc-status').className = 'status-badge status-active';
-                showSuccess('✅ Contrato FMC configurado correctamente');
-            } else {
-                showError('❌ Dirección de contrato FMC inválida');
-            }
-        }
-
-        function configureVault() {
-            const address = document.getElementById('vault-address').value;
-            if (isValidAddress(address)) {
-                document.getElementById('vault-status').textContent = 'Configurado ✅';
-                document.getElementById('vault-status').className = 'status-badge status-active';
-                showSuccess('✅ Contrato Vault configurado correctamente');
-            } else {
-                showError('❌ Dirección de contrato Vault inválida');
-            }
-        }
-
-        // ==================== FUNCIONES DE ACCIÓN ====================
-        async function depositAction() {
-            const amount = document.getElementById('deposit-amount').value;
-            const token = document.getElementById('deposit-token').value;
+            currentNetwork = null;
+            walletConnected = false;
             
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida');
-                return;
+            updateWalletUI();
+            showNotification('👋 Wallet desconectada', 'info');
+        }
+
+        function refreshNetworkInfo() {
+            if (walletConnected) {
+                updateNetworkInfo();
+                showNotification('🔄 Datos de red actualizados', 'success');
             }
-
-            showLoading(`🏦 Depositando ${amount} ${token.toUpperCase()}...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} ${token.toUpperCase()} depositado exitosamente`);
-                document.getElementById('deposit-amount').value = '';
-            }, 2000);
         }
 
-        async function mintAction() {
-            const amount = document.getElementById('mint-amount').value;
-            
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida de FMC');
-                return;
+        function startDataUpdates() {
+            // Actualizar datos cada 30 segundos si está conectado
+            setInterval(() => {
+                if (walletConnected) {
+                    loadWalletData();
+                }
+            }, 30000);
+        }
+
+        function getNetworkKeyByName(name) {
+            for (const [key, network] of Object.entries(BLOCKCHAIN_NETWORKS)) {
+                if (network.name === name) return key;
             }
-
-            showLoading(`🪙 Minteando ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} FMC minteados exitosamente`);
-                document.getElementById('mint-amount').value = '';
-            }, 2000);
+            return null;
         }
 
-        async function transferAction() {
-            const toAddress = document.getElementById('transfer-address').value;
-            const amount = document.getElementById('transfer-amount').value;
-            
-            if (!isValidAddress(toAddress)) {
-                showError('❌ Dirección destino inválida');
-                return;
-            }
-
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida');
-                return;
-            }
-
-            showLoading(`📤 Enviando ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} FMC enviados a ${toAddress.slice(0,8)}...`);
-                document.getElementById('transfer-address').value = '';
-                document.getElementById('transfer-amount').value = '';
-            }, 2000);
-        }
-
-        async function buyFMC() {
-            const amount = document.getElementById('buy-amount').value;
-            if (!amount) {
-                showError('❌ Ingresa cantidad a comprar');
-                return;
-            }
-            
-            showLoading(`🛒 Comprando ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ Compra de ${amount} FMC ejecutada exitosamente`);
-                document.getElementById('buy-amount').value = '';
-            }, 2000);
-        }
-
-        async function sellFMC() {
-            const amount = document.getElementById('sell-amount').value;
-            const price = document.getElementById('sell-price').value;
-            
-            if (!amount || !price) {
-                showError('❌ Completa cantidad y precio');
-                return;
-            }
-            
-            showLoading(`💰 Vendiendo ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ Venta de ${amount} FMC creada a ${price} USDC`);
-                document.getElementById('sell-amount').value = '';
-            }, 2000);
-        }
-
-        // ==================== FUNCIONES UTILITARIAS ====================
-        function isValidAddress(address) {
-            return /^0x[a-fA-F0-9]{40}$/.test(address);
-        }
-
-        function installMetaMask() {
-            window.open('https://metamask.io/download.html', '_blank');
-        }
-
+        // ==================== LOADING Y NOTIFICACIONES ====================
         function showLoading(message) {
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading-text').textContent = message;
@@ -623,45 +1351,52 @@
 
         function hideLoading() {
             document.getElementById('loading').style.display = 'none';
+            updateProgress(0);
         }
 
-        function showSuccess(message) {
-            const div = document.createElement('div');
-            div.className = 'success';
-            div.innerHTML = message;
-            document.querySelector('.container').prepend(div);
-            setTimeout(() => div.remove(), 5000);
+        function updateProgress(percent) {
+            document.getElementById('progress-fill').style.width = percent + '%';
         }
 
-        function showError(message) {
-            const div = document.createElement('div');
-            div.className = 'error';
-            div.innerHTML = message;
-            document.querySelector('.container').prepend(div);
-            setTimeout(() => div.remove(), 5000);
-        }
-
-        // ==================== INICIALIZACIÓN ====================
-        window.addEventListener('load', function() {
-            console.log('🚀 FlashMorCoin inicializado');
+        function showNotification(message, type = 'info') {
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
             
-            // Verificar si ya hay una wallet conectada
-            if (typeof window.ethereum !== 'undefined') {
-                window.ethereum.request({ method: 'eth_accounts' })
-                    .then(accounts => {
-                        if (accounts.length > 0) {
-                            userAddress = accounts[0];
-                            web3 = new Web3(window.ethereum);
-                            updateBalance().then(updateUI);
-                            setupEventListeners();
-                            console.log('✅ Wallet ya conectada:', userAddress);
-                        }
-                    })
-                    .catch(error => {
-                        console.log('ℹ️ No hay wallet conectada previamente');
-                    });
-            }
-        });
+            // Agregar al documento
+            document.body.appendChild(notification);
+            
+            // Remover después de 5 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // ==================== SIMULACIÓN DE DATOS ====================
+        function simulateWalletData() {
+            // Simular datos de wallet
+            userBalances = {
+                fmc: 1250.50,
+                matic: 15.75,
+                usdc: 500.00
+            };
+            updateBalancesUI();
+        }
+
+        // Inicializar datos simulados después de la carga
+        setTimeout(simulateWalletData, 1000);
+
+        // ==================== EXPORTAR FUNCIONES GLOBALES ====================
+        window.connectWallet = connectWallet;
+        window.disconnectWallet = disconnectWallet;
+        window.switchNetwork = switchNetwork;
+        window.showPage = showPage;
+        window.refreshNetworkInfo = refreshNetworkInfo;
+        window.showSendModal = showSendModal;
+        window.hideModal = hideModal;
+        window.sendTokens = sendTokens;
+        window.exportPrivateKey = exportPrivateKey;
     </script>
 </body>
 </html>
