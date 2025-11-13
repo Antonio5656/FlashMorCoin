@@ -1,667 +1,441 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin - Protocolo DeFi</title>
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white; font-family: 'Arial', sans-serif;
-            min-height: 100vh;
-        }
-        
-        /* ========== LOGO MONEDA ANTIGUA ========== */
-        .ancient-coin {
-            width: 60px;
-            height: 60px;
-            background: radial-gradient(circle at 30% 30%, #D4AF37, #B8860B, #8B4513);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 
-                0 0 0 2px #8B4513,
-                0 4px 15px rgba(139, 69, 19, 0.6),
-                inset 0 1px 6px rgba(255, 215, 0, 0.4);
-            border: 2px solid #CD7F32;
-            position: relative;
-            font-family: 'Times New Roman', serif;
-        }
-
-        .ancient-coin::before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 70% 70%, transparent 30%, rgba(0,0,0,0.2) 100%);
-        }
-
-        .coin-design {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            color: #8B4513;
-            text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.5);
-        }
-
-        .coin-symbol {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 1px;
-        }
-
-        .coin-text {
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
-
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
-        /* Header */
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 15px 30px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .brand-text {
-            font-size: 1.8rem;
-            font-weight: bold;
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Botones */
-        .connect-btn {
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        
-        .connect-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        
-        .connect-btn.connected {
-            background: linear-gradient(45deg, #4CAF50, #45a049);
-        }
-        
-        /* Cards */
-        .card { 
-            background: rgba(255,255,255,0.1); 
-            backdrop-filter: blur(10px);
-            padding: 25px; 
-            border-radius: 15px; 
-            margin: 20px 0; 
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .action-btn { 
-            background: linear-gradient(45deg, #FFD700, #FFA500);
-            color: #8B4513; 
-            border: none; 
-            padding: 12px 20px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            margin: 5px; 
-            font-weight: bold; 
-            transition: all 0.3s;
-            width: 100%;
-        }
-        
-        .action-btn:hover { 
-            transform: translateY(-2px); 
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
-        }
-        
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; 
-        }
-        
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            margin: 8px 0; 
-            border: none; 
-            border-radius: 8px; 
-            background: rgba(255,255,255,0.9);
-            color: #333;
-        }
-        
-        /* Loading */
-        .loading { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.8); 
-            z-index: 1000; 
-            justify-content: center; 
-            align-items: center; 
-        }
-        
-        .success { 
-            background: rgba(76, 175, 80, 0.3); 
-            border: 1px solid #4CAF50; 
-            padding: 15px; 
-            border-radius: 8px; 
-            margin: 10px 0; 
-        }
-        
-        .error { 
-            background: rgba(244, 67, 54, 0.3); 
-            border: 1px solid #f44336; 
-            padding: 15px; 
-            border-radius: 8px; 
-            margin: 10px 0; 
-        }
-        
-        .wallet-info {
-            background: rgba(255,255,255,0.1);
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.3);
-            text-align: center;
-        }
-        
-        .status-badge { 
-            padding: 4px 8px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            margin-left: 10px; 
-        }
-        
-        .status-active { 
-            background: #4CAF50; 
-        }
-        
-        .status-inactive { 
-            background: #f44336; 
-        }
-        
-        .trade-item { 
-            background: rgba(255,255,255,0.05); 
-            padding: 15px; 
-            margin: 10px 0; 
-            border-radius: 8px; 
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web3 DApp | Conectar Wallet</title>
+  <script src="https://cdn.ethers.io/lib/ethers-6.7.umd.min.js" type="application/javascript"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 30px 0;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    .wallet-info {
+      background: #e3f2fd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+    .section {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+    }
+    .balance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .balance-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+    }
+    .balance-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #27ae60;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #34495e;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background: linear-gradient(90deg, #3498db, #2ecc71);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+    }
+    .transaction-item {
+      padding: 15px;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background: #f9f9f9;
+    }
+    .error {
+      color: #e74c3c;
+      background: #ffebee;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    .success {
+      color: #27ae60;
+      background: #e8f5e9;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 12px;
+      background: #e0e0e0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #3498db;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .connect-btn {
+      background: linear-gradient(90deg, #8e44ad, #3498db);
+      padding: 15px;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="loading" id="loading">
-        <div style="background: white; color: #333; padding: 30px; border-radius: 15px; text-align: center; min-width: 300px;">
-            <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
-            <p id="loading-text">Conectando con MetaMask...</p>
+  <div class="container">
+    <header>
+      <h1>🔷 Web3 DApp</h1>
+      <p>Conectar Wallet • Cambiar Red • Enviar Transacciones</p>
+      <div id="wallet-info" class="wallet-info">
+        <span id="status">Conecta tu wallet para comenzar</span>
+      </div>
+      <button id="connect-btn" class="connect-btn"> conectar wallet</button>
+    </header>
+
+    <div id="app" style="display: none;">
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="dashboard">dashboard</button>
+        <button class="tab-btn" data-tab="send">enviar</button>
+        <button class="tab-btn" data-tab="network">red</button>
+        <button class="tab-btn" data-tab="transactions">transacciones</button>
+      </div>
+
+      <!-- Dashboard -->
+      <div id="dashboard" class="tab-content active">
+        <h2>resumen</h2>
+        <div class="balance-grid">
+          <div class="balance-card">
+            <div>saldo eth</div>
+            <div class="balance-value" id="eth-balance">0</div>
+          </div>
+          <div class="balance-card">
+            <div>direccion</div>
+            <div class="balance-value" id="user-address">-</div>
+          </div>
+          <div class="balance-card">
+            <div>red actual</div>
+            <div class="balance-value" id="current-network">-</div>
+          </div>
+          <div class="balance-card">
+            <div>nonce</div>
+            <div class="balance-value" id="user-nonce">0</div>
+          </div>
         </div>
+      </div>
+
+      <!-- Send -->
+      <div id="send" class="tab-content">
+        <h2>enviar eth</h2>
+        <div class="form-group">
+          <label>direccion destino</label>
+          <input type="text" id="send-to" placeholder="0x...">
+        </div>
+        <div class="form-group">
+          <label>cantidad (eth)</label>
+          <input type="number" id="send-amount" placeholder="0.1" step="any">
+        </div>
+        <button id="send-btn">enviar</button>
+      </div>
+
+      <!-- Network -->
+      <div id="network" class="tab-content">
+        <h2>cambiar red</h2>
+        <div class="form-group">
+          <label>selecciona red</label>
+          <select id="network-select">
+            <option value="1">Ethereum Mainnet</option>
+            <option value="11155111">Sepolia Testnet</option>
+            <option value="137">Polygon Mainnet</option>
+            <option value="80001">Polygon Mumbai</option>
+          </select>
+        </div>
+        <button id="switch-network-btn">cambiar red</button>
+
+        <h2>red personalizada</h2>
+        <div class="form-group">
+          <label>chain id</label>
+          <input type="number" id="custom-chain-id" placeholder="12345">
+        </div>
+        <div class="form-group">
+          <label>nombre</label>
+          <input type="text" id="custom-chain-name" placeholder="Mi Red">
+        </div>
+        <div class="form-group">
+          <label>rpc url</label>
+          <input type="text" id="custom-rpc-url" placeholder="https://...">
+        </div>
+        <button id="add-custom-network-btn">agregar red</button>
+      </div>
+
+      <!-- Transactions -->
+      <div id="transactions" class="tab-content">
+        <h2>ultimas transacciones</h2>
+        <button id="load-transactions-btn">cargar transacciones</button>
+        <div id="transactions-list"></div>
+      </div>
     </div>
 
-    <div class="container">
-        <!-- Header con Logo -->
-        <header>
-            <div class="logo-container">
-                <div class="ancient-coin">
-                    <div class="coin-design">
-                        <div class="coin-symbol">⚡</div>
-                        <div class="coin-text">FMC</div>
-                    </div>
-                </div>
-                <div class="brand-text">FlashMorCoin</div>
-            </div>
-            
-            <div id="wallet-section">
-                <button class="connect-btn" onclick="connectWallet()" id="connect-btn">
-                    🔗 Conectar MetaMask
-                </button>
-                <div class="wallet-info" id="wallet-info" style="display: none;">
-                    <div><strong>✅ Conectado:</strong> <span id="wallet-address"></span></div>
-                    <div><strong>💰 Balance:</strong> <span id="wallet-balance">-</span> MATIC</div>
-                    <button onclick="disconnectWallet()" style="background: #ff4444; color: white; padding: 5px 10px; margin-top: 8px; font-size: 12px;">
-                        🚪 Desconectar
-                    </button>
-                </div>
-            </div>
-        </header>
+    <div id="messages"></div>
+  </div>
 
-        <!-- Mensaje de Bienvenida -->
-        <div class="card" id="welcome-section">
-            <h2>🚀 Bienvenido a FlashMorCoin</h2>
-            <p>Protocolo DeFi para liquidez instantánea en Yield Farming</p>
-            <div class="grid" style="margin-top: 20px;">
-                <div>
-                    <h3>📊 Para comenzar:</h3>
-                    <p>1. 👆 Haz clic en "Conectar MetaMask"</p>
-                    <p>2. ✅ Acepta la conexión en tu wallet</p>
-                    <p>3. 🌐 Cambia a la red Polygon Mumbai</p>
-                    <p>4. 🎉 ¡Listo para usar FlashMorCoin!</p>
-                </div>
-                <div>
-                    <h3>💡 ¿Problemas de conexión?</h3>
-                    <p>• 🔍 Asegúrate de tener MetaMask instalado</p>
-                    <p>• ✅ Acepta la solicitud de conexión</p>
-                    <p>• 🌐 Usa la red Mumbai Testnet</p>
-                    <button onclick="installMetaMask()" style="background: #FF6B6B; color: white; padding: 10px 15px;">
-                        📲 Instalar MetaMask
-                    </button>
-                </div>
-            </div>
-        </div>
+  <script>
+    // Variables globales
+    let provider, signer;
+    let currentNetwork = null;
 
-        <!-- Sección de Contratos (visible cuando esté conectado) -->
-        <div class="card" id="contracts-section" style="display: none;">
-            <h2>⚙️ Configuración de Contratos</h2>
-            <div class="grid">
-                <div>
-                    <h3>🔗 Contrato FMC</h3>
-                    <p>Estado: <span id="fmc-status" class="status-badge status-inactive">No configurado</span></p>
-                    <input type="text" id="fmc-address" 
-                           placeholder="0x..." 
-                           value="0x742d35Cc6634C0532925a3b8D6B6fB6F7A55Bd99"
-                           style="font-family: monospace;">
-                    <button class="action-btn" onclick="configureFMC()">✅ Configurar FMC</button>
-                </div>
-                <div>
-                    <h3>🏦 Contrato Vault</h3>
-                    <p>Estado: <span id="vault-status" class="status-badge status-inactive">No configurado</span></p>
-                    <input type="text" id="vault-address" 
-                           placeholder="0x..." 
-                           value="0x8ba1f109551bD432803012645Ac136ddd64DBA72"
-                           style="font-family: monospace;">
-                    <button class="action-btn" onclick="configureVault()">✅ Configurar Vault</button>
-                </div>
-            </div>
-        </div>
+    // Eventos de conexión
+    document.getElementById('connect-btn').addEventListener('click', connectWallet);
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
 
-        <!-- Portfolio (visible cuando esté conectado) -->
-        <div class="card" id="portfolio-section" style="display: none;">
-            <h2>📊 Tu Portfolio en Vivo</h2>
-            <div class="grid">
-                <div>
-                    <p>👛 <strong>Wallet:</strong> <span id="display-address">-</span></p>
-                    <p>💰 <strong>Balance MATIC:</strong> <span id="matic-balance">-</span></p>
-                </div>
-                <div>
-                    <p>🪙 <strong>Balance FMC:</strong> <span id="fmc-balance">0.00 FMC</span></p>
-                    <p>🏦 <strong>Colateral:</strong> <span id="vault-balance">0.00 USDC</span></p>
-                </div>
-            </div>
-        </div>
+    // Eventos de red
+    document.getElementById('switch-network-btn').addEventListener('click', switchNetwork);
+    document.getElementById('add-custom-network-btn').addEventListener('click', addCustomNetwork);
 
-        <!-- Acciones Principales (visible cuando esté conectado) -->
-        <div class="grid" id="actions-section" style="display: none;">
-            <!-- Depositar -->
-            <div class="card">
-                <h3>🏦 Depositar Colateral</h3>
-                <select id="deposit-token">
-                    <option value="usdc">USDC</option>
-                    <option value="dai">DAI</option>
-                    <option value="wmatic">WMATIC</option>
-                </select>
-                <input type="number" placeholder="Cantidad a depositar" id="deposit-amount" step="0.001">
-                <button class="action-btn" onclick="depositAction()">✅ Depositar Colateral</button>
-            </div>
+    // Eventos de envío
+    document.getElementById('send-btn').addEventListener('click', sendTransaction);
 
-            <!-- Mintear -->
-            <div class="card">
-                <h3>🪙 Mintear FMC</h3>
-                <p style="font-size: 0.9em; opacity: 0.8; margin: 10px 0;">
-                    Genera tokens FMC usando tu colateral como garantía
-                </p>
-                <input type="number" placeholder="Cantidad FMC a mintear" id="mint-amount" step="0.001">
-                <button class="action-btn" onclick="mintAction()">🪙 Mintear FMC</button>
-            </div>
+    // Eventos de transacciones
+    document.getElementById('load-transactions-btn').addEventListener('click', loadTransactions);
 
-            <!-- Transferir -->
-            <div class="card">
-                <h3>📤 Transferir FMC</h3>
-                <input type="text" placeholder="Dirección destino (0x...)" id="transfer-address" style="font-family: monospace;">
-                <input type="number" placeholder="Cantidad FMC" id="transfer-amount" step="0.001">
-                <button class="action-btn" onclick="transferAction()">📤 Transferir FMC</button>
-            </div>
-        </div>
+    // Conectar wallet automáticamente si ya está conectada
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', () => {
+        location.reload();
+      });
+      window.ethereum.on('chainChanged', () => {
+        location.reload();
+      });
+    }
 
-        <!-- Mercado P2P (visible cuando esté conectado) -->
-        <div class="card" id="p2p-section" style="display: none;">
-            <h2>🔄 Mercado P2P FlashMorCoin</h2>
-            <div class="grid">
-                <div>
-                    <h3>🛒 Comprar FMC</h3>
-                    <input type="number" placeholder="Cantidad FMC a comprar" id="buy-amount" step="0.001">
-                    <p style="margin: 10px 0;">Precio estimado: <span id="buy-price">1.02</span> USDC por FMC</p>
-                    <button class="action-btn" onclick="buyFMC()">✅ Comprar FMC</button>
-                </div>
-                <div>
-                    <h3>💰 Vender FMC</h3>
-                    <input type="number" placeholder="Cantidad FMC a vender" id="sell-amount" step="0.001">
-                    <input type="number" placeholder="Precio en USDC" id="sell-price" step="0.0001" value="1.02">
-                    <button class="action-btn" onclick="sellFMC()">💰 Vender FMC</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    async function connectWallet() {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          provider = new ethers.BrowserProvider(window.ethereum);
+          signer = await provider.getSigner();
 
-    <script>
-        // ==================== ESTADO GLOBAL ====================
-        let web3 = null;
-        let userAddress = null;
-        let userBalance = '0';
+          // Detectar red
+          const network = await provider.getNetwork();
+          currentNetwork = network.chainId;
 
-        // ==================== CONEXIÓN METAMASK ====================
-        async function connectWallet() {
-            console.log('🔗 Iniciando conexión con MetaMask...');
-            
-            if (typeof window.ethereum === 'undefined') {
-                showError('❌ MetaMask no detectado. Por favor instala MetaMask.');
-                return;
-            }
+          document.getElementById('connect-btn').style.display = 'none';
+          document.getElementById('app').style.display = 'block';
+          document.getElementById('status').textContent = `Conectado: ${await signer.getAddress()}`;
 
-            try {
-                showLoading('Conectando con MetaMask...');
-                
-                // Solicitar acceso a las cuentas
-                const accounts = await window.ethereum.request({
-                    method: 'eth_requestAccounts'
-                });
-                
-                console.log('✅ Cuentas obtenidas:', accounts);
-                
-                if (accounts.length === 0) {
-                    throw new Error('Usuario rechazó la conexión');
-                }
-                
-                userAddress = accounts[0];
-                
-                // Inicializar Web3
-                web3 = new Web3(window.ethereum);
-                
-                // Obtener balance
-                await updateBalance();
-                
-                // Actualizar interfaz
-                updateUI();
-                
-                // Configurar listeners de eventos
-                setupEventListeners();
-                
-                hideLoading();
-                showSuccess('🎉 ¡Wallet conectada exitosamente!');
-                
-            } catch (error) {
-                hideLoading();
-                console.error('❌ Error en conexión:', error);
-                
-                if (error.code === 4001) {
-                    showError('❌ Rechazaste la conexión. Haz clic en "Conectar" en la ventana de MetaMask.');
-                } else if (error.code === -32002) {
-                    showError('⏳ Ya hay una solicitud pendiente. Revisa MetaMask.');
-                } else {
-                    showError('Error de conexión: ' + error.message);
-                }
-            }
+          // Cargar datos iniciales
+          await loadDashboardData();
+
+        } catch (err) {
+          showMessage(`Error: ${err.message}`, 'error');
         }
+      } else {
+        showMessage('MetaMask no encontrado. Por favor instálalo.', 'error');
+      }
+    }
 
-        async function updateBalance() {
-            if (!web3 || !userAddress) return;
-            
-            try {
-                const balance = await web3.eth.getBalance(userAddress);
-                userBalance = parseFloat(web3.utils.fromWei(balance, 'ether')).toFixed(4);
-                console.log('💰 Balance actualizado:', userBalance);
-            } catch (error) {
-                console.error('Error obteniendo balance:', error);
-                userBalance = 'Error';
-            }
+    async function loadDashboardData() {
+      if (!signer) return;
+      try {
+        const addr = await signer.getAddress();
+        const balance = await provider.getBalance(addr);
+        const nonce = await provider.getTransactionCount(addr);
+
+        document.getElementById('user-address').textContent = addr;
+        document.getElementById('eth-balance').textContent = ethers.formatEther(balance);
+        document.getElementById('user-nonce').textContent = nonce;
+
+        // Nombre de la red actual
+        let networkName = 'Desconocida';
+        switch (currentNetwork) {
+          case 1n: networkName = 'Ethereum'; break;
+          case 11155111n: networkName = 'Sepolia'; break;
+          case 137n: networkName = 'Polygon'; break;
+          case 80001n: networkName = 'Mumbai'; break;
         }
+        document.getElementById('current-network').textContent = networkName;
 
-        function updateUI() {
-            // Actualizar información de wallet
-            const shortAddress = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
-            document.getElementById('wallet-address').textContent = shortAddress;
-            document.getElementById('wallet-balance').textContent = userBalance;
-            document.getElementById('display-address').textContent = shortAddress;
-            document.getElementById('matic-balance').textContent = userBalance + ' MATIC';
-            
-            // Mostrar secciones principales
-            document.getElementById('wallet-info').style.display = 'block';
-            document.getElementById('connect-btn').style.display = 'none';
-            document.getElementById('welcome-section').style.display = 'none';
-            document.getElementById('contracts-section').style.display = 'block';
-            document.getElementById('portfolio-section').style.display = 'block';
-            document.getElementById('actions-section').style.display = 'grid';
-            document.getElementById('p2p-section').style.display = 'block';
-        }
+      } catch (err) {
+        showMessage(`Error al cargar datos: ${err.message}`, 'error');
+      }
+    }
 
-        function setupEventListeners() {
-            // Cambios de cuenta
-            window.ethereum.on('accountsChanged', (accounts) => {
-                console.log('🔄 Cuenta cambiada:', accounts);
-                if (accounts.length === 0) {
-                    disconnectWallet();
-                } else {
-                    userAddress = accounts[0];
-                    updateBalance().then(updateUI);
-                    showSuccess('🔄 Cuenta actualizada');
-                }
-            });
-            
-            // Cambios de red
-            window.ethereum.on('chainChanged', (chainId) => {
-                console.log('🌐 Red cambiada:', chainId);
-                showSuccess('🌐 Red actualizada - Recargando...');
-                setTimeout(() => location.reload(), 1000);
-            });
-        }
+    async function sendTransaction() {
+      const to = document.getElementById('send-to').value;
+      const amount = document.getElementById('send-amount').value;
 
-        function disconnectWallet() {
-            userAddress = null;
-            web3 = null;
-            document.getElementById('connect-btn').style.display = 'block';
-            document.getElementById('wallet-info').style.display = 'none';
-            document.getElementById('welcome-section').style.display = 'block';
-            document.getElementById('contracts-section').style.display = 'none';
-            document.getElementById('portfolio-section').style.display = 'none';
-            document.getElementById('actions-section').style.display = 'none';
-            document.getElementById('p2p-section').style.display = 'none';
-            showSuccess('👋 Wallet desconectada');
-        }
+      if (!to || !amount) {
+        showMessage('Por favor ingresa destino y cantidad.', 'error');
+        return;
+      }
 
-        // ==================== FUNCIONES DE CONTRATOS ====================
-        function configureFMC() {
-            const address = document.getElementById('fmc-address').value;
-            if (isValidAddress(address)) {
-                document.getElementById('fmc-status').textContent = 'Configurado ✅';
-                document.getElementById('fmc-status').className = 'status-badge status-active';
-                showSuccess('✅ Contrato FMC configurado correctamente');
-            } else {
-                showError('❌ Dirección de contrato FMC inválida');
-            }
-        }
-
-        function configureVault() {
-            const address = document.getElementById('vault-address').value;
-            if (isValidAddress(address)) {
-                document.getElementById('vault-status').textContent = 'Configurado ✅';
-                document.getElementById('vault-status').className = 'status-badge status-active';
-                showSuccess('✅ Contrato Vault configurado correctamente');
-            } else {
-                showError('❌ Dirección de contrato Vault inválida');
-            }
-        }
-
-        // ==================== FUNCIONES DE ACCIÓN ====================
-        async function depositAction() {
-            const amount = document.getElementById('deposit-amount').value;
-            const token = document.getElementById('deposit-token').value;
-            
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida');
-                return;
-            }
-
-            showLoading(`🏦 Depositando ${amount} ${token.toUpperCase()}...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} ${token.toUpperCase()} depositado exitosamente`);
-                document.getElementById('deposit-amount').value = '';
-            }, 2000);
-        }
-
-        async function mintAction() {
-            const amount = document.getElementById('mint-amount').value;
-            
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida de FMC');
-                return;
-            }
-
-            showLoading(`🪙 Minteando ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} FMC minteados exitosamente`);
-                document.getElementById('mint-amount').value = '';
-            }, 2000);
-        }
-
-        async function transferAction() {
-            const toAddress = document.getElementById('transfer-address').value;
-            const amount = document.getElementById('transfer-amount').value;
-            
-            if (!isValidAddress(toAddress)) {
-                showError('❌ Dirección destino inválida');
-                return;
-            }
-
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida');
-                return;
-            }
-
-            showLoading(`📤 Enviando ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} FMC enviados a ${toAddress.slice(0,8)}...`);
-                document.getElementById('transfer-address').value = '';
-                document.getElementById('transfer-amount').value = '';
-            }, 2000);
-        }
-
-        async function buyFMC() {
-            const amount = document.getElementById('buy-amount').value;
-            if (!amount) {
-                showError('❌ Ingresa cantidad a comprar');
-                return;
-            }
-            
-            showLoading(`🛒 Comprando ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ Compra de ${amount} FMC ejecutada exitosamente`);
-                document.getElementById('buy-amount').value = '';
-            }, 2000);
-        }
-
-        async function sellFMC() {
-            const amount = document.getElementById('sell-amount').value;
-            const price = document.getElementById('sell-price').value;
-            
-            if (!amount || !price) {
-                showError('❌ Completa cantidad y precio');
-                return;
-            }
-            
-            showLoading(`💰 Vendiendo ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ Venta de ${amount} FMC creada a ${price} USDC`);
-                document.getElementById('sell-amount').value = '';
-            }, 2000);
-        }
-
-        // ==================== FUNCIONES UTILITARIAS ====================
-        function isValidAddress(address) {
-            return /^0x[a-fA-F0-9]{40}$/.test(address);
-        }
-
-        function installMetaMask() {
-            window.open('https://metamask.io/download.html', '_blank');
-        }
-
-        function showLoading(message) {
-            document.getElementById('loading').style.display = 'flex';
-            document.getElementById('loading-text').textContent = message;
-        }
-
-        function hideLoading() {
-            document.getElementById('loading').style.display = 'none';
-        }
-
-        function showSuccess(message) {
-            const div = document.createElement('div');
-            div.className = 'success';
-            div.innerHTML = message;
-            document.querySelector('.container').prepend(div);
-            setTimeout(() => div.remove(), 5000);
-        }
-
-        function showError(message) {
-            const div = document.createElement('div');
-            div.className = 'error';
-            div.innerHTML = message;
-            document.querySelector('.container').prepend(div);
-            setTimeout(() => div.remove(), 5000);
-        }
-
-        // ==================== INICIALIZACIÓN ====================
-        window.addEventListener('load', function() {
-            console.log('🚀 FlashMorCoin inicializado');
-            
-            // Verificar si ya hay una wallet conectada
-            if (typeof window.ethereum !== 'undefined') {
-                window.ethereum.request({ method: 'eth_accounts' })
-                    .then(accounts => {
-                        if (accounts.length > 0) {
-                            userAddress = accounts[0];
-                            web3 = new Web3(window.ethereum);
-                            updateBalance().then(updateUI);
-                            setupEventListeners();
-                            console.log('✅ Wallet ya conectada:', userAddress);
-                        }
-                    })
-                    .catch(error => {
-                        console.log('ℹ️ No hay wallet conectada previamente');
-                    });
-            }
+      try {
+        const tx = await signer.sendTransaction({
+          to: to,
+          value: ethers.parseEther(amount)
         });
-    </script>
+        showMessage(`✅ Transacción enviada: ${tx.hash}`, 'success');
+        await loadDashboardData();
+      } catch (err) {
+        showMessage(`Error: ${err.message}`, 'error');
+      }
+    }
+
+    async function switchNetwork() {
+      const networkId = document.getElementById('network-select').value;
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x' + parseInt(networkId).toString(16) }]
+        });
+        showMessage(`✅ Red cambiada a: ${networkId}`, 'success');
+      } catch (err) {
+        showMessage(`Error al cambiar red: ${err.message}`, 'error');
+      }
+    }
+
+    async function addCustomNetwork() {
+      const chainId = document.getElementById('custom-chain-id').value;
+      const chainName = document.getElementById('custom-chain-name').value;
+      const rpcUrl = document.getElementById('custom-rpc-url').value;
+
+      if (!chainId || !chainName || !rpcUrl) {
+        showMessage('Completa todos los campos.', 'error');
+        return;
+      }
+
+      try {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: '0x' + parseInt(chainId).toString(16),
+            chainName: chainName,
+            rpcUrls: [rpcUrl],
+            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+            blockExplorerUrls: [rpcUrl.replace('/api', '')] // Asumiendo que el explorador está en la raíz
+          }]
+        });
+        showMessage(`✅ Red personalizada agregada: ${chainName}`, 'success');
+      } catch (err) {
+        showMessage(`Error al agregar red: ${err.message}`, 'error');
+      }
+    }
+
+    async function loadTransactions() {
+      try {
+        const addr = await signer.getAddress();
+        // Nota: ethers no tiene una función directa para historial
+        // Esto es un placeholder. En producción, usarías un servicio como Moralis, Alchemy, etc.
+        const txList = document.getElementById('transactions-list');
+        txList.innerHTML = `
+          <div class="transaction-item">
+            <strong>Últimas transacciones:</strong><br>
+            (Funcionalidad real requiere backend o API externa)
+          </div>
+        `;
+      } catch (err) {
+        showMessage(`Error al cargar transacciones: ${err.message}`, 'error');
+      }
+    }
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => {
+        el.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('active');
+      });
+
+      document.getElementById(tabName).classList.add('active');
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    }
+
+    function showMessage(text, type) {
+      const msgEl = document.createElement('div');
+      msgEl.className = type;
+      msgEl.textContent = text;
+      document.getElementById('messages').appendChild(msgEl);
+
+      setTimeout(() => {
+        msgEl.remove();
+      }, 5000);
+    }
+  </script>
 </body>
 </html>
