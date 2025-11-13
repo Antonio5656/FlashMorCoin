@@ -1,441 +1,1608 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Web3 DApp | Conectar Wallet</title>
-  <script src="https://cdn.ethers.io/lib/ethers-6.7.umd.min.js" type="application/javascript"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Inter', 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf9 100%);
-      color: #2c3e50;
-      line-height: 1.6;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    header {
-      text-align: center;
-      padding: 30px 0;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-      margin-bottom: 25px;
-    }
-    h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(90deg, #3498db, #2ecc71);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 10px;
-    }
-    .wallet-info {
-      background: #e3f2fd;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 15px;
-      font-size: 0.9rem;
-    }
-    .section {
-      background: white;
-      border-radius: 12px;
-      padding: 25px;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    }
-    h2 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-      font-size: 1.5rem;
-      border-bottom: 2px solid #3498db;
-      padding-bottom: 10px;
-    }
-    .balance-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    .balance-card {
-      background: #f8f9fa;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-      border: 1px solid #e0e0e0;
-    }
-    .balance-value {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #27ae60;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #34495e;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    button {
-      background: linear-gradient(90deg, #3498db, #2ecc71);
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      transition: transform 0.2s;
-    }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
-    }
-    .transaction-item {
-      padding: 15px;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      background: #f9f9f9;
-    }
-    .error {
-      color: #e74c3c;
-      background: #ffebee;
-      padding: 12px;
-      border-radius: 6px;
-      margin-top: 10px;
-    }
-    .success {
-      color: #27ae60;
-      background: #e8f5e9;
-      padding: 12px;
-      border-radius: 6px;
-      margin-top: 10px;
-    }
-    .tab-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 12px;
-      background: #e0e0e0;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .tab-btn.active {
-      background: #3498db;
-      color: white;
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    .connect-btn {
-      background: linear-gradient(90deg, #8e44ad, #3498db);
-      padding: 15px;
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashMorCoi- Plataforma DeFi Multichain</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #0c0c2e 0%, #1a1a4a 50%, #2d1b69 100%);
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        
+        /* Header */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .brand-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 114, 255, 0.3);
+        }
+        
+        /* Botones */
+        .connect-btn {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .connect-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 198, 255, 0.6);
+        }
+        
+        .connect-btn.connected {
+            background: linear-gradient(45deg, #00d26a, #00a854);
+            box-shadow: 0 5px 15px rgba(0, 210, 106, 0.4);
+        }
+        
+        /* Cards */
+        .card { 
+            background: rgba(255,255,255,0.05); 
+            backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 20px; 
+            margin: 25px 0; 
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .action-btn { 
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            color: white; 
+            border: none; 
+            padding: 14px 20px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            margin: 12px 0; 
+            font-weight: 600; 
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .action-btn:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 8px 20px rgba(0, 198, 255, 0.5);
+        }
+        
+        .action-btn.secondary {
+            background: linear-gradient(45deg, #6a00ff, #8e2de2);
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 30px; 
+        }
+        
+        input, select { 
+            width: 100%; 
+            padding: 14px 18px; 
+            margin: 12px 0; 
+            border: none; 
+            border-radius: 12px; 
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+        }
+        
+        input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Loading */
+        .loading { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.85); 
+            z-index: 1000; 
+            justify-content: center; 
+            align-items: center; 
+            flex-direction: column;
+        }
+        
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(0, 198, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00c6ff;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success { 
+            background: rgba(0, 210, 106, 0.2); 
+            border: 1px solid #00d26a; 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            margin: 15px 0; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .error { 
+            background: rgba(244, 67, 54, 0.2); 
+            border: 1px solid #f44336; 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            margin: 15px 0; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .wallet-info {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .status-badge { 
+            padding: 6px 14px; 
+            border-radius: 20px; 
+            font-size: 14px; 
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .status-active { 
+            background: rgba(0, 210, 106, 0.2); 
+            color: #00d26a;
+            border: 1px solid #00d26a;
+        }
+        
+        .status-inactive { 
+            background: rgba(244, 67, 54, 0.2); 
+            color: #f44336;
+            border: 1px solid #f44336;
+        }
+        
+        .network-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .network-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .network-btn.active {
+            background: linear-gradient(45deg, rgba(0, 198, 255, 0.2), rgba(0, 114, 255, 0.2));
+            border: 1px solid #00c6ff;
+            box-shadow: 0 5px 15px rgba(0, 198, 255, 0.3);
+        }
+        
+        .network-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-3px);
+        }
+        
+        .wallet-detector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .wallet-option {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            text-align: center;
+        }
+        
+        .wallet-option:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .wallet-option.active {
+            background: linear-gradient(45deg, rgba(0, 198, 255, 0.2), rgba(0, 114, 255, 0.2));
+            border: 1px solid #00c6ff;
+            box-shadow: 0 10px 20px rgba(0, 198, 255, 0.3);
+        }
+        
+        .wallet-icon {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .transaction-history {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding-right: 10px;
+        }
+        
+        .transaction-item {
+            background: rgba(255,255,255,0.05);
+            padding: 18px;
+            margin: 12px 0;
+            border-radius: 15px;
+            border-left: 4px solid #00c6ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .transaction-item:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateX(5px);
+        }
+        
+        .transaction-type {
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+        
+        .type-send {
+            background: rgba(255, 107, 107, 0.2);
+            color: #FF6B6B;
+        }
+        
+        .type-receive {
+            background: rgba(0, 210, 106, 0.2);
+            color: #00d26a;
+        }
+        
+        .type-trade {
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+        }
+        
+        .qr-code {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .auto-connect-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 15px;
+        }
+        
+        .auto-connect-toggle {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 35px;
+        }
+        
+        .auto-connect-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255,255,255,0.2);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(35px);
+        }
+        
+        .price-ticker {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .price-item {
+            text-align: center;
+            padding: 15px;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .price-change {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: #00d26a;
+        }
+        
+        .negative {
+            color: #f44336;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 10px 0;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .section-title i {
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .feature-highlight {
+            background: linear-gradient(45deg, rgba(0, 198, 255, 0.1), rgba(0, 114, 255, 0.1));
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid rgba(0, 198, 255, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .wallet-detector, .network-selector {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .brand-text {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* Scrollbar personalizado */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00c6ff, #0072ff);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, #00a3d4, #005cc5);
+        }
+        
+        /* Efectos de partículas en el fondo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 198, 255, 0.3);
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>🔷 Web3 DApp</h1>
-      <p>Conectar Wallet • Cambiar Red • Enviar Transacciones</p>
-      <div id="wallet-info" class="wallet-info">
-        <span id="status">Conecta tu wallet para comenzar</span>
-      </div>
-      <button id="connect-btn" class="connect-btn"> conectar wallet</button>
-    </header>
-
-    <div id="app" style="display: none;">
-      <div class="tab-buttons">
-        <button class="tab-btn active" data-tab="dashboard">dashboard</button>
-        <button class="tab-btn" data-tab="send">enviar</button>
-        <button class="tab-btn" data-tab="network">red</button>
-        <button class="tab-btn" data-tab="transactions">transacciones</button>
-      </div>
-
-      <!-- Dashboard -->
-      <div id="dashboard" class="tab-content active">
-        <h2>resumen</h2>
-        <div class="balance-grid">
-          <div class="balance-card">
-            <div>saldo eth</div>
-            <div class="balance-value" id="eth-balance">0</div>
-          </div>
-          <div class="balance-card">
-            <div>direccion</div>
-            <div class="balance-value" id="user-address">-</div>
-          </div>
-          <div class="balance-card">
-            <div>red actual</div>
-            <div class="balance-value" id="current-network">-</div>
-          </div>
-          <div class="balance-card">
-            <div>nonce</div>
-            <div class="balance-value" id="user-nonce">0</div>
-          </div>
+    <div class="particles" id="particles"></div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div style="background: rgba(255,255,255,0.1); color: white; padding: 30px; border-radius: 15px; text-align: center; min-width: 300px; backdrop-filter: blur(10px);">
+            <p id="loading-text">Conectando con tu wallet...</p>
         </div>
-      </div>
-
-      <!-- Send -->
-      <div id="send" class="tab-content">
-        <h2>enviar eth</h2>
-        <div class="form-group">
-          <label>direccion destino</label>
-          <input type="text" id="send-to" placeholder="0x...">
-        </div>
-        <div class="form-group">
-          <label>cantidad (eth)</label>
-          <input type="number" id="send-amount" placeholder="0.1" step="any">
-        </div>
-        <button id="send-btn">enviar</button>
-      </div>
-
-      <!-- Network -->
-      <div id="network" class="tab-content">
-        <h2>cambiar red</h2>
-        <div class="form-group">
-          <label>selecciona red</label>
-          <select id="network-select">
-            <option value="1">Ethereum Mainnet</option>
-            <option value="11155111">Sepolia Testnet</option>
-            <option value="137">Polygon Mainnet</option>
-            <option value="80001">Polygon Mumbai</option>
-          </select>
-        </div>
-        <button id="switch-network-btn">cambiar red</button>
-
-        <h2>red personalizada</h2>
-        <div class="form-group">
-          <label>chain id</label>
-          <input type="number" id="custom-chain-id" placeholder="12345">
-        </div>
-        <div class="form-group">
-          <label>nombre</label>
-          <input type="text" id="custom-chain-name" placeholder="Mi Red">
-        </div>
-        <div class="form-group">
-          <label>rpc url</label>
-          <input type="text" id="custom-rpc-url" placeholder="https://...">
-        </div>
-        <button id="add-custom-network-btn">agregar red</button>
-      </div>
-
-      <!-- Transactions -->
-      <div id="transactions" class="tab-content">
-        <h2>ultimas transacciones</h2>
-        <button id="load-transactions-btn">cargar transacciones</button>
-        <div id="transactions-list"></div>
-      </div>
     </div>
 
-    <div id="messages"></div>
-  </div>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="brand-text">FMC Pro</div>
+            </div>
+            
+            <div id="wallet-section">
+                <button class="connect-btn" onclick="connectWallet()" id="connect-btn">
+                    <i class="fas fa-plug"></i> Conectar Wallet
+                </button>
+                <div class="wallet-info" id="wallet-info" style="display: none;">
+                    <div><strong><i class="fas fa-check-circle"></i> Conectado:</strong> <span id="wallet-address"></span></div>
+                    <div><strong><i class="fas fa-network-wired"></i> Red:</strong> <span id="network-name">-</span></div>
+                    <div><strong><i class="fas fa-wallet"></i> Balance:</strong> <span id="wallet-balance">-</span> <span id="balance-symbol">ETH</span></div>
+                    <button onclick="disconnectWallet()" style="background: rgba(244, 67, 54, 0.2); color: #f44336; padding: 10px 15px; margin-top: 12px; font-size: 14px; border-radius: 10px; border: 1px solid #f44336; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-sign-out-alt"></i> Desconectar
+                    </button>
+                </div>
+            </div>
+        </header>
 
-  <script>
-    // Variables globales
-    let provider, signer;
-    let currentNetwork = null;
+        <!-- Mensaje de Bienvenida -->
+        <div class="card" id="welcome-section">
+            <div class="section-title">
+                <i class="fas fa-rocket"></i>
+                <h2>Plataforma DeFi Multichain Profesional</h2>
+            </div>
+            <p>Conecta, opera y gestiona tus activos en todas las blockchains desde una única interfaz</p>
+            
+            <div class="auto-connect-section">
+                <label class="auto-connect-toggle">
+                    <input type="checkbox" id="auto-connect-toggle" checked>
+                    <span class="slider"></span>
+                </label>
+                <span>Conexión automática a wallets</span>
+            </div>
+            
+            <div class="feature-highlight">
+                <h3><i class="fas fa-star"></i> Características Premium</h3>
+                <div class="grid" style="margin-top: 20px;">
+                    <div>
+                        <h4><i class="fas fa-bolt"></i> Conexión Automática</h4>
+                        <p>Detecta y conecta automáticamente con todas las wallets instaladas</p>
+                    </div>
+                    <div>
+                        <h4><i class="fas fa-network-wired"></i> Multichain</h4>
+                        <p>Soporte para 15+ blockchains con cambio automático de red</p>
+                    </div>
+                    <div>
+                        <h4><i class="fas fa-shield-alt"></i> Seguridad Avanzada</h4>
+                        <p>Transacciones firmadas localmente sin exposición de claves</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 30px;">Selecciona tu Wallet</h3>
+            <div class="wallet-detector" id="wallet-detector">
+                <!-- Se llenará dinámicamente con las wallets detectadas -->
+            </div>
+        </div>
 
-    // Eventos de conexión
-    document.getElementById('connect-btn').addEventListener('click', connectWallet);
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-    });
+        <!-- Selector de Red -->
+        <div class="card" id="network-section" style="display: none;">
+            <div class="section-title">
+                <i class="fas fa-network-wired"></i>
+                <h2>Selección de Red Blockchain</h2>
+            </div>
+            <p>Cambia automáticamente entre 15+ blockchains compatibles</p>
+            
+            <div class="network-selector" id="network-selector">
+                <!-- Se llenará dinámicamente con las redes disponibles -->
+            </div>
+            
+            <div id="network-status">
+                <p>Estado de conexión: <span id="network-status-text" class="status-badge status-inactive">Desconectado</span></p>
+            </div>
+        </div>
 
-    // Eventos de red
-    document.getElementById('switch-network-btn').addEventListener('click', switchNetwork);
-    document.getElementById('add-custom-network-btn').addEventListener('click', addCustomNetwork);
+        <!-- Estadísticas -->
+        <div class="card" id="stats-section" style="display: none;">
+            <div class="section-title">
+                <i class="fas fa-chart-line"></i>
+                <h2>Estadísticas en Tiempo Real</h2>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Balance Total</div>
+                    <div class="stat-value" id="total-balance">$0.00</div>
+                    <div class="stat-label">En todas las redes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Transacciones</div>
+                    <div class="stat-value" id="transaction-count">0</div>
+                    <div class="stat-label">Realizadas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Redes Conectadas</div>
+                    <div class="stat-value" id="network-count">1</div>
+                    <div class="stat-label">Activas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tiempo Conectado</div>
+                    <div class="stat-value" id="connection-time">0m</div>
+                    <div class="stat-label">Sesión actual</div>
+                </div>
+            </div>
+            
+            <div class="price-ticker">
+                <div class="price-item">
+                    <div>ETH/USD</div>
+                    <div>$3,450.25</div>
+                    <div class="price-change positive">+2.5%</div>
+                </div>
+                <div class="price-item">
+                    <div>MATIC/USD</div>
+                    <div>$0.85</div>
+                    <div class="price-change positive">+1.2%</div>
+                </div>
+                <div class="price-item">
+                    <div>BNB/USD</div>
+                    <div>$585.30</div>
+                    <div class="price-change negative">-0.8%</div>
+                </div>
+                <div class="price-item">
+                    <div>SOL/USD</div>
+                    <div>$142.75</div>
+                    <div class="price-change positive">+3.7%</div>
+                </div>
+            </div>
+        </div>
 
-    // Eventos de envío
-    document.getElementById('send-btn').addEventListener('click', sendTransaction);
+        <!-- Transacciones P2P -->
+        <div class="grid" id="actions-section" style="display: none;">
+            <!-- Enviar Fondos -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3>Envío de Fondos</h3>
+                </div>
+                <input type="text" placeholder="Dirección destino (0x...)" id="send-address" style="font-family: monospace;">
+                <input type="number" placeholder="Cantidad a enviar" id="send-amount" step="0.0001">
+                <select id="send-token">
+                    <option value="native">Nativo (ETH/MATIC/BNB)</option>
+                    <option value="usdc">USDC</option>
+                    <option value="usdt">USDT</option>
+                    <option value="dai">DAI</option>
+                </select>
+                <button class="action-btn" onclick="sendTransaction()">
+                    <i class="fas fa-paper-plane"></i> Enviar Fondos
+                </button>
+            </div>
 
-    // Eventos de transacciones
-    document.getElementById('load-transactions-btn').addEventListener('click', loadTransactions);
+            <!-- Recibir Fondos -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>Recibir Fondos</h3>
+                </div>
+                <p>Comparte esta dirección para recibir fondos:</p>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; margin: 15px 0; word-break: break-all; font-family: monospace; font-size: 14px;" id="receive-address">
+                    -
+                </div>
+                <div class="qr-code" id="qr-code-container">
+                    <div style="width: 200px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #333;">
+                        Código QR
+                    </div>
+                </div>
+                <button class="action-btn secondary" onclick="copyAddress()">
+                    <i class="fas fa-copy"></i> Copiar Dirección
+                </button>
+            </div>
 
-    // Conectar wallet automáticamente si ya está conectada
-    if (window.ethereum) {
-      window.ethereum.on('accountsChanged', () => {
-        location.reload();
-      });
-      window.ethereum.on('chainChanged', () => {
-        location.reload();
-      });
-    }
+            <!-- Intercambio P2P -->
+            <div class="card">
+                <div class="section-title">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h3>Intercambio P2P</h3>
+                </div>
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0;">
+                    <div>
+                        <label>Vender</label>
+                        <select id="sell-token">
+                            <option value="eth">ETH</option>
+                            <option value="usdc">USDC</option>
+                            <option value="usdt">USDT</option>
+                        </select>
+                        <input type="number" placeholder="Cantidad" id="sell-amount" step="0.001">
+                    </div>
+                    <div>
+                        <label>Comprar</label>
+                        <select id="buy-token">
+                            <option value="usdc">USDC</option>
+                            <option value="usdt">USDT</option>
+                            <option value="eth">ETH</option>
+                        </select>
+                        <input type="number" placeholder="Cantidad" id="buy-amount" step="0.001" readonly>
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin: 15px 0;">
+                    <p>Tipo de cambio: <span id="exchange-rate">1 ETH = 3450.25 USDC</span></p>
+                    <p>Comisión: <span id="exchange-fee">0.3%</span></p>
+                </div>
+                <button class="action-btn" onclick="executeTrade()">
+                    <i class="fas fa-exchange-alt"></i> Ejecutar Intercambio
+                </button>
+            </div>
+        </div>
 
-    async function connectWallet() {
-      if (typeof window.ethereum !== 'undefined') {
-        try {
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          provider = new ethers.BrowserProvider(window.ethereum);
-          signer = await provider.getSigner();
+        <!-- Historial de Transacciones -->
+        <div class="card" id="history-section" style="display: none;">
+            <div class="section-title">
+                <i class="fas fa-history"></i>
+                <h2>Historial de Transacciones</h2>
+            </div>
+            <div class="transaction-history" id="transaction-history">
+                <!-- Las transacciones se agregarán aquí dinámicamente -->
+            </div>
+        </div>
+    </div>
 
-          // Detectar red
-          const network = await provider.getNetwork();
-          currentNetwork = network.chainId;
+    <script>
+        // ==================== CONFIGURACIÓN GLOBAL ====================
+        // PARÁMETROS QUE PUEDES MODIFICAR PARA PERSONALIZAR LA PLATAFORMA:
+        
+        // 1. LISTA DE REDES COMPATIBLES - Añade más redes cambiando este objeto
+        const SUPPORTED_NETWORKS = {
+            1: { 
+                name: 'Ethereum Mainnet', 
+                symbol: 'ETH', 
+                explorer: 'https://etherscan.io',
+                rpcUrl: 'https://mainnet.infura.io/v3/your-project-id'  // Cambia por tu RPC
+            },
+            137: { 
+                name: 'Polygon Mainnet', 
+                symbol: 'MATIC', 
+                explorer: 'https://polygonscan.com',
+                rpcUrl: 'https://polygon-rpc.com'
+            },
+            56: { 
+                name: 'Binance Smart Chain', 
+                symbol: 'BNB', 
+                explorer: 'https://bscscan.com',
+                rpcUrl: 'https://bsc-dataseed.binance.org/'
+            },
+            42161: { 
+                name: 'Arbitrum One', 
+                symbol: 'ETH', 
+                explorer: 'https://arbiscan.io',
+                rpcUrl: 'https://arb1.arbitrum.io/rpc'
+            },
+            10: { 
+                name: 'Optimism', 
+                symbol: 'ETH', 
+                explorer: 'https://optimistic.etherscan.io',
+                rpcUrl: 'https://mainnet.optimism.io'
+            },
+            43114: { 
+                name: 'Avalanche C-Chain', 
+                symbol: 'AVAX', 
+                explorer: 'https://snowtrace.io',
+                rpcUrl: 'https://api.avax.network/ext/bc/C/rpc'
+            },
+            250: { 
+                name: 'Fantom Opera', 
+                symbol: 'FTM', 
+                explorer: 'https://ftmscan.com',
+                rpcUrl: 'https://rpc.ftm.tools'
+            },
+            100: { 
+                name: 'Gnosis Chain', 
+                symbol: 'xDAI', 
+                explorer: 'https://blockscout.com/xdai/mainnet',
+                rpcUrl: 'https://rpc.gnosischain.com'
+            },
+            1284: { 
+                name: 'Moonbeam', 
+                symbol: 'GLMR', 
+                explorer: 'https://moonscan.io',
+                rpcUrl: 'https://rpc.api.moonbeam.network'
+            },
+            1285: { 
+                name: 'Moonriver', 
+                symbol: 'MOVR', 
+                explorer: 'https://moonriver.moonscan.io',
+                rpcUrl: 'https://rpc.api.moonriver.moonbeam.network'
+            },
+            25: { 
+                name: 'Cronos Mainnet', 
+                symbol: 'CRO', 
+                explorer: 'https://cronoscan.com',
+                rpcUrl: 'https://evm.cronos.org'
+            },
+            42220: { 
+                name: 'Celo Mainnet', 
+                symbol: 'CELO', 
+                explorer: 'https://celoscan.io',
+                rpcUrl: 'https://forno.celo.org'
+            },
+            1666600000: { 
+                name: 'Harmony One', 
+                symbol: 'ONE', 
+                explorer: 'https://explorer.harmony.one',
+                rpcUrl: 'https://api.harmony.one'
+            },
+            1313161554: { 
+                name: 'Aurora Mainnet', 
+                symbol: 'ETH', 
+                explorer: 'https://aurorascan.dev',
+                rpcUrl: 'https://mainnet.aurora.dev'
+            },
+            80001: { 
+                name: 'Polygon Mumbai', 
+                symbol: 'MATIC', 
+                explorer: 'https://mumbai.polygonscan.com',
+                rpcUrl: 'https://rpc-mumbai.maticvigil.com'
+            }
+        };
 
-          document.getElementById('connect-btn').style.display = 'none';
-          document.getElementById('app').style.display = 'block';
-          document.getElementById('status').textContent = `Conectado: ${await signer.getAddress()}`;
+        // 2. WALLETS COMPATIBLES - Añade más wallets modificando este array
+        const SUPPORTED_WALLETS = [
+            { name: 'MetaMask', id: 'metamask', icon: '🔷', provider: 'ethereum' },
+            { name: 'Coinbase Wallet', id: 'coinbase', icon: '🟦', provider: 'coinbaseWallet' },
+            { name: 'Trust Wallet', id: 'trustwallet', icon: '🔶', provider: 'ethereum' },
+            { name: 'WalletConnect', id: 'walletconnect', icon: '🔄', provider: 'walletconnect' },
+            { name: 'Brave Wallet', id: 'brave', icon: '🦁', provider: 'ethereum' },
+            { name: 'Phantom', id: 'phantom', icon: '👻', provider: 'phantom' },
+            { name: 'Ledger Live', id: 'ledger', icon: '🔐', provider: 'ledger' },
+            { name: 'Trezor Suite', id: 'trezor', icon: '💎', provider: 'trezor' },
+            { name: 'SafePal', id: 'safepal', icon: '🛡️', provider: 'safepal' },
+            { name: 'TokenPocket', id: 'tokenpocket', icon: '👛', provider: 'tokenpocket' }
+        ];
 
-          // Cargar datos iniciales
-          await loadDashboardData();
+        // 3. CONFIGURACIÓN DE LA APARIENCIA - Cambia colores y estilos
+        const THEME_CONFIG = {
+            primaryGradient: 'linear-gradient(45deg, #00c6ff, #0072ff)',
+            secondaryGradient: 'linear-gradient(45deg, #6a00ff, #8e2de2)',
+            successColor: '#00d26a',
+            errorColor: '#f44336',
+            cardBackground: 'rgba(255,255,255,0.05)',
+            textColor: 'white'
+        };
 
-        } catch (err) {
-          showMessage(`Error: ${err.message}`, 'error');
+        // ==================== ESTADO GLOBAL ====================
+        let web3 = null;
+        let userAddress = null;
+        let userBalance = '0';
+        let currentNetwork = null;
+        let currentProvider = null;
+        let autoConnectEnabled = true;
+        let connectionStartTime = null;
+        let transactionHistory = [];
+
+        // ==================== INICIALIZACIÓN ====================
+        window.addEventListener('load', function() {
+            console.log('🚀 FMC Pro inicializado');
+            createParticles();
+            detectWallets();
+            setupNetworkSelector();
+            
+            // Configurar el toggle de conexión automática
+            const autoConnectToggle = document.getElementById('auto-connect-toggle');
+            autoConnectToggle.checked = localStorage.getItem('FlashMorCoin-auto-connect') !== 'false';
+            autoConnectToggle.addEventListener('change', function() {
+                autoConnectEnabled = this.checked;
+                localStorage.setItem('FlashMorCoin-auto-connect', this.checked);
+            });
+            
+            // Intentar conexión automática
+            if (autoConnectEnabled) {
+                setTimeout(autoConnect, 1000);
+            }
+            
+            // Iniciar temporizador de conexión
+            setInterval(updateConnectionTime, 1000);
+            
+            // Simular actualizaciones de precios
+            setInterval(updatePriceTicker, 5000);
+        });
+
+        // ==================== DETECCIÓN DE WALLETS ====================
+        function detectWallets() {
+            const walletDetector = document.getElementById('wallet-detector');
+            walletDetector.innerHTML = '';
+            
+            SUPPORTED_WALLETS.forEach(wallet => {
+                const walletOption = document.createElement('div');
+                walletOption.className = 'wallet-option';
+                walletOption.innerHTML = `
+                    <div class="wallet-icon">${wallet.icon}</div>
+                    <div>${wallet.name}</div>
+                    <div style="font-size: 12px; opacity: 0.7;">${isWalletAvailable(wallet.id) ? 'Disponible' : 'No detectada'}</div>
+                `;
+                walletOption.onclick = () => connectToWallet(wallet.id);
+                walletDetector.appendChild(walletOption);
+            });
         }
-      } else {
-        showMessage('MetaMask no encontrado. Por favor instálalo.', 'error');
-      }
-    }
 
-    async function loadDashboardData() {
-      if (!signer) return;
-      try {
-        const addr = await signer.getAddress();
-        const balance = await provider.getBalance(addr);
-        const nonce = await provider.getTransactionCount(addr);
-
-        document.getElementById('user-address').textContent = addr;
-        document.getElementById('eth-balance').textContent = ethers.formatEther(balance);
-        document.getElementById('user-nonce').textContent = nonce;
-
-        // Nombre de la red actual
-        let networkName = 'Desconocida';
-        switch (currentNetwork) {
-          case 1n: networkName = 'Ethereum'; break;
-          case 11155111n: networkName = 'Sepolia'; break;
-          case 137n: networkName = 'Polygon'; break;
-          case 80001n: networkName = 'Mumbai'; break;
+        function isWalletAvailable(walletId) {
+            switch(walletId) {
+                case 'metamask':
+                case 'trustwallet':
+                case 'brave':
+                    return typeof window.ethereum !== 'undefined';
+                case 'coinbase':
+                    return typeof window.ethereum !== 'undefined' && window.ethereum.isCoinbaseWallet;
+                case 'phantom':
+                    return typeof window.phantom !== 'undefined' && window.phantom.ethereum;
+                case 'walletconnect':
+                    // En una implementación real, verificarías si WalletConnect está disponible
+                    return true;
+                default:
+                    return false;
+            }
         }
-        document.getElementById('current-network').textContent = networkName;
 
-      } catch (err) {
-        showMessage(`Error al cargar datos: ${err.message}`, 'error');
-      }
-    }
+        // ==================== CONEXIÓN AUTOMÁTICA ====================
+        async function autoConnect() {
+            if (!autoConnectEnabled) return;
+            
+            console.log('🔄 Intentando conexión automática...');
+            
+            // Verificar si hay una wallet previamente conectada
+            const savedWallet = localStorage.getItem('FlashMorCoin-connected-wallet');
+            if (savedWallet && isWalletAvailable(savedWallet)) {
+                console.log(`🔄 Reconectando a ${savedWallet}...`);
+                await connectToWallet(savedWallet);
+            } else {
+                // Intentar conectar con la primera wallet disponible
+                for (const wallet of SUPPORTED_WALLETS) {
+                    if (isWalletAvailable(wallet.id)) {
+                        console.log(`🔄 Conectando automáticamente a ${wallet.name}...`);
+                        await connectToWallet(wallet.id);
+                        break;
+                    }
+                }
+            }
+        }
 
-    async function sendTransaction() {
-      const to = document.getElementById('send-to').value;
-      const amount = document.getElementById('send-amount').value;
+        // ==================== CONEXIÓN A WALLETS ====================
+        async function connectToWallet(walletType) {
+            console.log(`🔗 Conectando a ${walletType}...`);
+            
+            try {
+                showLoading(`Conectando a ${walletType}...`);
+                
+                let provider;
+                
+                switch(walletType) {
+                    case 'metamask':
+                    case 'trustwallet':
+                    case 'brave':
+                        if (typeof window.ethereum === 'undefined') {
+                            throw new Error('Wallet no detectada');
+                        }
+                        provider = window.ethereum;
+                        break;
+                        
+                    case 'coinbase':
+                        if (typeof window.ethereum !== 'undefined' && window.ethereum.isCoinbaseWallet) {
+                            provider = window.ethereum;
+                        } else if (window.coinbaseWalletExtension) {
+                            provider = window.coinbaseWalletExtension;
+                        } else {
+                            throw new Error('Coinbase Wallet no detectado');
+                        }
+                        break;
+                        
+                    case 'phantom':
+                        if (typeof window.phantom !== 'undefined' && window.phantom.ethereum) {
+                            provider = window.phantom.ethereum;
+                        } else {
+                            throw new Error('Phantom Wallet no detectado');
+                        }
+                        break;
+                        
+                    case 'walletconnect':
+                        // En una implementación real, aquí integrarías WalletConnect
+                        throw new Error('WalletConnect requiere configuración adicional');
+                        
+                    default:
+                        // Para otras wallets, usar el provider global de Ethereum
+                        if (typeof window.ethereum === 'undefined') {
+                            throw new Error('Wallet no detectada');
+                        }
+                        provider = window.ethereum;
+                }
+                
+                // Solicitar acceso a las cuentas
+                const accounts = await provider.request({
+                    method: 'eth_requestAccounts'
+                });
+                
+                if (accounts.length === 0) {
+                    throw new Error('Usuario rechazó la conexión');
+                }
+                
+                userAddress = accounts[0];
+                currentProvider = provider;
+                connectionStartTime = new Date();
+                
+                // Inicializar Web3
+                web3 = new Web3(provider);
+                
+                // Obtener red actual
+                await updateNetworkInfo();
+                
+                // Obtener balance
+                await updateBalance();
+                
+                // Actualizar estadísticas
+                updateStats();
+                
+                // Guardar preferencia de wallet
+                localStorage.setItem('FlashMorCoin-connected-wallet', walletType);
+                
+                // Actualizar interfaz
+                updateUI();
+                
+                // Configurar listeners de eventos
+                setupEventListeners();
+                
+                hideLoading();
+                showSuccess(`🎉 ¡Conectado a ${walletType} exitosamente!`);
+                
+            } catch (error) {
+                hideLoading();
+                console.error(`❌ Error conectando a ${walletType}:`, error);
+                
+                if (error.code === 4001) {
+                    showError('❌ Rechazaste la conexión. Haz clic en "Conectar" en tu wallet.');
+                } else {
+                    showError(`Error conectando a ${walletType}: ${error.message}`);
+                }
+            }
+        }
 
-      if (!to || !amount) {
-        showMessage('Por favor ingresa destino y cantidad.', 'error');
-        return;
-      }
+        async function connectWallet() {
+            // Si ya hay una wallet detectada, conectar automáticamente
+            if (typeof window.ethereum !== 'undefined') {
+                await connectToWallet('metamask');
+            } else {
+                showError('❌ No se detectó ninguna wallet. Instala MetaMask u otra wallet compatible.');
+            }
+        }
 
-      try {
-        const tx = await signer.sendTransaction({
-          to: to,
-          value: ethers.parseEther(amount)
-        });
-        showMessage(`✅ Transacción enviada: ${tx.hash}`, 'success');
-        await loadDashboardData();
-      } catch (err) {
-        showMessage(`Error: ${err.message}`, 'error');
-      }
-    }
+        // ==================== GESTIÓN DE REDES ====================
+        function setupNetworkSelector() {
+            const networkSelector = document.getElementById('network-selector');
+            networkSelector.innerHTML = '';
+            
+            Object.entries(SUPPORTED_NETWORKS).forEach(([chainId, network]) => {
+                const networkBtn = document.createElement('div');
+                networkBtn.className = 'network-btn';
+                networkBtn.innerHTML = `
+                    <div style="font-size: 1.5rem;">🌐</div>
+                    <div>${network.name}</div>
+                    <div style="font-size: 12px; opacity: 0.7;">${network.symbol}</div>
+                `;
+                networkBtn.onclick = () => switchNetwork(chainId);
+                networkSelector.appendChild(networkBtn);
+            });
+        }
 
-    async function switchNetwork() {
-      const networkId = document.getElementById('network-select').value;
-      try {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x' + parseInt(networkId).toString(16) }]
-        });
-        showMessage(`✅ Red cambiada a: ${networkId}`, 'success');
-      } catch (err) {
-        showMessage(`Error al cambiar red: ${err.message}`, 'error');
-      }
-    }
+        async function switchNetwork(chainId) {
+            if (!web3 || !currentProvider) {
+                showError('❌ Primero conecta tu wallet');
+                return;
+            }
+            
+            try {
+                showLoading(`Cambiando a ${SUPPORTED_NETWORKS[chainId]?.name || 'red desconocida'}...`);
+                
+                // Intentar cambiar de red
+                await currentProvider.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: `0x${parseInt(chainId).toString(16)}` }],
+                });
+                
+                // Actualizar información de red
+                await updateNetworkInfo();
+                await updateBalance();
+                
+                hideLoading();
+                showSuccess(`✅ Conectado a ${SUPPORTED_NETWORKS[chainId]?.name || 'red desconocida'}`);
+                
+            } catch (switchError) {
+                // Si la red no está agregada, intentar agregarla
+                if (switchError.code === 4902) {
+                    try {
+                        await addNetwork(chainId);
+                    } catch (addError) {
+                        console.error('Error agregando red:', addError);
+                        showError('❌ Error agregando la red a tu wallet');
+                    }
+                } else {
+                    console.error('Error cambiando de red:', switchError);
+                    showError('❌ Error cambiando de red');
+                }
+                hideLoading();
+            }
+        }
 
-    async function addCustomNetwork() {
-      const chainId = document.getElementById('custom-chain-id').value;
-      const chainName = document.getElementById('custom-chain-name').value;
-      const rpcUrl = document.getElementById('custom-rpc-url').value;
+        async function addNetwork(chainId) {
+            const network = SUPPORTED_NETWORKS[chainId];
+            if (!network) {
+                throw new Error('Red no soportada');
+            }
+            
+            await currentProvider.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                    chainId: `0x${parseInt(chainId).toString(16)}`,
+                    chainName: network.name,
+                    rpcUrls: [network.rpcUrl],
+                    nativeCurrency: {
+                        name: network.symbol,
+                        symbol: network.symbol,
+                        decimals: 18
+                    },
+                    blockExplorerUrls: [network.explorer]
+                }]
+            });
+        }
 
-      if (!chainId || !chainName || !rpcUrl) {
-        showMessage('Completa todos los campos.', 'error');
-        return;
-      }
+        async function updateNetworkInfo() {
+            if (!web3) return;
+            
+            try {
+                const chainId = await web3.eth.getChainId();
+                currentNetwork = chainId;
+                
+                const networkInfo = SUPPORTED_NETWORKS[chainId] || { 
+                    name: `Red Desconocida (${chainId})`, 
+                    symbol: 'ETH' 
+                };
+                
+                document.getElementById('network-name').textContent = networkInfo.name;
+                document.getElementById('balance-symbol').textContent = networkInfo.symbol;
+                document.getElementById('network-status-text').textContent = `Conectado a ${networkInfo.name}`;
+                document.getElementById('network-status-text').className = 'status-badge status-active';
+                document.getElementById('display-network').textContent = networkInfo.name;
+                
+                // Actualizar botones de red activa
+                document.querySelectorAll('.network-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+            } catch (error) {
+                console.error('Error obteniendo información de red:', error);
+            }
+        }
 
-      try {
-        await window.ethereum.request({
-          method: 'wallet_addEthereumChain',
-          params: [{
-            chainId: '0x' + parseInt(chainId).toString(16),
-            chainName: chainName,
-            rpcUrls: [rpcUrl],
-            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-            blockExplorerUrls: [rpcUrl.replace('/api', '')] // Asumiendo que el explorador está en la raíz
-          }]
-        });
-        showMessage(`✅ Red personalizada agregada: ${chainName}`, 'success');
-      } catch (err) {
-        showMessage(`Error al agregar red: ${err.message}`, 'error');
-      }
-    }
+        async function updateBalance() {
+            if (!web3 || !userAddress) return;
+            
+            try {
+                const balance = await web3.eth.getBalance(userAddress);
+                userBalance = parseFloat(web3.utils.fromWei(balance, 'ether')).toFixed(4);
+                console.log('💰 Balance actualizado:', userBalance);
+                
+                document.getElementById('wallet-balance').textContent = userBalance;
+                document.getElementById('matic-balance').textContent = userBalance;
+                
+                // Actualizar balance total estimado (simulado)
+                const totalBalance = (parseFloat(userBalance) * 3450).toFixed(2); // Asumiendo precio de ETH
+                document.getElementById('total-balance').textContent = `$${totalBalance}`;
+                
+            } catch (error) {
+                console.error('Error obteniendo balance:', error);
+                userBalance = 'Error';
+            }
+        }
 
-    async function loadTransactions() {
-      try {
-        const addr = await signer.getAddress();
-        // Nota: ethers no tiene una función directa para historial
-        // Esto es un placeholder. En producción, usarías un servicio como Moralis, Alchemy, etc.
-        const txList = document.getElementById('transactions-list');
-        txList.innerHTML = `
-          <div class="transaction-item">
-            <strong>Últimas transacciones:</strong><br>
-            (Funcionalidad real requiere backend o API externa)
-          </div>
-        `;
-      } catch (err) {
-        showMessage(`Error al cargar transacciones: ${err.message}`, 'error');
-      }
-    }
+        function updateUI() {
+            // Actualizar información de wallet
+            const shortAddress = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+            document.getElementById('wallet-address').textContent = shortAddress;
+            document.getElementById('display-address').textContent = shortAddress;
+            document.getElementById('receive-address').textContent = userAddress;
+            
+            // Mostrar secciones principales
+            document.getElementById('wallet-info').style.display = 'block';
+            document.getElementById('connect-btn').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'none';
+            document.getElementById('network-section').style.display = 'block';
+            document.getElementById('stats-section').style.display = 'block';
+            document.getElementById('actions-section').style.display = 'grid';
+            document.getElementById('history-section').style.display = 'block';
+        }
 
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(el => {
-        el.classList.remove('active');
-      });
-      document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove('active');
-      });
+        function setupEventListeners() {
+            if (!currentProvider) return;
+            
+            // Cambios de cuenta
+            currentProvider.on('accountsChanged', (accounts) => {
+                console.log('🔄 Cuenta cambiada:', accounts);
+                if (accounts.length === 0) {
+                    disconnectWallet();
+                } else {
+                    userAddress = accounts[0];
+                    updateBalance().then(updateUI);
+                    showSuccess('🔄 Cuenta actualizada');
+                }
+            });
+            
+            // Cambios de red
+            currentProvider.on('chainChanged', (chainId) => {
+                console.log('🌐 Red cambiada:', chainId);
+                currentNetwork = parseInt(chainId, 16);
+                updateNetworkInfo().then(updateBalance);
+                showSuccess('🌐 Red actualizada');
+            });
+        }
 
-      document.getElementById(tabName).classList.add('active');
-      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-    }
+        function disconnectWallet() {
+            userAddress = null;
+            web3 = null;
+            currentProvider = null;
+            currentNetwork = null;
+            connectionStartTime = null;
+            
+            // Limpiar preferencia guardada
+            localStorage.removeItem('FlashMorCoin-connected-wallet');
+            
+            // Restaurar UI inicial
+            document.getElementById('connect-btn').style.display = 'block';
+            document.getElementById('wallet-info').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'block';
+            document.getElementById('network-section').style.display = 'none';
+            document.getElementById('stats-section').style.display = 'none';
+            document.getElementById('actions-section').style.display = 'none';
+            document.getElementById('history-section').style.display = 'none';
+            
+            showSuccess('👋 Wallet desconectada');
+        }
 
-    function showMessage(text, type) {
-      const msgEl = document.createElement('div');
-      msgEl.className = type;
-      msgEl.textContent = text;
-      document.getElementById('messages').appendChild(msgEl);
+        // ==================== FUNCIONALIDADES PRINCIPALES ====================
+        async function sendTransaction() {
+            const toAddress = document.getElementById('send-address').value;
+            const amount = document.getElementById('send-amount').value;
+            const token = document.getElementById('send-token').value;
+            
+            if (!isValidAddress(toAddress)) {
+                showError('❌ Dirección destino inválida');
+                return;
+            }
 
-      setTimeout(() => {
-        msgEl.remove();
-      }, 5000);
-    }
-  </script>
+            if (!amount || amount <= 0) {
+                showError('❌ Ingresa una cantidad válida');
+                return;
+            }
+
+            showLoading(`📤 Enviando ${amount} ${token.toUpperCase()}...`);
+            
+            try {
+                // En una implementación real, aquí enviarías la transacción
+                // const tx = await web3.eth.sendTransaction({...});
+                
+                // Simulamos el envío
+                setTimeout(() => {
+                    hideLoading();
+                    
+                    // Añadir a historial
+                    addTransactionToHistory({
+                        type: 'send',
+                        amount: amount,
+                        token: token,
+                        to: toAddress,
+                        timestamp: new Date(),
+                        status: 'confirmed'
+                    });
+                    
+                    showSuccess(`✅ ${amount} ${token.toUpperCase()} enviados a ${toAddress.slice(0,8)}...`);
+                    document.getElementById('send-address').value = '';
+                    document.getElementById('send-amount').value = '';
+                }, 2000);
+                
+            } catch (error) {
+                hideLoading();
+                showError('❌ Error enviando transacción: ' + error.message);
+            }
+        }
+
+        function copyAddress() {
+            navigator.clipboard.writeText(userAddress).then(() => {
+                showSuccess('✅ Dirección copiada al portapapeles');
+            }).catch(err => {
+                showError('❌ Error copiando la dirección');
+            });
+        }
+
+        function executeTrade() {
+            const sellAmount = document.getElementById('sell-amount').value;
+            const sellToken = document.getElementById('sell-token').value;
+            const buyToken = document.getElementById('buy-token').value;
+            
+            if (!sellAmount || sellAmount <= 0) {
+                showError('❌ Ingresa una cantidad válida');
+                return;
+            }
+            
+            showLoading(`🔄 Ejecutando intercambio...`);
+            
+            // Simulamos el intercambio
+            setTimeout(() => {
+                hideLoading();
+                
+                // Añadir a historial
+                addTransactionToHistory({
+                    type: 'trade',
+                    sellAmount: sellAmount,
+                    sellToken: sellToken,
+                    buyAmount: (sellAmount * 0.99).toFixed(4), // Simulando comisión
+                    buyToken: buyToken,
+                    timestamp: new Date(),
+                    status: 'confirmed'
+                });
+                
+                showSuccess(`✅ Intercambio ejecutado: ${sellAmount} ${sellToken} → ${(sellAmount * 0.99).toFixed(4)} ${buyToken}`);
+                document.getElementById('sell-amount').value = '';
+                document.getElementById('buy-amount').value = '';
+            }, 2000);
+        }
+
+        function addTransactionToHistory(tx) {
+            transactionHistory.unshift(tx);
+            updateTransactionHistory();
+            updateStats();
+        }
+
+        function updateTransactionHistory() {
+            const historyContainer = document.getElementById('transaction-history');
+            historyContainer.innerHTML = '';
+            
+            transactionHistory.slice(0, 10).forEach(tx => {
+                const txElement = document.createElement('div');
+                txElement.className = 'transaction-item';
+                
+                let content = '';
+                if (tx.type === 'send') {
+                    content = `
+                        <div>
+                            <div style="font-weight: 600;">Envío a ${tx.to.slice(0, 8)}...</div>
+                            <div style="font-size: 14px; opacity: 0.8;">${formatDate(tx.timestamp)}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="transaction-type type-send">- ${tx.amount} ${tx.token.toUpperCase()}</div>
+                            <div style="font-size: 12px; opacity: 0.8;">${tx.status}</div>
+                        </div>
+                    `;
+                } else if (tx.type === 'trade') {
+                    content = `
+                        <div>
+                            <div style="font-weight: 600;">Intercambio</div>
+                            <div style="font-size: 14px; opacity: 0.8;">${formatDate(tx.timestamp)}</div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div class="transaction-type type-trade">${tx.sellAmount} ${tx.sellToken.toUpperCase()} → ${tx.buyAmount} ${tx.buyToken.toUpperCase()}</div>
+                            <div style="font-size: 12px; opacity: 0.8;">${tx.status}</div>
+                        </div>
+                    `;
+                }
+                
+                txElement.innerHTML = content;
+                historyContainer.appendChild(txElement);
+            });
+        }
+
+        // ==================== FUNCIONES UTILITARIAS ====================
+        function updateStats() {
+            document.getElementById('transaction-count').textContent = transactionHistory.length;
+            document.getElementById('network-count').textContent = currentNetwork ? '1' : '0';
+        }
+
+        function updateConnectionTime() {
+            if (!connectionStartTime) return;
+            
+            const now = new Date();
+            const diffMs = now - connectionStartTime;
+            const diffMins = Math.floor(diffMs / 60000);
+            
+            document.getElementById('connection-time').textContent = `${diffMins}m`;
+        }
+
+        function updatePriceTicker() {
+            // Simular cambios de precio
+            const changes = ['positive', 'negative'];
+            const changeTypes = document.querySelectorAll('.price-change');
+            
+            changeTypes.forEach(change => {
+                const randomChange = changes[Math.floor(Math.random() * changes.length)];
+                change.className = `price-change ${randomChange}`;
+                change.textContent = randomChange === 'positive' ? 
+                    `+${(Math.random() * 3).toFixed(2)}%` : 
+                    `-${(Math.random() * 2).toFixed(2)}%`;
+            });
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                day: '2-digit',
+                month: '2-digit'
+            });
+        }
+
+        function isValidAddress(address) {
+            return /^0x[a-fA-F0-9]{40}$/.test(address);
+        }
+
+        function installMetaMask() {
+            window.open('https://metamask.io/download.html', '_blank');
+        }
+
+        function showLoading(message) {
+            document.getElementById('loading').style.display = 'flex';
+            document.getElementById('loading-text').textContent = message;
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const div = document.createElement('div');
+            div.className = 'success';
+            div.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.querySelector('.container').prepend(div);
+            setTimeout(() => div.remove(), 5000);
+        }
+
+        function showError(message) {
+            const div = document.createElement('div');
+            div.className = 'error';
+            div.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            document.querySelector('.container').prepend(div);
+            setTimeout(() => div.remove(), 5000);
+        }
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = Math.random() * 10 + 10;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+    </script>
 </body>
 </html>
