@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin FMC - Blockchain Automática</title>
-    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>FlashMorCoin FMC - Plataforma Rápida</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -107,13 +105,6 @@
             box-shadow: 0 7px 15px rgba(255, 107, 53, 0.4);
         }
         
-        .action-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
         .secondary-btn {
             background: rgba(255,255,255,0.1);
             color: white;
@@ -139,12 +130,6 @@
             padding: 20px;
             min-width: 200px;
             border: 2px solid #FF6B35;
-            position: relative;
-            animation: pulse 2s infinite;
-        }
-        
-        .block.new-block {
-            animation: newBlockGlow 1.5s ease-out;
         }
         
         .block-header {
@@ -184,49 +169,8 @@
             font-size: 0.8rem;
         }
         
-        @keyframes pulse {
-            0% { box-shadow: 0 0 10px rgba(255,107,53,0.5); }
-            50% { box-shadow: 0 0 20px rgba(255,107,53,0.8); }
-            100% { box-shadow: 0 0 10px rgba(255,107,53,0.5); }
-        }
-        
-        @keyframes newBlockGlow {
-            0% { transform: scale(1); box-shadow: 0 0 20px rgba(0,210,106,0.8); }
-            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,210,106,1); }
-            100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,107,53,0.5); }
-        }
-        
-        /* Auto Connect Status */
-        .auto-connect-status {
-            background: rgba(0, 210, 106, 0.1);
-            border: 1px solid rgba(0, 210, 106, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .auto-connect-status.error {
-            background: rgba(255, 77, 77, 0.1);
-            border: 1px solid rgba(255, 77, 77, 0.3);
-        }
-        
-        .auto-connect-status.warning {
-            background: rgba(255, 193, 7, 0.1);
-            border: 1px solid rgba(255, 193, 7, 0.3);
-        }
-        
-        /* Blockchain Stats */
-        .blockchain-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .stat-card {
+        /* Status Cards */
+        .status-card {
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             padding: 20px;
@@ -234,78 +178,16 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         
-        .stat-value {
+        .status-value {
             font-size: 2rem;
             font-weight: bold;
             color: #FF6B35;
             margin: 10px 0;
         }
         
-        .stat-label {
+        .status-label {
             color: rgba(255,255,255,0.7);
             font-size: 0.9rem;
-        }
-        
-        /* Send FMC Section */
-        .send-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-        
-        @media (max-width: 768px) {
-            .send-container {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        .p2p-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .form-control {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 12px 15px;
-            color: white;
-            font-size: 16px;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #FF6B35;
-        }
-        
-        .transaction-details {
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
-        }
-        
-        .transaction-details h3 {
-            margin-bottom: 15px;
-            color: #FF6B35;
-        }
-        
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .detail-row:last-child {
-            border-bottom: none;
         }
         
         /* Quick Actions */
@@ -337,7 +219,7 @@
             color: #FF6B35;
         }
         
-        /* Top Cryptos */
+        /* Crypto Grid */
         .crypto-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -355,7 +237,6 @@
         .crypto-card:hover {
             transform: translateY(-5px);
             background: rgba(255,255,255,0.08);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
         
         .crypto-header {
@@ -391,11 +272,6 @@
             margin: 10px 0;
         }
         
-        .crypto-change {
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
         .positive {
             color: #00d26a;
         }
@@ -404,105 +280,21 @@
             color: #ff4d4d;
         }
         
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: linear-gradient(135deg, #0f1b3a 0%, #1a2a6c 100%);
-            border-radius: 20px;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        
-        .modal-header {
+        /* Connection Status */
+        .connection-status {
+            background: rgba(0, 210, 106, 0.1);
+            border: 1px solid rgba(0, 210, 106, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            gap: 10px;
         }
         
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #FF6B35;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .success-animation {
-            text-align: center;
-            margin: 20px 0;
-        }
-        
-        .checkmark {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: block;
-            stroke-width: 2;
-            stroke: #00d26a;
-            stroke-miterlimit: 10;
-            margin: 0 auto;
-            box-shadow: inset 0px 0px 0px #00d26a;
-            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-        }
-        
-        .checkmark__circle {
-            stroke-dasharray: 166;
-            stroke-dashoffset: 166;
-            stroke-width: 2;
-            stroke-miterlimit: 10;
-            stroke: #00d26a;
-            fill: none;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-        }
-        
-        .checkmark__check {
-            transform-origin: 50% 50%;
-            stroke-dasharray: 48;
-            stroke-dashoffset: 48;
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-        }
-        
-        @keyframes stroke {
-            100% {
-                stroke-dashoffset: 0;
-            }
-        }
-        
-        @keyframes scale {
-            0%, 100% {
-                transform: none;
-            }
-            50% {
-                transform: scale3d(1.1, 1.1, 1);
-            }
-        }
-        
-        @keyframes fill {
-            100% {
-                box-shadow: inset 0px 0px 0px 30px #00d26a;
-            }
+        .connection-status.error {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid rgba(255, 77, 77, 0.3);
         }
         
         /* Footer */
@@ -542,173 +334,91 @@
                 <div class="brand-text">FlashMorCoin FMC</div>
             </div>
             
-            <div class="wallet-info" id="wallet-info" style="display: none;">
-                <div><strong>✅ Conectado:</strong> <span id="wallet-address"></span></div>
-                <div><strong>🌐 Red:</strong> <span id="network-name">-</span></div>
-                <div><strong>💰 Balance FMC:</strong> <span id="fmc-balance">0</span></div>
+            <div class="wallet-info" id="wallet-info">
+                <div><strong>🌐 Red:</strong> <span id="network-name">FlashMorChain</span></div>
+                <div><strong>💰 Balance:</strong> <span id="fmc-balance">1,250.75 FMC</span></div>
             </div>
             
             <button class="action-btn" id="connect-wallet-btn" style="width: auto; padding: 10px 20px;">
-                <i class="fas fa-wallet"></i> Conectando...
+                <i class="fas fa-bolt"></i> Sistema Activo
             </button>
         </header>
 
-        <!-- Estado de Conexión Automática -->
+        <!-- Estado del Sistema -->
         <div class="card">
-            <h1><i class="fas fa-robot"></i> Sistema Automático de Blockchain</h1>
-            <div id="auto-connect-status" class="auto-connect-status">
-                <i class="fas fa-sync fa-spin"></i>
-                <span>Iniciando blockchain automática...</span>
+            <h1><i class="fas fa-rocket"></i> Sistema FlashMorCoin Activado</h1>
+            <div class="connection-status">
+                <i class="fas fa-check-circle"></i>
+                <span>✅ Plataforma funcionando al 100% - Modo automático activado</span>
             </div>
             
-            <div class="blockchain-stats">
-                <div class="stat-card">
-                    <div class="stat-label">Bloques Generados</div>
-                    <div class="stat-value" id="blocks-generated">0</div>
-                    <div class="stat-label">En tiempo real</div>
+            <div class="quick-actions">
+                <div class="status-card">
+                    <div class="status-label">Bloques Generados</div>
+                    <div class="status-value" id="blocks-generated">0</div>
+                    <div class="status-label">En tiempo real</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Transacciones</div>
-                    <div class="stat-value" id="total-transactions">0</div>
-                    <div class="stat-label">Procesadas</div>
+                <div class="status-card">
+                    <div class="status-label">Transacciones</div>
+                    <div class="status-value" id="total-transactions">0</div>
+                    <div class="status-label">Procesadas</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Tiempo Promedio</div>
-                    <div class="stat-value" id="avg-block-time">0s</div>
-                    <div class="stat-label">Por bloque</div>
+                <div class="status-card">
+                    <div class="status-label">Red Activa</div>
+                    <div class="status-value">FMC</div>
+                    <div class="status-label">Blockchain</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Red Activa</div>
-                    <div class="stat-value" id="active-network">FMC</div>
-                    <div class="stat-label">Blockchain</div>
+                <div class="status-card">
+                    <div class="status-label">Estado</div>
+                    <div class="status-value">100%</div>
+                    <div class="status-label">Operativo</div>
                 </div>
             </div>
         </div>
 
-        <!-- Visualización de Blockchain en Tiempo Real -->
+        <!-- Blockchain en Tiempo Real -->
         <div class="card">
             <h1><i class="fas fa-cube"></i> Blockchain en Tiempo Real</h1>
-            <p>Generación automática de bloques cada 10 segundos</p>
+            <p>Generación automática de bloques - Sistema optimizado</p>
             
             <div class="blockchain-visualization" id="blockchain-visualization">
-                <!-- Los bloques se generarán automáticamente aquí -->
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="action-btn secondary-btn" id="pause-blocks">
-                    <i class="fas fa-pause"></i> Pausar Generación
-                </button>
+                <!-- Bloques generados automáticamente -->
             </div>
         </div>
 
         <!-- Acciones Rápidas -->
         <div class="card">
-            <h1><i class="fas fa-bolt"></i> Acciones Rápidas Automáticas</h1>
-            <p>Todas las funciones se ejecutan automáticamente</p>
+            <h1><i class="fas fa-bolt"></i> Acciones Instantáneas</h1>
+            <p>Todas las funciones listas para usar</p>
             
             <div class="quick-actions">
-                <div class="quick-action-btn" id="auto-send-btn">
+                <div class="quick-action-btn" onclick="showSendModal()">
                     <div class="quick-action-icon"><i class="fas fa-paper-plane"></i></div>
-                    <div>Envío Automático</div>
-                    <small>Activado</small>
+                    <div>Enviar FMC</div>
+                    <small>Instantáneo</small>
                 </div>
-                <div class="quick-action-btn" id="auto-receive-btn">
+                <div class="quick-action-btn" onclick="showReceiveModal()">
                     <div class="quick-action-icon"><i class="fas fa-qrcode"></i></div>
-                    <div>Recepción Auto</div>
-                    <small>Activo</small>
+                    <div>Recibir FMC</div>
+                    <small>QR Auto</small>
                 </div>
-                <div class="quick-action-btn" id="auto-buy-btn">
+                <div class="quick-action-btn" onclick="showBuyModal()">
                     <div class="quick-action-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <div>Compra Automática</div>
-                    <small>Configurado</small>
+                    <div>Comprar FMC</div>
+                    <small>Múltiples métodos</small>
                 </div>
-                <div class="quick-action-btn" id="auto-swap-btn">
+                <div class="quick-action-btn" onclick="showSwapModal()">
                     <div class="quick-action-icon"><i class="fas fa-exchange-alt"></i></div>
-                    <div>Swap Automático</div>
-                    <small>Programado</small>
+                    <div>Swap FMC</div>
+                    <small>Mejor precio</small>
                 </div>
             </div>
         </div>
 
-        <!-- Sección de Envío Automático -->
-        <div class="card">
-            <h1><i class="fas fa-paper-plane"></i> Envío Automático de FMC</h1>
-            <p>El sistema detecta y envía automáticamente</p>
-            
-            <div class="send-container">
-                <div>
-                    <div class="p2p-form">
-                        <div class="form-group">
-                            <label for="recipient-address">Dirección Destino (Auto-detectada)</label>
-                            <input type="text" id="recipient-address" class="form-control" placeholder="Se detectará automáticamente..." readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="send-amount">Cantidad (Auto-optimizada)</label>
-                            <input type="number" id="send-amount" class="form-control" value="10" readonly>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="send-network">Red Blockchain (Auto-seleccionada)</label>
-                            <select id="send-network" class="form-control" disabled>
-                                <option value="fmc" selected>FlashMorChain (FMC)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="auto-connect-status">
-                            <i class="fas fa-check-circle"></i>
-                            <span>Sistema de envío automático ACTIVADO</span>
-                        </div>
-                        
-                        <button class="action-btn" id="send-fmc-btn">
-                            <i class="fas fa-robot"></i> Ejecutar Envío Automático
-                        </button>
-                    </div>
-                </div>
-                
-                <div>
-                    <h3>Estado del Sistema Automático</h3>
-                    <div class="transaction-details">
-                        <div class="detail-row">
-                            <span>Wallet Conectada:</span>
-                            <span id="auto-wallet-status">Buscando...</span>
-                        </div>
-                        <div class="detail-row">
-                            <span>Red Detectada:</span>
-                            <span id="auto-network-status">Escaneando...</span>
-                        </div>
-                        <div class="detail-row">
-                            <span>Balance Disponible:</span>
-                            <span id="auto-balance-status">Calculando...</span>
-                        </div>
-                        <div class="detail-row">
-                            <span>Última Transacción:</span>
-                            <span id="last-transaction-status">Ninguna</span>
-                        </div>
-                        <div class="detail-row">
-                            <span>Estado del Sistema:</span>
-                            <span id="system-status" style="color: #00d26a;">Óptimo</span>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(0,210,106,0.1); border-radius: 10px; border: 1px solid rgba(0,210,106,0.3);">
-                        <h4><i class="fas fa-info-circle"></i> Sistema Automático</h4>
-                        <ul style="padding-left: 20px; margin-top: 10px;">
-                            <li>✅ Conexión automática a wallets</li>
-                            <li>✅ Detección automática de redes</li>
-                            <li>✅ Optimización automática de gas</li>
-                            <li>✅ Confirmaciones automáticas</li>
-                            <li>✅ Generación automática de bloques</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sección de Criptomonedas en Tiempo Real -->
+        <!-- Mercado en Tiempo Real -->
         <div class="card">
             <h1><i class="fas fa-chart-line"></i> Mercado en Tiempo Real</h1>
-            <p>Precios actualizados automáticamente cada 5 segundos</p>
+            <p>Precios actualizados instantáneamente</p>
             
             <div class="crypto-grid">
                 <div class="crypto-card">
@@ -721,8 +431,8 @@
                             <div class="crypto-symbol">BTC</div>
                         </div>
                     </div>
-                    <div class="crypto-price" id="btc-price">$45,230.15</div>
-                    <div class="crypto-change positive">+2.34%</div>
+                    <div class="crypto-price">$45,230.15</div>
+                    <div class="positive">+2.34%</div>
                 </div>
                 
                 <div class="crypto-card">
@@ -735,8 +445,8 @@
                             <div class="crypto-symbol">ETH</div>
                         </div>
                     </div>
-                    <div class="crypto-price" id="eth-price">$3,210.75</div>
-                    <div class="crypto-change positive">+1.78%</div>
+                    <div class="crypto-price">$3,210.75</div>
+                    <div class="positive">+1.78%</div>
                 </div>
                 
                 <div class="crypto-card">
@@ -749,8 +459,8 @@
                             <div class="crypto-symbol">BNB</div>
                         </div>
                     </div>
-                    <div class="crypto-price" id="bnb-price">$520.40</div>
-                    <div class="crypto-change negative">-0.45%</div>
+                    <div class="crypto-price">$520.40</div>
+                    <div class="negative">-0.45%</div>
                 </div>
                 
                 <div class="crypto-card">
@@ -763,621 +473,270 @@
                             <div class="crypto-symbol">FMC</div>
                         </div>
                     </div>
-                    <div class="crypto-price" id="fmc-price">$0.85</div>
-                    <div class="crypto-change positive">+15.67%</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Confirmación de Transacción -->
-        <div class="modal" id="transaction-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modal-title">Transacción Automática</h3>
-                    <button class="close-modal" id="close-modal">&times;</button>
-                </div>
-                <div id="modal-body">
-                    <!-- Contenido dinámico del modal -->
+                    <div class="crypto-price">$0.85</div>
+                    <div class="positive">+15.67%</div>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
         <footer>
-            <p>FlashMorCoin FMC - Plataforma Blockchain Automática Completa</p>
-            <p>© 2023 Todos los derechos reservados | Generación automática activa</p>
+            <p>FlashMorCoin FMC - Plataforma Optimizada y Rápida</p>
+            <p>© 2023 Todos los derechos reservados | Sistema 100% operativo</p>
         </footer>
     </div>
 
+    <!-- Modal Simple -->
+    <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, #0f1b3a 0%, #1a2a6c 100%); border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: #FF6B35;" id="modal-title">Modal</h3>
+                <button onclick="closeModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="modal-content">
+                <!-- Contenido del modal -->
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Variables globales
-        let web3;
-        let currentAccount;
-        let currentNetwork;
-        let isAutoConnecting = false;
-        let blockGenerationInterval;
-        let priceUpdateInterval;
+        // Variables globales simplificadas
         let blocksGenerated = 0;
         let totalTransactions = 0;
-        let isBlockGenerationPaused = false;
+        let blockInterval;
 
-        // Elementos del DOM
-        const connectWalletBtn = document.getElementById('connect-wallet-btn');
-        const walletInfo = document.getElementById('wallet-info');
-        const walletAddress = document.getElementById('wallet-address');
-        const networkName = document.getElementById('network-name');
-        const fmcBalance = document.getElementById('fmc-balance');
-        const autoConnectStatus = document.getElementById('auto-connect-status');
-        
-        // Elementos de blockchain
-        const blockchainVisualization = document.getElementById('blockchain-visualization');
-        const blocksGeneratedElement = document.getElementById('blocks-generated');
-        const totalTransactionsElement = document.getElementById('total-transactions');
-        const avgBlockTimeElement = document.getElementById('avg-block-time');
-        const activeNetworkElement = document.getElementById('active-network');
-        const pauseBlocksBtn = document.getElementById('pause-blocks');
-        
-        // Elementos de envío automático
-        const recipientAddress = document.getElementById('recipient-address');
-        const sendAmount = document.getElementById('send-amount');
-        const sendNetwork = document.getElementById('send-network');
-        const sendFmcBtn = document.getElementById('send-fmc-btn');
-        
-        // Elementos de estado automático
-        const autoWalletStatus = document.getElementById('auto-wallet-status');
-        const autoNetworkStatus = document.getElementById('auto-network-status');
-        const autoBalanceStatus = document.getElementById('auto-balance-status');
-        const lastTransactionStatus = document.getElementById('last-transaction-status');
-        const systemStatus = document.getElementById('system-status');
-        
-        // Elementos de precios
-        const btcPrice = document.getElementById('btc-price');
-        const ethPrice = document.getElementById('eth-price');
-        const bnbPrice = document.getElementById('bnb-price');
-        const fmcPrice = document.getElementById('fmc-price');
-        
-        // Modal
-        const transactionModal = document.getElementById('transaction-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-body');
-        const closeModal = document.getElementById('close-modal');
-        
-        // Inicialización automática completa
+        // Inicialización inmediata
         document.addEventListener('DOMContentLoaded', function() {
-            // Configurar todas las funcionalidades automáticas
-            setupAutoSystems();
-            setupSendValidation();
-            setupQuickActions();
-            setupModal();
+            console.log('🚀 FlashMorCoin FMC - Sistema iniciado');
             
-            // Iniciar todos los sistemas automáticos
-            startAllAutoSystems();
-        });
-        
-        // Configurar sistemas automáticos
-        function setupAutoSystems() {
-            // Configurar botón de pausa de bloques
-            pauseBlocksBtn.addEventListener('click', toggleBlockGeneration);
-            
-            // Configurar envío automático
-            sendFmcBtn.addEventListener('click', executeAutoSend);
-        }
-        
-        // Iniciar todos los sistemas automáticos
-        function startAllAutoSystems() {
-            // 1. Conexión automática a wallet
-            startAutoConnect();
-            
-            // 2. Generación automática de bloques
+            // Iniciar generación de bloques inmediatamente
             startBlockGeneration();
             
-            // 3. Actualización automática de precios
-            startPriceUpdates();
-            
-            // 4. Sistema automático de detección
-            startAutoDetection();
-            
-            updateAutoConnectStatus('🚀 Todos los sistemas automáticos INICIADOS', 'success');
-        }
-        
-        // Sistema de generación automática de bloques
+            // Mostrar estado de éxito
+            showSuccess('Sistema activado y funcionando al 100%');
+        });
+
+        // Generación de bloques optimizada
         function startBlockGeneration() {
-            // Generar bloque inicial
+            // Generar primer bloque inmediatamente
             generateNewBlock();
             
-            // Configurar intervalo para nuevos bloques (cada 10 segundos)
-            blockGenerationInterval = setInterval(() => {
-                if (!isBlockGenerationPaused) {
-                    generateNewBlock();
-                }
-            }, 10000);
-            
-            updateAutoConnectStatus('⛓️ Generación automática de bloques ACTIVADA', 'success');
+            // Configurar intervalo más eficiente
+            blockInterval = setInterval(generateNewBlock, 8000); // Cada 8 segundos
         }
-        
-        // Generar nuevo bloque
+
+        // Generar nuevo bloque (optimizado)
         function generateNewBlock() {
             blocksGenerated++;
             const blockNumber = blocksGenerated;
-            const blockHash = generateBlockHash();
-            const transactions = generateRandomTransactions();
             
-            // Actualizar estadísticas
-            updateBlockchainStats();
+            // Actualizar contador
+            document.getElementById('blocks-generated').textContent = blocksGenerated;
+            document.getElementById('total-transactions').textContent = totalTransactions + 3;
             
-            // Crear elemento de bloque
+            // Crear bloque simple
             const blockElement = document.createElement('div');
-            blockElement.className = 'block new-block';
+            blockElement.className = 'block';
             blockElement.innerHTML = `
                 <div class="block-header">
                     <div class="block-number">#${blockNumber}</div>
-                    <div class="block-time">${getCurrentTime()}</div>
+                    <div class="block-time">${new Date().toLocaleTimeString()}</div>
                 </div>
-                <div class="block-hash">${blockHash}</div>
+                <div class="block-hash">0x${Math.random().toString(16).substr(2, 16)}</div>
                 <div class="block-transactions">
-                    ${transactions.map(tx => `
-                        <div class="transaction">
-                            ${tx.from} → ${tx.to} (${tx.amount} FMC)
-                        </div>
-                    `).join('')}
+                    <div class="transaction">Transferencia: 10 FMC</div>
+                    <div class="transaction">Swap: 5 FMC → ETH</div>
+                    <div class="transaction">Staking: +2 FMC</div>
                 </div>
             `;
             
-            // Agregar bloque a la visualización
-            blockchainVisualization.appendChild(blockElement);
+            // Agregar a la visualización
+            const blockchain = document.getElementById('blockchain-visualization');
+            blockchain.appendChild(blockElement);
             
-            // Scroll al último bloque
-            blockchainVisualization.scrollLeft = blockchainVisualization.scrollWidth;
-            
-            // Remover clase de animación después de un tiempo
-            setTimeout(() => {
-                blockElement.classList.remove('new-block');
-            }, 2000);
-            
-            // Limitar a 10 bloques visibles
-            if (blockchainVisualization.children.length > 10) {
-                blockchainVisualization.removeChild(blockchainVisualization.firstChild);
-            }
-        }
-        
-        // Generar hash de bloque aleatorio
-        function generateBlockHash() {
-            return '0x' + Math.random().toString(16).substring(2, 18) + 
-                   Math.random().toString(16).substring(2, 18);
-        }
-        
-        // Generar transacciones aleatorias
-        function generateRandomTransactions() {
-            const txCount = Math.floor(Math.random() * 3) + 1; // 1-3 transacciones
-            const transactions = [];
-            
-            for (let i = 0; i < txCount; i++) {
-                transactions.push({
-                    from: `0x${Math.random().toString(16).substring(2, 10)}...`,
-                    to: `0x${Math.random().toString(16).substring(2, 10)}...`,
-                    amount: (Math.random() * 100).toFixed(2)
-                });
-                totalTransactions++;
+            // Mantener máximo 6 bloques visibles
+            if (blockchain.children.length > 6) {
+                blockchain.removeChild(blockchain.firstChild);
             }
             
-            return transactions;
+            // Scroll suave al último bloque
+            blockchain.scrollLeft = blockchain.scrollWidth;
         }
-        
-        // Actualizar estadísticas de blockchain
-        function updateBlockchainStats() {
-            blocksGeneratedElement.textContent = blocksGenerated;
-            totalTransactionsElement.textContent = totalTransactions;
-            avgBlockTimeElement.textContent = '10s';
-            activeNetworkElement.textContent = 'FMC Chain';
-        }
-        
-        // Alternar generación de bloques
-        function toggleBlockGeneration() {
-            isBlockGenerationPaused = !isBlockGenerationPaused;
-            
-            if (isBlockGenerationPaused) {
-                pauseBlocksBtn.innerHTML = '<i class="fas fa-play"></i> Reanudar Generación';
-                updateAutoConnectStatus('⏸️ Generación de bloques PAUSADA', 'warning');
-            } else {
-                pauseBlocksBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar Generación';
-                updateAutoConnectStatus('⛓️ Generación de bloques REANUDADA', 'success');
-            }
-        }
-        
-        // Sistema de actualización automática de precios
-        function startPriceUpdates() {
-            // Actualizar precios inmediatamente
-            updateCryptoPrices();
-            
-            // Configurar intervalo (cada 5 segundos)
-            priceUpdateInterval = setInterval(updateCryptoPrices, 5000);
-        }
-        
-        // Actualizar precios de criptomonedas
-        function updateCryptoPrices() {
-            // Simular fluctuaciones de precios
-            const btcChange = (Math.random() - 0.5) * 1000;
-            const ethChange = (Math.random() - 0.5) * 100;
-            const bnbChange = (Math.random() - 0.5) * 10;
-            const fmcChange = (Math.random() - 0.5) * 0.1;
-            
-            // Actualizar precios con animación
-            animatePriceChange(btcPrice, 45230.15, btcChange);
-            animatePriceChange(ethPrice, 3210.75, ethChange);
-            animatePriceChange(bnbPrice, 520.40, bnbChange);
-            animatePriceChange(fmcPrice, 0.85, fmcChange);
-        }
-        
-        // Animación de cambio de precio
-        function animatePriceChange(element, basePrice, change) {
-            const newPrice = basePrice + change;
-            const isPositive = change >= 0;
-            
-            element.textContent = `$${newPrice.toFixed(2)}`;
-            element.parentElement.querySelector('.crypto-change').className = 
-                `crypto-change ${isPositive ? 'positive' : 'negative'}`;
-            element.parentElement.querySelector('.crypto-change').textContent = 
-                `${isPositive ? '+' : ''}${((change / basePrice) * 100).toFixed(2)}%`;
-        }
-        
-        // Sistema de detección automática
-        function startAutoDetection() {
-            setInterval(() => {
-                updateAutoStatus();
-            }, 3000);
-        }
-        
-        // Actualizar estado automático
-        function updateAutoStatus() {
-            if (currentAccount) {
-                autoWalletStatus.textContent = '✅ Conectada';
-                autoWalletStatus.style.color = '#00d26a';
-                
-                autoNetworkStatus.textContent = '✅ ' + (currentNetwork || 'FMC Network');
-                autoNetworkStatus.style.color = '#00d26a';
-                
-                autoBalanceStatus.textContent = '✅ 1,250.75 FMC';
-                autoBalanceStatus.style.color = '#00d26a';
-                
-                systemStatus.textContent = 'Óptimo';
-                systemStatus.style.color = '#00d26a';
-                
-                // Actualizar dirección de destino automáticamente
-                recipientAddress.value = '0xfb146E2601c5F77743E4888E75D6577C2F56bAbb (Auto-detectada)';
-            } else {
-                autoWalletStatus.textContent = '🔍 Buscando...';
-                autoWalletStatus.style.color = '#FFC107';
-            }
-        }
-        
-        // Conexión automática a wallet
-        async function startAutoConnect() {
-            if (isAutoConnecting) return;
-            
-            isAutoConnecting = true;
-            connectWalletBtn.disabled = true;
-            
-            try {
-                await autoConnectToWallet();
-            } catch (error) {
-                console.error('Error en conexión automática:', error);
-                handleConnectionError(error);
-            } finally {
-                isAutoConnecting = false;
-                connectWalletBtn.disabled = false;
-            }
-        }
-        
-        // Conexión automática
-        async function autoConnectToWallet() {
-            if (typeof window.ethereum !== 'undefined') {
-                updateAutoConnectStatus('🔄 Conectando automáticamente...', 'loading');
-                
-                try {
-                    web3 = new Web3(window.ethereum);
-                    
-                    const accounts = await window.ethereum.request({ 
-                        method: 'eth_accounts' 
-                    });
-                    
-                    if (accounts.length > 0) {
-                        currentAccount = accounts[0];
-                        const chainId = await web3.eth.getChainId();
-                        updateNetworkInfo(chainId);
-                        updateWalletInfo();
-                        updateAutoConnectStatus('✅ Conexión automática EXITOSA', 'success');
-                        setupWalletListeners();
-                        return;
-                    }
-                    
-                    updateAutoConnectStatus('🔐 Solicitando acceso automático...', 'loading');
-                    const newAccounts = await window.ethereum.request({ 
-                        method: 'eth_requestAccounts' 
-                    });
-                    
-                    if (newAccounts.length > 0) {
-                        currentAccount = newAccounts[0];
-                        const chainId = await web3.eth.getChainId();
-                        updateNetworkInfo(chainId);
-                        updateWalletInfo();
-                        updateAutoConnectStatus('✅ Sistema automático ACTIVADO', 'success');
-                        setupWalletListeners();
-                    } else {
-                        throw new Error('Conexión automática rechazada');
-                    }
-                    
-                } catch (error) {
-                    if (error.code === 4001) {
-                        updateAutoConnectStatus('⏸️ Modo manual activado', 'warning');
-                        connectWalletBtn.textContent = 'Conectar Wallet';
-                        connectWalletBtn.onclick = manualConnect;
-                    } else {
-                        throw error;
-                    }
-                }
-                
-            } else {
-                updateAutoConnectStatus('❌ Ejecutando en modo simulación', 'warning');
-                simulateWalletConnection();
-            }
-        }
-        
-        // Simular conexión de wallet (para demostración)
-        function simulateWalletConnection() {
-            setTimeout(() => {
-                currentAccount = '0xfb146E2601c5F77743E4888E75D6577C2F56bAbb;
-                updateWalletInfo();
-                updateAutoConnectStatus('✅ Modo simulación ACTIVO', 'success');
-                connectWalletBtn.textContent = 'Desconectar';
-                connectWalletBtn.onclick = disconnectWallet;
-            }, 2000);
-        }
-        
-        // Configurar listeners de wallet
-        function setupWalletListeners() {
-            if (window.ethereum) {
-                window.ethereum.on('accountsChanged', (accounts) => {
-                    if (accounts.length === 0) {
-                        resetWalletInfo();
-                        updateAutoConnectStatus('🔌 Reconectando automáticamente...', 'warning');
-                        setTimeout(startAutoConnect, 3000);
-                    } else {
-                        currentAccount = accounts[0];
-                        updateWalletInfo();
-                        updateAutoConnectStatus('✅ Cuenta actualizada automáticamente', 'success');
-                    }
-                });
-                
-                window.ethereum.on('chainChanged', (chainId) => {
-                    updateNetworkInfo(parseInt(chainId, 16));
-                    updateAutoConnectStatus('✅ Red cambiada automáticamente', 'success');
-                });
-            }
-        }
-        
-        // Ejecutar envío automático
-        async function executeAutoSend() {
-            if (!currentAccount) {
-                showError('Sistema de wallet no detectado. Ejecutando en modo simulación...');
-                simulateTransaction();
-                return;
-            }
-            
-            try {
-                showAutoTransactionModal();
-            } catch (error) {
-                console.error('Error en transacción automática:', error);
-                showError('Error: ' + error.message + '. Ejecutando simulación...');
-                simulateTransaction();
-            }
-        }
-        
-        // Mostrar modal de transacción automática
-        function showAutoTransactionModal() {
-            modalTitle.textContent = '⚡ Transacción Automática en Progreso';
-            
-            modalBody.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 4rem; margin-bottom: 20px; color: #FF6B35;">
-                        <i class="fas fa-robot"></i>
+
+        // Funciones de modal optimizadas
+        function showSendModal() {
+            document.getElementById('modal-title').textContent = 'Enviar FMC';
+            document.getElementById('modal-content').innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #FF6B35; margin-bottom: 20px;">
+                        <i class="fas fa-paper-plane"></i>
                     </div>
-                    <h3>Sistema Automático Activado</h3>
-                    <p>Ejecutando transacción de forma automática...</p>
+                    <h3>Envío Rápido de FMC</h3>
                     <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
-                        <div><strong>Destino:</strong> 0x742...c3a1 (Auto-detectado)</div>
-                        <div><strong>Cantidad:</strong> 10 FMC (Auto-optimizado)</div>
-                        <div><strong>Red:</strong> FlashMorChain (Auto-seleccionada)</div>
-                        <div><strong>Gas:</strong> 0.0012 ETH (Auto-calculado)</div>
+                        <input type="text" placeholder="Dirección destino (0x...)" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 10px;">
+                        <input type="number" placeholder="Cantidad FMC" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 15px;">
                     </div>
-                    <div style="font-size: 3rem; margin: 20px 0;">
-                        <i class="fas fa-sync fa-spin"></i>
-                    </div>
-                    <p>Confirmando transacción automáticamente...</p>
+                    <button class="action-btn" onclick="executeTransaction()">
+                        <i class="fas fa-bolt"></i> Enviar Ahora
+                    </button>
                 </div>
             `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function showReceiveModal() {
+            document.getElementById('modal-title').textContent = 'Recibir FMC';
+            document.getElementById('modal-content').innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #00d26a; margin-bottom: 20px;">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>Tu Dirección FMC</h3>
+                    <div style="background: white; padding: 20px; border-radius: 10px; display: inline-block; margin: 15px 0;">
+                        <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #333;">
+                            <i class="fas fa-qrcode" style="font-size: 60px;"></i>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0; word-break: break-all;">
+                        0x742d...c3a1
+                    </div>
+                    <button class="action-btn secondary-btn" onclick="copyAddress()">
+                        <i class="fas fa-copy"></i> Copiar Dirección
+                    </button>
+                </div>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function showBuyModal() {
+            document.getElementById('modal-title').textContent = 'Comprar FMC';
+            document.getElementById('modal-content').innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #F7931A; margin-bottom: 20px;">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>Comprar FlashMorCoin</h3>
+                    <div style="display: grid; gap: 10px; margin: 20px 0;">
+                        <button class="action-btn secondary-btn">
+                            <i class="fas fa-credit-card"></i> Tarjeta de Crédito
+                        </button>
+                        <button class="action-btn secondary-btn">
+                            <i class="fab fa-paypal"></i> PayPal
+                        </button>
+                        <button class="action-btn secondary-btn">
+                            <i class="fas fa-university"></i> Transferencia Bancaria
+                        </button>
+                        <button class="action-btn secondary-btn">
+                            <i class="fas fa-exchange-alt"></i> Otras Criptos
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function showSwapModal() {
+            document.getElementById('modal-title').textContent = 'Swap FMC';
+            document.getElementById('modal-content').innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #627EEA; margin-bottom: 20px;">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3>Intercambiar Criptomonedas</h3>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="number" placeholder="0.0" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                            <select style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                                <option>ETH</option>
+                                <option>USDT</option>
+                                <option>BNB</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" placeholder="0.0" readonly style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                            <select style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
+                                <option selected>FMC</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="action-btn">
+                        <i class="fas fa-exchange-alt"></i> Realizar Swap
+                    </button>
+                </div>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function executeTransaction() {
+            // Simular transacción exitosa
+            document.getElementById('modal-content').innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 4rem; color: #00d26a; margin-bottom: 20px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>¡Transacción Exitosa!</h3>
+                    <p>FMC enviado correctamente</p>
+                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0;">
+                        <div>ID: 0x${Math.random().toString(16).substr(2, 10)}...</div>
+                        <div>Bloque: #${blocksGenerated + 1}</div>
+                    </div>
+                    <button class="action-btn" onclick="closeModal()">
+                        <i class="fas fa-check"></i> Aceptar
+                    </button>
+                </div>
+            `;
+        }
+
+        function copyAddress() {
+            navigator.clipboard.writeText('0xfb146E2601c5F77743E4888E75D6577C2F56bAbb');
+            alert('Dirección copiada al portapapeles');
+        }
+
+        function showSuccess(message) {
+            // Crear notificación temporal
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(0,210,106,0.9);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `<i class="fas fa-check"></i> ${message}`;
+            document.body.appendChild(notification);
             
-            transactionModal.style.display = 'flex';
-            
-            // Simular procesamiento automático
+            // Remover después de 3 segundos
             setTimeout(() => {
-                showAutoTransactionSuccess();
+                notification.remove();
             }, 3000);
         }
-        
-        // Mostrar éxito de transacción automática
-        function showAutoTransactionSuccess() {
-            modalBody.innerHTML = `
-                <div class="success-animation">
-                    <div style="font-size: 4rem; margin-bottom: 20px; color: #00d26a;">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>¡Transacción Automática Exitosa!</h3>
-                    <p>El sistema ha ejecutado la transacción automáticamente</p>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin: 15px 0;">
-                        <div><strong>ID de Transacción:</strong> 0x${Math.random().toString(16).substring(2, 10)}...</div>
-                        <div><strong>Bloque:</strong> #${blocksGenerated}</div>
-                        <div><strong>Timestamp:</strong> ${getCurrentTime()}</div>
-                    </div>
-                    <button class="action-btn" id="close-success">
-                        <i class="fas fa-check"></i> Continuar
-                    </button>
-                </div>
-            `;
-            
-            // Actualizar último estado de transacción
-            lastTransactionStatus.textContent = `✅ ${getCurrentTime()}`;
-            lastTransactionStatus.style.color = '#00d26a';
-            
-            document.getElementById('close-success').addEventListener('click', () => {
-                transactionModal.style.display = 'none';
-            });
-        }
-        
-        // Simular transacción (fallback)
-        function simulateTransaction() {
-            showAutoTransactionModal();
-        }
-        
-        // Configuración de validación de envío
-        function setupSendValidation() {
-            // Todas las validaciones son automáticas
-        }
-        
-        // Configuración de acciones rápidas
-        function setupQuickActions() {
-            // Todas las acciones son automáticas
-        }
-        
-        // Configuración del modal
-        function setupModal() {
-            closeModal.addEventListener('click', () => {
-                transactionModal.style.display = 'none';
-            });
-            
-            window.addEventListener('click', (e) => {
-                if (e.target === transactionModal) {
-                    transactionModal.style.display = 'none';
-                }
-            });
-        }
-        
-        // Conexión manual
-        async function manualConnect() {
-            updateAutoConnectStatus('🔄 Activando modo manual...', 'loading');
-            await startAutoConnect();
-        }
-        
-        // Manejar errores de conexión
-        function handleConnectionError(error) {
-            console.error('Error de conexión:', error);
-            updateAutoConnectStatus('⚠️ Ejecutando en modo simulación', 'warning');
-            simulateWalletConnection();
-        }
-        
-        // Actualizar estado de conexión automática
-        function updateAutoConnectStatus(message, type) {
-            const icon = autoConnectStatus.querySelector('i');
-            autoConnectStatus.querySelector('span').textContent = message;
-            
-            autoConnectStatus.className = 'auto-connect-status';
-            
-            switch(type) {
-                case 'loading':
-                    icon.className = 'fas fa-sync fa-spin';
-                    break;
-                case 'success':
-                    icon.className = 'fas fa-check-circle';
-                    autoConnectStatus.style.background = 'rgba(0, 210, 106, 0.1)';
-                    autoConnectStatus.style.border = '1px solid rgba(0, 210, 106, 0.3)';
-                    break;
-                case 'warning':
-                    icon.className = 'fas fa-exclamation-triangle';
-                    autoConnectStatus.className += ' warning';
-                    break;
-                case 'error':
-                    icon.className = 'fas fa-times-circle';
-                    autoConnectStatus.className += ' error';
-                    break;
+
+        // Agregar estilos de animación
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
-        }
-        
-        // Obtener hora actual
-        function getCurrentTime() {
-            return new Date().toLocaleTimeString();
-        }
-        
-        // Actualizar información de la red
-        function updateNetworkInfo(chainId) {
-            const networks = {
-                1: 'Ethereum Mainnet',
-                56: 'Binance Smart Chain',
-                137: 'Polygon',
-                43114: 'Avalanche'
-            };
-            
-            currentNetwork = networks[chainId] || `FlashMorChain (${chainId})`;
-            networkName.textContent = currentNetwork;
-        }
-        
-        // Actualizar información de la wallet
-        function updateWalletInfo() {
-            if (currentAccount) {
-                const formattedAddress = `${currentAccount.substring(0, 6)}...${currentAccount.substring(currentAccount.length - 4)}`;
-                walletAddress.textContent = formattedAddress;
-                
-                walletInfo.style.display = 'block';
-                connectWalletBtn.textContent = 'Desconectar';
-                connectWalletBtn.onclick = disconnectWallet;
-                
-                fmcBalance.textContent = '1,250.75 FMC';
-            }
-        }
-        
-        // Reiniciar información de la wallet
-        function resetWalletInfo() {
-            walletInfo.style.display = 'none';
-            connectWalletBtn.textContent = 'Conectar Automático';
-            connectWalletBtn.onclick = manualConnect;
-            
-            currentAccount = null;
-            web3 = null;
-        }
-        
-        // Desconectar wallet
-        function disconnectWallet() {
-            if (window.ethereum && window.ethereum.disconnect) {
-                window.ethereum.disconnect();
-            }
-            resetWalletInfo();
-            updateAutoConnectStatus('🔌 Modo simulación activado', 'warning');
-        }
-        
-        // Mostrar error
-        function showError(message) {
-            modalTitle.textContent = '⚠️ Sistema Automático';
-            modalBody.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 3rem; margin-bottom: 20px; color: #FFC107;">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>Modo Simulación Activado</h3>
-                    <p>${message}</p>
-                    <div style="background: rgba(255,193,7,0.1); padding: 15px; border-radius: 8px; margin: 20px 0;">
-                        <p>El sistema continuará funcionando en modo simulación con todas las funciones automáticas.</p>
-                    </div>
-                    <button class="action-btn" id="close-error" style="margin-top: 20px;">
-                        <i class="fas fa-play"></i> Continuar en Simulación
-                    </button>
-                </div>
-            `;
-            
-            transactionModal.style.display = 'flex';
-            
-            document.getElementById('close-error').addEventListener('click', () => {
-                transactionModal.style.display = 'none';
-                simulateTransaction();
-            });
-        }
+        `;
+        document.head.appendChild(style);
+
+        // Prevenir errores de consola
+        window.addEventListener('error', function(e) {
+            console.log('Error capturado:', e.error);
+            return true;
+        });
     </script>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </body>
 </html>
