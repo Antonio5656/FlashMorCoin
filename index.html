@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin FMC - Plataforma Rápida</title>
+    <title>FlashMorCoin FMC - Vender Tokens</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -115,62 +115,57 @@
             background: rgba(255,255,255,0.2);
         }
         
-        /* Blockchain Visualization */
-        .blockchain-visualization {
+        .success-btn {
+            background: linear-gradient(45deg, #00d26a, #00b357);
+        }
+        
+        .success-btn:hover {
+            box-shadow: 0 7px 15px rgba(0, 210, 106, 0.4);
+        }
+        
+        /* Sell Section */
+        .sell-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .sell-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group {
             display: flex;
-            overflow-x: auto;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .form-control {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+        
+        /* Token Stats */
+        .token-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            padding: 20px 0;
             margin: 20px 0;
         }
         
-        .block {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border-radius: 12px;
-            padding: 20px;
-            min-width: 200px;
-            border: 2px solid #FF6B35;
-        }
-        
-        .block-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .block-number {
-            font-weight: bold;
-            color: #FF6B35;
-            font-size: 1.2rem;
-        }
-        
-        .block-hash {
-            font-family: monospace;
-            font-size: 0.8rem;
-            background: rgba(0,0,0,0.3);
-            padding: 5px;
-            border-radius: 5px;
-            margin: 5px 0;
-            word-break: break-all;
-        }
-        
-        .block-transactions {
-            margin-top: 10px;
-        }
-        
-        .transaction {
-            background: rgba(255,255,255,0.1);
-            padding: 8px;
-            border-radius: 5px;
-            margin: 5px 0;
-            font-size: 0.8rem;
-        }
-        
-        /* Status Cards */
-        .status-card {
+        .stat-card {
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             padding: 20px;
@@ -178,16 +173,35 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         
-        .status-value {
+        .stat-value {
             font-size: 2rem;
             font-weight: bold;
             color: #FF6B35;
             margin: 10px 0;
         }
         
-        .status-label {
+        .stat-label {
             color: rgba(255,255,255,0.7);
             font-size: 0.9rem;
+        }
+        
+        /* Price Chart */
+        .price-chart {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 5px;
+        }
+        
+        .chart-bar {
+            background: linear-gradient(to top, #FF6B35, #F7931E);
+            flex: 1;
+            border-radius: 5px 5px 0 0;
+            min-height: 10px;
         }
         
         /* Quick Actions */
@@ -219,82 +233,33 @@
             color: #FF6B35;
         }
         
-        /* Crypto Grid */
-        .crypto-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+        /* Sales History */
+        .sales-history {
+            margin-top: 20px;
         }
         
-        .crypto-card {
+        .sale-item {
             background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .crypto-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.08);
-        }
-        
-        .crypto-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .crypto-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        
-        .crypto-name {
-            font-weight: 600;
-            font-size: 18px;
-        }
-        
-        .crypto-symbol {
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
-        }
-        
-        .crypto-price {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 10px 0;
-        }
-        
-        .positive {
-            color: #00d26a;
-        }
-        
-        .negative {
-            color: #ff4d4d;
-        }
-        
-        /* Connection Status */
-        .connection-status {
-            background: rgba(0, 210, 106, 0.1);
-            border: 1px solid rgba(0, 210, 106, 0.3);
             border-radius: 10px;
             padding: 15px;
-            margin: 15px 0;
+            margin: 10px 0;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
         }
         
-        .connection-status.error {
-            background: rgba(255, 77, 77, 0.1);
-            border: 1px solid rgba(255, 77, 77, 0.3);
+        .sale-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sale-amount {
+            font-weight: bold;
+            color: #FF6B35;
+        }
+        
+        .sale-price {
+            color: rgba(255,255,255,0.7);
         }
         
         /* Footer */
@@ -336,161 +301,275 @@
             
             <div class="wallet-info" id="wallet-info">
                 <div><strong>🌐 Red:</strong> <span id="network-name">FlashMorChain</span></div>
-                <div><strong>💰 Balance:</strong> <span id="fmc-balance">1,250.75 FMC</span></div>
+                <div><strong>💰 Balance:</strong> <span id="fmc-balance">12,458.75 FMC</span></div>
+                <div><strong>💵 Valor:</strong> <span id="fmc-value">$10,590.94 USD</span></div>
             </div>
             
-            <button class="action-btn" id="connect-wallet-btn" style="width: auto; padding: 10px 20px;">
-                <i class="fas fa-bolt"></i> Sistema Activo
+            <button class="action-btn success-btn" style="width: auto; padding: 10px 20px;">
+                <i class="fas fa-coins"></i> Vender FMC
             </button>
         </header>
 
-        <!-- Estado del Sistema -->
+        <!-- Estadísticas del Token -->
         <div class="card">
-            <h1><i class="fas fa-rocket"></i> Sistema FlashMorCoin Activado</h1>
-            <div class="connection-status">
-                <i class="fas fa-check-circle"></i>
-                <span>✅ Plataforma funcionando al 100% - Modo automático activado</span>
+            <h1><i class="fas fa-chart-bar"></i> Estadísticas de FlashMorCoin</h1>
+            
+            <div class="token-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Precio Actual</div>
+                    <div class="stat-value">$0.85</div>
+                    <div class="stat-label">+15.67% hoy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tu Balance</div>
+                    <div class="stat-value">12,458 FMC</div>
+                    <div class="stat-label">$10,590.94 USD</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Máximo para Vender</div>
+                    <div class="stat-value">12,458 FMC</div>
+                    <div class="stat-label">Balance disponible</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Ganancia Potencial</div>
+                    <div class="stat-value">$10,590</div>
+                    <div class="stat-label">Al precio actual</div>
+                </div>
             </div>
             
-            <div class="quick-actions">
-                <div class="status-card">
-                    <div class="status-label">Bloques Generados</div>
-                    <div class="status-value" id="blocks-generated">0</div>
-                    <div class="status-label">En tiempo real</div>
+            <div class="price-chart" id="price-chart">
+                <!-- Gráfico de precios se generará aquí -->
+            </div>
+        </div>
+
+        <!-- Sistema de Venta de Tokens -->
+        <div class="card">
+            <h1><i class="fas fa-cash-register"></i> Vender Tus Tokens FMC</h1>
+            <p>Vende tus FlashMorCoins directamente desde tu wallet a múltiples mercados</p>
+            
+            <div class="sell-container">
+                <div>
+                    <h3>Venta Rápida</h3>
+                    <div class="form-group">
+                        <label for="sell-amount">Cantidad de FMC a Vender</label>
+                        <input type="number" id="sell-amount" class="form-control" placeholder="Ej: 1000" min="1" max="12458" value="1000">
+                        <small>Máximo: 12,458 FMC (Tu balance completo)</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sell-price">Precio por FMC (USD)</label>
+                        <input type="number" id="sell-price" class="form-control" placeholder="0.85" step="0.01" min="0.01" value="0.85">
+                        <small>Precio actual de mercado: $0.85</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sell-method">Método de Venta</label>
+                        <select id="sell-method" class="form-control">
+                            <option value="p2p">Venta P2P Directa</option>
+                            <option value="dex">Intercambio (DEX)</option>
+                            <option value="market">Mercado Centralizado</option>
+                            <option value="otc">OTC (Grandes Cantidades)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="receive-wallet">Wallet para Recibir Fondos</label>
+                        <input type="text" id="receive-wallet" class="form-control" placeholder="0xfb146E2601c5F77743E4888E75D6577C2F56bAbb" value="0xfb146E2601c5F77743E4888E75D6577C2F56bAbb">
+                    </div>
+                    
+                    <div style="background: rgba(0,210,106,0.1); padding: 15px; border-radius: 10px; margin: 20px 0; border: 1px solid rgba(0,210,106,0.3);">
+                        <h4><i class="fas fa-calculator"></i> Resumen de Venta</h4>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Cantidad a vender:</span>
+                            <span id="summary-amount">1,000 FMC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Precio por FMC:</span>
+                            <span id="summary-price">$0.85</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Total a recibir:</span>
+                            <span id="summary-total" style="color: #00d26a; font-weight: bold;">$850.00 USD</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Comisión (1.5%):</span>
+                            <span id="summary-fee">$12.75 USD</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <span>Neto a recibir:</span>
+                            <span id="summary-net" style="color: #FF6B35; font-weight: bold;">$837.25 USD</span>
+                        </div>
+                    </div>
+                    
+                    <button class="action-btn success-btn" id="sell-now-btn">
+                        <i class="fas fa-bolt"></i> Vender Ahora
+                    </button>
+                    
+                    <button class="action-btn secondary-btn" id="max-sell-btn">
+                        <i class="fas fa-coins"></i> Vender Balance Completo
+                    </button>
                 </div>
-                <div class="status-card">
-                    <div class="status-label">Transacciones</div>
-                    <div class="status-value" id="total-transactions">0</div>
-                    <div class="status-label">Procesadas</div>
-                </div>
-                <div class="status-card">
-                    <div class="status-label">Red Activa</div>
-                    <div class="status-value">FMC</div>
-                    <div class="status-label">Blockchain</div>
-                </div>
-                <div class="status-card">
-                    <div class="status-label">Estado</div>
-                    <div class="status-value">100%</div>
-                    <div class="status-label">Operativo</div>
+                
+                <div>
+                    <h3>Opciones de Venta</h3>
+                    
+                    <div class="quick-actions">
+                        <div class="quick-action-btn" onclick="setSellOption('p2p')">
+                            <div class="quick-action-icon"><i class="fas fa-user-friends"></i></div>
+                            <div>Venta P2P</div>
+                            <small>Sin comisiones</small>
+                        </div>
+                        <div class="quick-action-btn" onclick="setSellOption('dex')">
+                            <div class="quick-action-icon"><i class="fas fa-exchange-alt"></i></div>
+                            <div>Intercambio DEX</div>
+                            <small>0.3% comisión</small>
+                        </div>
+                        <div class="quick-action-btn" onclick="setSellOption('market')">
+                            <div class="quick-action-icon"><i class="fas fa-store"></i></div>
+                            <div>Mercado CEX</div>
+                            <small>0.5% comisión</small>
+                        </div>
+                        <div class="quick-action-btn" onclick="setSellOption('otc')">
+                            <div class="quick-action-icon"><i class="fas fa-handshake"></i></div>
+                            <div>OTC</div>
+                            <small>Grandes cantidades</small>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <h4>Mercados Disponibles</h4>
+                        <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-top: 15px;">
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <span>Uniswap</span>
+                                <span style="color: #00d26a;">$0.849</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                                <span>PancakeSwap</span>
+                                <span style="color: #00d26a;">$0.851</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                                <span>Binance</span>
+                                <span style="color: #00d26a;">$0.852</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 15px; background: rgba(255,107,53,0.1); border-radius: 10px; border: 1px solid rgba(255,107,53,0.3);">
+                        <h4><i class="fas fa-lightbulb"></i> Consejos de Venta</h4>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>Vende en pequeños lotes para maximizar ganancias</li>
+                            <li>Considera el momento del día (mejores precios en horario comercial USA)</li>
+                            <li>Para grandes cantidades usa OTC para mejor precio</li>
+                            <li>Mantén siempre FMC para staking y recompensas</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Blockchain en Tiempo Real -->
+        <!-- Historial de Ventas -->
         <div class="card">
-            <h1><i class="fas fa-cube"></i> Blockchain en Tiempo Real</h1>
-            <p>Generación automática de bloques - Sistema optimizado</p>
+            <h1><i class="fas fa-history"></i> Historial de Ventas</h1>
             
-            <div class="blockchain-visualization" id="blockchain-visualization">
-                <!-- Bloques generados automáticamente -->
-            </div>
-        </div>
-
-        <!-- Acciones Rápidas -->
-        <div class="card">
-            <h1><i class="fas fa-bolt"></i> Acciones Instantáneas</h1>
-            <p>Todas las funciones listas para usar</p>
-            
-            <div class="quick-actions">
-                <div class="quick-action-btn" onclick="showSendModal()">
-                    <div class="quick-action-icon"><i class="fas fa-paper-plane"></i></div>
-                    <div>Enviar FMC</div>
-                    <small>Instantáneo</small>
+            <div class="sales-history">
+                <div class="sale-item">
+                    <div class="sale-info">
+                        <div class="sale-amount">2,500 FMC</div>
+                        <div class="sale-price">Vendido a $0.83 c/u • Total: $2,075.00</div>
+                    </div>
+                    <div style="color: #00d26a;">
+                        Completado
+                    </div>
                 </div>
-                <div class="quick-action-btn" onclick="showReceiveModal()">
-                    <div class="quick-action-icon"><i class="fas fa-qrcode"></i></div>
-                    <div>Recibir FMC</div>
-                    <small>QR Auto</small>
+                
+                <div class="sale-item">
+                    <div class="sale-info">
+                        <div class="sale-amount">1,000 FMC</div>
+                        <div class="sale-price">Vendido a $0.82 c/u • Total: $820.00</div>
+                    </div>
+                    <div style="color: #00d26a;">
+                        Completado
+                    </div>
                 </div>
-                <div class="quick-action-btn" onclick="showBuyModal()">
-                    <div class="quick-action-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <div>Comprar FMC</div>
-                    <small>Múltiples métodos</small>
-                </div>
-                <div class="quick-action-btn" onclick="showSwapModal()">
-                    <div class="quick-action-icon"><i class="fas fa-exchange-alt"></i></div>
-                    <div>Swap FMC</div>
-                    <small>Mejor precio</small>
+                
+                <div class="sale-item">
+                    <div class="sale-info">
+                        <div class="sale-amount">5,000 FMC</div>
+                        <div class="sale-price">Orden OTC pendiente • $0.86 c/u</div>
+                    </div>
+                    <div style="color: #FFC107;">
+                        Pendiente
+                    </div>
                 </div>
             </div>
+            
+            <button class="action-btn secondary-btn" style="margin-top: 20px;">
+                <i class="fas fa-download"></i> Descargar Reporte de Ventas
+            </button>
         </div>
 
-        <!-- Mercado en Tiempo Real -->
+        <!-- Calculadora de Ganancias -->
         <div class="card">
-            <h1><i class="fas fa-chart-line"></i> Mercado en Tiempo Real</h1>
-            <p>Precios actualizados instantáneamente</p>
+            <h1><i class="fas fa-calculator"></i> Calculadora de Ganancias</h1>
             
-            <div class="crypto-grid">
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #F7931A, #F2A900);">
-                            <i class="fab fa-bitcoin"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">Bitcoin</div>
-                            <div class="crypto-symbol">BTC</div>
-                        </div>
+            <div class="sell-container">
+                <div>
+                    <div class="form-group">
+                        <label for="calc-amount">Cantidad de FMC a Vender</label>
+                        <input type="number" id="calc-amount" class="form-control" placeholder="Ej: 1000" min="1" value="1000">
                     </div>
-                    <div class="crypto-price">$45,230.15</div>
-                    <div class="positive">+2.34%</div>
+                    
+                    <div class="form-group">
+                        <label for="calc-price">Precio de Venta por FMC (USD)</label>
+                        <input type="number" id="calc-price" class="form-control" placeholder="0.85" step="0.01" value="0.85">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="calc-fee">Comisión de Venta (%)</label>
+                        <input type="number" id="calc-fee" class="form-control" placeholder="1.5" step="0.1" value="1.5">
+                    </div>
                 </div>
                 
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #627EEA, #8A92B2);">
-                            <i class="fab fa-ethereum"></i>
+                <div>
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 20px;">
+                        <h4>Resultados de la Venta</h4>
+                        <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                            <span>Ingreso Bruto:</span>
+                            <span id="calc-gross">$850.00</span>
                         </div>
-                        <div>
-                            <div class="crypto-name">Ethereum</div>
-                            <div class="crypto-symbol">ETH</div>
+                        <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                            <span>Comisión:</span>
+                            <span id="calc-commission">$12.75</span>
                         </div>
-                    </div>
-                    <div class="crypto-price">$3,210.75</div>
-                    <div class="positive">+1.78%</div>
-                </div>
-                
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #F0B90B, #F8D33A);">
-                            <i class="fas fa-coins"></i>
+                        <div style="display: flex; justify-content: space-between; margin: 15px 0; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <span>Ganancia Neta:</span>
+                            <span id="calc-net" style="color: #00d26a; font-weight: bold;">$837.25</span>
                         </div>
-                        <div>
-                            <div class="crypto-name">Binance Coin</div>
-                            <div class="crypto-symbol">BNB</div>
+                        <div style="display: flex; justify-content: space-between; margin: 15px 0;">
+                            <span>ROI Estimado:</span>
+                            <span id="calc-roi" style="color: #00d26a;">+245%</span>
                         </div>
                     </div>
-                    <div class="crypto-price">$520.40</div>
-                    <div class="negative">-0.45%</div>
-                </div>
-                
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #FF6B35, #F7931E);">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">FlashMorCoin</div>
-                            <div class="crypto-symbol">FMC</div>
-                        </div>
-                    </div>
-                    <div class="crypto-price">$0.85</div>
-                    <div class="positive">+15.67%</div>
+                    
+                    <button class="action-btn secondary-btn" style="margin-top: 20px;" onclick="calculateProfit()">
+                        <i class="fas fa-calculator"></i> Calcular Ganancias
+                    </button>
                 </div>
             </div>
         </div>
 
         <!-- Footer -->
         <footer>
-            <p>FlashMorCoin FMC - Plataforma Optimizada y Rápida</p>
-            <p>© 2023 Todos los derechos reservados | Sistema 100% operativo</p>
+            <p>FlashMorCoin FMC - Plataforma Completa de Venta de Tokens</p>
+            <p>© 2023 Todos los derechos reservados | Máximiza tus ganancias</p>
         </footer>
     </div>
 
-    <!-- Modal Simple -->
+    <!-- Modal de Confirmación -->
     <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: linear-gradient(135deg, #0f1b3a 0%, #1a2a6c 100%); border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
+        <div style="background: linear-gradient(135deg, #0f1b3a 0%, #1a2a6c 100%); border-radius: 20px; padding: 30px; width: 90%; max-width: 500px; border: 1px solid rgba(255,255,255,0.1);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="color: #FF6B35;" id="modal-title">Modal</h3>
+                <h3 style="color: #FF6B35;" id="modal-title">Confirmar Venta</h3>
                 <button onclick="closeModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
             </div>
             <div id="modal-content">
@@ -500,134 +579,161 @@
     </div>
 
     <script>
-        // Variables globales simplificadas
-        let blocksGenerated = 0;
-        let totalTransactions = 0;
-        let blockInterval;
+        // Variables globales
+        let currentBalance = 12458.75;
+        let currentPrice = 0.85;
+        let sellMethod = 'p2p';
+        let commissionRate = 0.015; // 1.5%
 
-        // Inicialización inmediata
+        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 FlashMorCoin FMC - Sistema iniciado');
+            console.log('🚀 Sistema de Venta FMC - Iniciado');
             
-            // Iniciar generación de bloques inmediatamente
-            startBlockGeneration();
+            // Configurar event listeners
+            setupEventListeners();
+            
+            // Inicializar cálculos
+            updateSellSummary();
+            generatePriceChart();
+            calculateProfit();
             
             // Mostrar estado de éxito
-            showSuccess('Sistema activado y funcionando al 100%');
+            showSuccess('Sistema de venta listo - Puedes vender hasta ' + formatNumber(currentBalance) + ' FMC');
         });
 
-        // Generación de bloques optimizada
-        function startBlockGeneration() {
-            // Generar primer bloque inmediatamente
-            generateNewBlock();
+        // Configurar event listeners
+        function setupEventListeners() {
+            document.getElementById('sell-amount').addEventListener('input', updateSellSummary);
+            document.getElementById('sell-price').addEventListener('input', updateSellSummary);
+            document.getElementById('sell-method').addEventListener('change', updateSellMethod);
+            document.getElementById('sell-now-btn').addEventListener('click', confirmSale);
+            document.getElementById('max-sell-btn').addEventListener('click', setMaxSell);
             
-            // Configurar intervalo más eficiente
-            blockInterval = setInterval(generateNewBlock, 8000); // Cada 8 segundos
+            // Calculadora
+            document.getElementById('calc-amount').addEventListener('input', calculateProfit);
+            document.getElementById('calc-price').addEventListener('input', calculateProfit);
+            document.getElementById('calc-fee').addEventListener('input', calculateProfit);
         }
 
-        // Generar nuevo bloque (optimizado)
-        function generateNewBlock() {
-            blocksGenerated++;
-            const blockNumber = blocksGenerated;
+        // Actualizar resumen de venta
+        function updateSellSummary() {
+            const amount = parseFloat(document.getElementById('sell-amount').value) || 0;
+            const price = parseFloat(document.getElementById('sell-price').value) || 0;
             
-            // Actualizar contador
-            document.getElementById('blocks-generated').textContent = blocksGenerated;
-            document.getElementById('total-transactions').textContent = totalTransactions + 3;
+            const gross = amount * price;
+            const fee = gross * commissionRate;
+            const net = gross - fee;
             
-            // Crear bloque simple
-            const blockElement = document.createElement('div');
-            blockElement.className = 'block';
-            blockElement.innerHTML = `
-                <div class="block-header">
-                    <div class="block-number">#${blockNumber}</div>
-                    <div class="block-time">${new Date().toLocaleTimeString()}</div>
-                </div>
-                <div class="block-hash">0x${Math.random().toString(16).substr(2, 16)}</div>
-                <div class="block-transactions">
-                    <div class="transaction">Transferencia: 10 FMC</div>
-                    <div class="transaction">Swap: 5 FMC → ETH</div>
-                    <div class="transaction">Staking: +2 FMC</div>
-                </div>
-            `;
+            // Actualizar UI
+            document.getElementById('summary-amount').textContent = formatNumber(amount) + ' FMC';
+            document.getElementById('summary-price').textContent = '$' + price.toFixed(2);
+            document.getElementById('summary-total').textContent = '$' + gross.toFixed(2);
+            document.getElementById('summary-fee').textContent = '$' + fee.toFixed(2);
+            document.getElementById('summary-net').textContent = '$' + net.toFixed(2);
             
-            // Agregar a la visualización
-            const blockchain = document.getElementById('blockchain-visualization');
-            blockchain.appendChild(blockElement);
+            // Validar cantidad máxima
+            if (amount > currentBalance) {
+                document.getElementById('sell-amount').value = currentBalance;
+                updateSellSummary();
+                showError('No puedes vender más de tu balance disponible');
+            }
+        }
+
+        // Actualizar método de venta
+        function updateSellMethod() {
+            const method = document.getElementById('sell-method').value;
+            sellMethod = method;
             
-            // Mantener máximo 6 bloques visibles
-            if (blockchain.children.length > 6) {
-                blockchain.removeChild(blockchain.firstChild);
+            // Actualizar comisión según método
+            switch(method) {
+                case 'p2p':
+                    commissionRate = 0;
+                    break;
+                case 'dex':
+                    commissionRate = 0.003; // 0.3%
+                    break;
+                case 'market':
+                    commissionRate = 0.005; // 0.5%
+                    break;
+                case 'otc':
+                    commissionRate = 0.01; // 1%
+                    break;
             }
             
-            // Scroll suave al último bloque
-            blockchain.scrollLeft = blockchain.scrollWidth;
+            updateSellSummary();
         }
 
-        // Funciones de modal optimizadas
-        function showSendModal() {
-            document.getElementById('modal-title').textContent = 'Enviar FMC';
+        // Establecer opción de venta rápida
+        function setSellOption(method) {
+            document.getElementById('sell-method').value = method;
+            updateSellMethod();
+            
+            // Mostrar confirmación
+            let methodName = '';
+            switch(method) {
+                case 'p2p': methodName = 'Venta P2P'; break;
+                case 'dex': methodName = 'Intercambio DEX'; break;
+                case 'market': methodName = 'Mercado Centralizado'; break;
+                case 'otc': methodName = 'OTC'; break;
+            }
+            
+            showSuccess('Método de venta cambiado a: ' + methodName);
+        }
+
+        // Vender balance completo
+        function setMaxSell() {
+            document.getElementById('sell-amount').value = currentBalance;
+            updateSellSummary();
+            showSuccess('Cantidad establecida al máximo: ' + formatNumber(currentBalance) + ' FMC');
+        }
+
+        // Confirmar venta
+        function confirmSale() {
+            const amount = parseFloat(document.getElementById('sell-amount').value) || 0;
+            const price = parseFloat(document.getElementById('sell-price').value) || 0;
+            
+            if (amount <= 0) {
+                showError('Por favor ingresa una cantidad válida');
+                return;
+            }
+            
+            if (amount > currentBalance) {
+                showError('No tienes suficientes FMC para vender');
+                return;
+            }
+            
+            // Mostrar modal de confirmación
+            document.getElementById('modal-title').textContent = 'Confirmar Venta de FMC';
             document.getElementById('modal-content').innerHTML = `
                 <div style="text-align: center;">
                     <div style="font-size: 3rem; color: #FF6B35; margin-bottom: 20px;">
-                        <i class="fas fa-paper-plane"></i>
+                        <i class="fas fa-cash-register"></i>
                     </div>
-                    <h3>Envío Rápido de FMC</h3>
+                    <h3>¿Confirmar Venta?</h3>
                     <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
-                        <input type="text" placeholder="Dirección destino (0x...)" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 10px;">
-                        <input type="number" placeholder="Cantidad FMC" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 15px;">
-                    </div>
-                    <button class="action-btn" onclick="executeTransaction()">
-                        <i class="fas fa-bolt"></i> Enviar Ahora
-                    </button>
-                </div>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function showReceiveModal() {
-            document.getElementById('modal-title').textContent = 'Recibir FMC';
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #00d26a; margin-bottom: 20px;">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <h3>Tu Dirección FMC</h3>
-                    <div style="background: white; padding: 20px; border-radius: 10px; display: inline-block; margin: 15px 0;">
-                        <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #333;">
-                            <i class="fas fa-qrcode" style="font-size: 60px;"></i>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Cantidad:</span>
+                            <span>${formatNumber(amount)} FMC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Precio:</span>
+                            <span>$${price.toFixed(2)} por FMC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Método:</span>
+                            <span>${getMethodName(sellMethod)}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <span>Total a recibir:</span>
+                            <span style="color: #00d26a; font-weight: bold;">$${(amount * price * (1 - commissionRate)).toFixed(2)}</span>
                         </div>
                     </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0; word-break: break-all;">
-                        0x742d...c3a1
-                    </div>
-                    <button class="action-btn secondary-btn" onclick="copyAddress()">
-                        <i class="fas fa-copy"></i> Copiar Dirección
-                    </button>
-                </div>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function showBuyModal() {
-            document.getElementById('modal-title').textContent = 'Comprar FMC';
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #F7931A; margin-bottom: 20px;">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <h3>Comprar FlashMorCoin</h3>
-                    <div style="display: grid; gap: 10px; margin: 20px 0;">
-                        <button class="action-btn secondary-btn">
-                            <i class="fas fa-credit-card"></i> Tarjeta de Crédito
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn success-btn" onclick="executeSale()" style="flex: 1;">
+                            <i class="fas fa-check"></i> Confirmar Venta
                         </button>
-                        <button class="action-btn secondary-btn">
-                            <i class="fab fa-paypal"></i> PayPal
-                        </button>
-                        <button class="action-btn secondary-btn">
-                            <i class="fas fa-university"></i> Transferencia Bancaria
-                        </button>
-                        <button class="action-btn secondary-btn">
-                            <i class="fas fa-exchange-alt"></i> Otras Criptos
+                        <button class="action-btn secondary-btn" onclick="closeModal()" style="flex: 1;">
+                            <i class="fas fa-times"></i> Cancelar
                         </button>
                     </div>
                 </div>
@@ -635,69 +741,125 @@
             document.getElementById('modal').style.display = 'flex';
         }
 
-        function showSwapModal() {
-            document.getElementById('modal-title').textContent = 'Swap FMC';
+        // Ejecutar venta
+        function executeSale() {
+            const amount = parseFloat(document.getElementById('sell-amount').value) || 0;
+            const price = parseFloat(document.getElementById('sell-price').value) || 0;
+            const netAmount = amount * price * (1 - commissionRate);
+            
+            // Simular procesamiento
             document.getElementById('modal-content').innerHTML = `
                 <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #627EEA; margin-bottom: 20px;">
-                        <i class="fas fa-exchange-alt"></i>
+                    <div style="font-size: 3rem; color: #FF6B35; margin-bottom: 20px;">
+                        <i class="fas fa-spinner fa-spin"></i>
                     </div>
-                    <h3>Intercambiar Criptomonedas</h3>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <input type="number" placeholder="0.0" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                            <select style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                                <option>ETH</option>
-                                <option>USDT</option>
-                                <option>BNB</option>
-                            </select>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" placeholder="0.0" readonly style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                            <select style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                                <option selected>FMC</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="action-btn">
-                        <i class="fas fa-exchange-alt"></i> Realizar Swap
-                    </button>
+                    <h3>Procesando Venta</h3>
+                    <p>Tu transacción está siendo procesada...</p>
                 </div>
             `;
-            document.getElementById('modal').style.display = 'flex';
+            
+            // Simular tiempo de procesamiento
+            setTimeout(() => {
+                // Actualizar balance
+                currentBalance -= amount;
+                document.getElementById('fmc-balance').textContent = formatNumber(currentBalance) + ' FMC';
+                document.getElementById('fmc-value').textContent = '$' + (currentBalance * currentPrice).toFixed(2) + ' USD';
+                
+                // Mostrar éxito
+                document.getElementById('modal-content').innerHTML = `
+                    <div style="text-align: center;">
+                        <div style="font-size: 4rem; color: #00d26a; margin-bottom: 20px;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>¡Venta Exitosa!</h3>
+                        <p>Has vendido ${formatNumber(amount)} FMC</p>
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0;">
+                            <div>Total recibido: <strong style="color: #00d26a;">$${netAmount.toFixed(2)}</strong></div>
+                            <div>ID de transacción: 0x${Math.random().toString(16).substr(2, 10)}...</div>
+                        </div>
+                        <button class="action-btn" onclick="closeModal()">
+                            <i class="fas fa-check"></i> Aceptar
+                        </button>
+                    </div>
+                `;
+                
+                // Agregar al historial
+                addToSalesHistory(amount, price);
+                
+                showSuccess('Venta completada: ' + formatNumber(amount) + ' FMC por $' + netAmount.toFixed(2));
+            }, 2000);
+        }
+
+        // Calcular ganancias
+        function calculateProfit() {
+            const amount = parseFloat(document.getElementById('calc-amount').value) || 0;
+            const price = parseFloat(document.getElementById('calc-price').value) || 0;
+            const fee = parseFloat(document.getElementById('calc-fee').value) || 0;
+            
+            const gross = amount * price;
+            const commission = gross * (fee / 100);
+            const net = gross - commission;
+            const roi = ((net - (amount * 0.25)) / (amount * 0.25)) * 100; // Suponiendo precio de compra de $0.25
+            
+            document.getElementById('calc-gross').textContent = '$' + gross.toFixed(2);
+            document.getElementById('calc-commission').textContent = '$' + commission.toFixed(2);
+            document.getElementById('calc-net').textContent = '$' + net.toFixed(2);
+            document.getElementById('calc-roi').textContent = roi.toFixed(0) + '%';
+            document.getElementById('calc-roi').style.color = roi >= 0 ? '#00d26a' : '#ff4d4d';
+        }
+
+        // Generar gráfico de precios
+        function generatePriceChart() {
+            const chart = document.getElementById('price-chart');
+            chart.innerHTML = '';
+            
+            // Generar barras aleatorias para el gráfico
+            for (let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = (Math.random() * 80 + 20) + 'px';
+                chart.appendChild(bar);
+            }
+        }
+
+        // Agregar al historial de ventas
+        function addToSalesHistory(amount, price) {
+            const history = document.querySelector('.sales-history');
+            const saleItem = document.createElement('div');
+            saleItem.className = 'sale-item';
+            saleItem.innerHTML = `
+                <div class="sale-info">
+                    <div class="sale-amount">${formatNumber(amount)} FMC</div>
+                    <div class="sale-price">Vendido a $${price.toFixed(2)} c/u • Total: $${(amount * price).toFixed(2)}</div>
+                </div>
+                <div style="color: #00d26a;">
+                    Completado
+                </div>
+            `;
+            
+            history.insertBefore(saleItem, history.firstChild);
+        }
+
+        // Utilidades
+        function formatNumber(num) {
+            return num.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        }
+
+        function getMethodName(method) {
+            switch(method) {
+                case 'p2p': return 'Venta P2P';
+                case 'dex': return 'Intercambio DEX';
+                case 'market': return 'Mercado Centralizado';
+                case 'otc': return 'OTC';
+                default: return 'Desconocido';
+            }
         }
 
         function closeModal() {
             document.getElementById('modal').style.display = 'none';
         }
 
-        function executeTransaction() {
-            // Simular transacción exitosa
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 4rem; color: #00d26a; margin-bottom: 20px;">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3>¡Transacción Exitosa!</h3>
-                    <p>FMC enviado correctamente</p>
-                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0;">
-                        <div>ID: 0x${Math.random().toString(16).substr(2, 10)}...</div>
-                        <div>Bloque: #${blocksGenerated + 1}</div>
-                    </div>
-                    <button class="action-btn" onclick="closeModal()">
-                        <i class="fas fa-check"></i> Aceptar
-                    </button>
-                </div>
-            `;
-        }
-
-        function copyAddress() {
-            navigator.clipboard.writeText('0xfb146E2601c5F77743E4888E75D6577C2F56bAbb');
-            alert('Dirección copiada al portapapeles');
-        }
-
         function showSuccess(message) {
-            // Crear notificación temporal
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
@@ -713,7 +875,27 @@
             notification.innerHTML = `<i class="fas fa-check"></i> ${message}`;
             document.body.appendChild(notification);
             
-            // Remover después de 3 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function showError(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(255,77,77,0.9);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            document.body.appendChild(notification);
+            
             setTimeout(() => {
                 notification.remove();
             }, 3000);
@@ -728,12 +910,6 @@
             }
         `;
         document.head.appendChild(style);
-
-        // Prevenir errores de consola
-        window.addEventListener('error', function(e) {
-            console.log('Error capturado:', e.error);
-            return true;
-        });
     </script>
 
     <!-- Font Awesome CDN -->
