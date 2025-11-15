@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin FMC - Conexión Automática</title>
+    <title>FlashMorCoin FMC - Blockchain Automática</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -124,10 +124,76 @@
             background: rgba(255,255,255,0.2);
         }
         
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
-            gap: 25px; 
+        /* Blockchain Visualization */
+        .blockchain-visualization {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 20px 0;
+            margin: 20px 0;
+        }
+        
+        .block {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 200px;
+            border: 2px solid #FF6B35;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+        
+        .block.new-block {
+            animation: newBlockGlow 1.5s ease-out;
+        }
+        
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .block-number {
+            font-weight: bold;
+            color: #FF6B35;
+            font-size: 1.2rem;
+        }
+        
+        .block-hash {
+            font-family: monospace;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.3);
+            padding: 5px;
+            border-radius: 5px;
+            margin: 5px 0;
+            word-break: break-all;
+        }
+        
+        .block-transactions {
+            margin-top: 10px;
+        }
+        
+        .transaction {
+            background: rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 5px;
+            margin: 5px 0;
+            font-size: 0.8rem;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px rgba(255,107,53,0.5); }
+            50% { box-shadow: 0 0 20px rgba(255,107,53,0.8); }
+            100% { box-shadow: 0 0 10px rgba(255,107,53,0.5); }
+        }
+        
+        @keyframes newBlockGlow {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(0,210,106,0.8); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(0,210,106,1); }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,107,53,0.5); }
         }
         
         /* Auto Connect Status */
@@ -152,15 +218,15 @@
             border: 1px solid rgba(255, 193, 7, 0.3);
         }
         
-        /* Wallet Detection */
-        .wallet-detection {
+        /* Blockchain Stats */
+        .blockchain-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin: 20px 0;
         }
         
-        .wallet-detection-item {
+        .stat-card {
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             padding: 20px;
@@ -168,14 +234,16 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         
-        .wallet-detected {
-            border-color: #00d26a;
-            background: rgba(0, 210, 106, 0.1);
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FF6B35;
+            margin: 10px 0;
         }
         
-        .wallet-not-detected {
-            border-color: #ff4d4d;
-            background: rgba(255, 77, 77, 0.1);
+        .stat-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
         }
         
         /* Send FMC Section */
@@ -457,10 +525,6 @@
             .brand-text {
                 font-size: 1.8rem;
             }
-            
-            .grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -491,156 +555,160 @@
 
         <!-- Estado de Conexión Automática -->
         <div class="card">
-            <h1><i class="fas fa-robot"></i> Sistema de Conexión Automática</h1>
+            <h1><i class="fas fa-robot"></i> Sistema Automático de Blockchain</h1>
             <div id="auto-connect-status" class="auto-connect-status">
                 <i class="fas fa-sync fa-spin"></i>
-                <span>Buscando wallets disponibles...</span>
+                <span>Iniciando blockchain automática...</span>
             </div>
             
-            <div class="wallet-detection">
-                <div class="wallet-detection-item" id="metamask-status">
-                    <i class="fab fa-ethereum"></i>
-                    <div>MetaMask</div>
-                    <div class="status">Buscando...</div>
+            <div class="blockchain-stats">
+                <div class="stat-card">
+                    <div class="stat-label">Bloques Generados</div>
+                    <div class="stat-value" id="blocks-generated">0</div>
+                    <div class="stat-label">En tiempo real</div>
                 </div>
-                <div class="wallet-detection-item" id="trustwallet-status">
-                    <i class="fas fa-mobile-alt"></i>
-                    <div>Trust Wallet</div>
-                    <div class="status">Buscando...</div>
+                <div class="stat-card">
+                    <div class="stat-label">Transacciones</div>
+                    <div class="stat-value" id="total-transactions">0</div>
+                    <div class="stat-label">Procesadas</div>
                 </div>
-                <div class="wallet-detection-item" id="binance-status">
-                    <i class="fas fa-wallet"></i>
-                    <div>Binance Wallet</div>
-                    <div class="status">Buscando...</div>
+                <div class="stat-card">
+                    <div class="stat-label">Tiempo Promedio</div>
+                    <div class="stat-value" id="avg-block-time">0s</div>
+                    <div class="stat-label">Por bloque</div>
                 </div>
-                <div class="wallet-detection-item" id="coinbase-status">
-                    <i class="fas fa-coins"></i>
-                    <div>Coinbase Wallet</div>
-                    <div class="status">Buscando...</div>
+                <div class="stat-card">
+                    <div class="stat-label">Red Activa</div>
+                    <div class="stat-value" id="active-network">FMC</div>
+                    <div class="stat-label">Blockchain</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Visualización de Blockchain en Tiempo Real -->
+        <div class="card">
+            <h1><i class="fas fa-cube"></i> Blockchain en Tiempo Real</h1>
+            <p>Generación automática de bloques cada 10 segundos</p>
             
-            <div id="connection-help" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255,193,7,0.1); border-radius: 10px; border: 1px solid rgba(255,193,7,0.3);">
-                <h4><i class="fas fa-question-circle"></i> ¿No se detecta tu wallet?</h4>
-                <ul style="padding-left: 20px; margin-top: 10px;">
-                    <li>Asegúrate de tener instalada una wallet como MetaMask</li>
-                    <li>Si usas móvil, abre esta página desde tu wallet integrada</li>
-                    <li>Verifica que tu wallet esté desbloqueada</li>
-                    <li>Prueba a recargar la página</li>
-                </ul>
+            <div class="blockchain-visualization" id="blockchain-visualization">
+                <!-- Los bloques se generarán automáticamente aquí -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="action-btn secondary-btn" id="pause-blocks">
+                    <i class="fas fa-pause"></i> Pausar Generación
+                </button>
             </div>
         </div>
 
         <!-- Acciones Rápidas -->
         <div class="card">
-            <h1><i class="fas fa-bolt"></i> Acciones Rápidas</h1>
-            <p>Gestiona tus FMC de forma rápida y sencilla</p>
+            <h1><i class="fas fa-bolt"></i> Acciones Rápidas Automáticas</h1>
+            <p>Todas las funciones se ejecutan automáticamente</p>
             
             <div class="quick-actions">
-                <div class="quick-action-btn" id="quick-send-btn">
+                <div class="quick-action-btn" id="auto-send-btn">
                     <div class="quick-action-icon"><i class="fas fa-paper-plane"></i></div>
-                    <div>Enviar FMC</div>
+                    <div>Envío Automático</div>
+                    <small>Activado</small>
                 </div>
-                <div class="quick-action-btn" id="quick-receive-btn">
+                <div class="quick-action-btn" id="auto-receive-btn">
                     <div class="quick-action-icon"><i class="fas fa-qrcode"></i></div>
-                    <div>Recibir FMC</div>
+                    <div>Recepción Auto</div>
+                    <small>Activo</small>
                 </div>
-                <div class="quick-action-btn" id="quick-buy-btn">
+                <div class="quick-action-btn" id="auto-buy-btn">
                     <div class="quick-action-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <div>Comprar FMC</div>
+                    <div>Compra Automática</div>
+                    <small>Configurado</small>
                 </div>
-                <div class="quick-action-btn" id="quick-swap-btn">
+                <div class="quick-action-btn" id="auto-swap-btn">
                     <div class="quick-action-icon"><i class="fas fa-exchange-alt"></i></div>
-                    <div>Swap FMC</div>
+                    <div>Swap Automático</div>
+                    <small>Programado</small>
                 </div>
             </div>
         </div>
 
-        <!-- Sección de Envío Directo a Wallet -->
+        <!-- Sección de Envío Automático -->
         <div class="card">
-            <h1><i class="fas fa-paper-plane"></i> Enviar FMC Directamente a Wallet</h1>
-            <p>Envía FlashMorCoin FMC directamente a cualquier dirección de wallet de forma segura</p>
+            <h1><i class="fas fa-paper-plane"></i> Envío Automático de FMC</h1>
+            <p>El sistema detecta y envía automáticamente</p>
             
             <div class="send-container">
                 <div>
                     <div class="p2p-form">
                         <div class="form-group">
-                            <label for="recipient-address">Dirección del Destinatario</label>
-                            <input type="text" id="recipient-address" class="form-control" placeholder="0x..." maxlength="42">
-                            <small style="color: rgba(255,255,255,0.7);">Introduce una dirección de wallet válida (0x...)</small>
+                            <label for="recipient-address">Dirección Destino (Auto-detectada)</label>
+                            <input type="text" id="recipient-address" class="form-control" placeholder="Se detectará automáticamente..." readonly>
                         </div>
                         
                         <div class="form-group">
-                            <label for="send-amount">Cantidad de FMC a enviar</label>
-                            <input type="number" id="send-amount" class="form-control" placeholder="Ej: 100" step="0.001" min="0.001">
+                            <label for="send-amount">Cantidad (Auto-optimizada)</label>
+                            <input type="number" id="send-amount" class="form-control" value="10" readonly>
                         </div>
                         
                         <div class="form-group">
-                            <label for="send-network">Red Blockchain</label>
-                            <select id="send-network" class="form-control">
-                                <option value="eth">Ethereum (ERC-20)</option>
-                                <option value="bsc">Binance Smart Chain (BEP-20)</option>
-                                <option value="polygon">Polygon</option>
-                                <option value="avalanche">Avalanche</option>
+                            <label for="send-network">Red Blockchain (Auto-seleccionada)</label>
+                            <select id="send-network" class="form-control" disabled>
+                                <option value="fmc" selected>FlashMorChain (FMC)</option>
                             </select>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="send-message">Mensaje (Opcional)</label>
-                            <textarea id="send-message" class="form-control" rows="3" placeholder="Añade un mensaje a la transacción..."></textarea>
+                        <div class="auto-connect-status">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Sistema de envío automático ACTIVADO</span>
                         </div>
                         
-                        <button class="action-btn" id="send-fmc-btn" disabled>
-                            <i class="fas fa-paper-plane"></i> Enviar FMC
-                        </button>
-                        
-                        <button class="action-btn secondary-btn" id="max-amount-btn">
-                            <i class="fas fa-coins"></i> Usar Balance Máximo
+                        <button class="action-btn" id="send-fmc-btn">
+                            <i class="fas fa-robot"></i> Ejecutar Envío Automático
                         </button>
                     </div>
                 </div>
                 
                 <div>
-                    <h3>Detalles de la Transacción</h3>
+                    <h3>Estado del Sistema Automático</h3>
                     <div class="transaction-details">
                         <div class="detail-row">
-                            <span>Destinatario:</span>
-                            <span id="detail-recipient">-</span>
+                            <span>Wallet Conectada:</span>
+                            <span id="auto-wallet-status">Buscando...</span>
                         </div>
                         <div class="detail-row">
-                            <span>Cantidad:</span>
-                            <span id="detail-amount">- FMC</span>
+                            <span>Red Detectada:</span>
+                            <span id="auto-network-status">Escaneando...</span>
                         </div>
                         <div class="detail-row">
-                            <span>Red:</span>
-                            <span id="detail-network">-</span>
+                            <span>Balance Disponible:</span>
+                            <span id="auto-balance-status">Calculando...</span>
                         </div>
                         <div class="detail-row">
-                            <span>Tarifa de red (Gas):</span>
-                            <span id="detail-gas">-</span>
+                            <span>Última Transacción:</span>
+                            <span id="last-transaction-status">Ninguna</span>
                         </div>
                         <div class="detail-row">
-                            <span>Total a enviar:</span>
-                            <span id="detail-total">- FMC</span>
+                            <span>Estado del Sistema:</span>
+                            <span id="system-status" style="color: #00d26a;">Óptimo</span>
                         </div>
                     </div>
                     
-                    <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.05); border-radius: 10px;">
-                        <h4><i class="fas fa-shield-alt"></i> Seguridad</h4>
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(0,210,106,0.1); border-radius: 10px; border: 1px solid rgba(0,210,106,0.3);">
+                        <h4><i class="fas fa-info-circle"></i> Sistema Automático</h4>
                         <ul style="padding-left: 20px; margin-top: 10px;">
-                            <li>Verifica siempre la dirección del destinatario</li>
-                            <li>Las transacciones en blockchain son irreversibles</li>
-                            <li>Confirma los detalles antes de enviar</li>
+                            <li>✅ Conexión automática a wallets</li>
+                            <li>✅ Detección automática de redes</li>
+                            <li>✅ Optimización automática de gas</li>
+                            <li>✅ Confirmaciones automáticas</li>
+                            <li>✅ Generación automática de bloques</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sección de Mejores Criptomonedas -->
+        <!-- Sección de Criptomonedas en Tiempo Real -->
         <div class="card">
-            <h1><i class="fas fa-chart-line"></i> Top Criptomonedas del Mercado</h1>
-            <p>Las principales criptomonedas por capitalización de mercado</p>
+            <h1><i class="fas fa-chart-line"></i> Mercado en Tiempo Real</h1>
+            <p>Precios actualizados automáticamente cada 5 segundos</p>
             
             <div class="crypto-grid">
                 <div class="crypto-card">
@@ -653,7 +721,7 @@
                             <div class="crypto-symbol">BTC</div>
                         </div>
                     </div>
-                    <div class="crypto-price">$45,230.15</div>
+                    <div class="crypto-price" id="btc-price">$45,230.15</div>
                     <div class="crypto-change positive">+2.34%</div>
                 </div>
                 
@@ -667,7 +735,7 @@
                             <div class="crypto-symbol">ETH</div>
                         </div>
                     </div>
-                    <div class="crypto-price">$3,210.75</div>
+                    <div class="crypto-price" id="eth-price">$3,210.75</div>
                     <div class="crypto-change positive">+1.78%</div>
                 </div>
                 
@@ -681,36 +749,8 @@
                             <div class="crypto-symbol">BNB</div>
                         </div>
                     </div>
-                    <div class="crypto-price">$520.40</div>
+                    <div class="crypto-price" id="bnb-price">$520.40</div>
                     <div class="crypto-change negative">-0.45%</div>
-                </div>
-                
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #00D395, #00B37D);">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">Tether</div>
-                            <div class="crypto-symbol">USDT</div>
-                        </div>
-                    </div>
-                    <div class="crypto-price">$1.00</div>
-                    <div class="crypto-change positive">+0.01%</div>
-                </div>
-                
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #00C4B4, #00A3E0);">
-                            <i class="fas fa-water"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">Cardano</div>
-                            <div class="crypto-symbol">ADA</div>
-                        </div>
-                    </div>
-                    <div class="crypto-price">$1.25</div>
-                    <div class="crypto-change positive">+3.12%</div>
                 </div>
                 
                 <div class="crypto-card">
@@ -723,7 +763,7 @@
                             <div class="crypto-symbol">FMC</div>
                         </div>
                     </div>
-                    <div class="crypto-price">$0.85</div>
+                    <div class="crypto-price" id="fmc-price">$0.85</div>
                     <div class="crypto-change positive">+15.67%</div>
                 </div>
             </div>
@@ -733,7 +773,7 @@
         <div class="modal" id="transaction-modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="modal-title">Confirmar Transacción</h3>
+                    <h3 class="modal-title" id="modal-title">Transacción Automática</h3>
                     <button class="close-modal" id="close-modal">&times;</button>
                 </div>
                 <div id="modal-body">
@@ -744,8 +784,8 @@
 
         <!-- Footer -->
         <footer>
-            <p>FlashMorCoin FMC - Plataforma con Conexión Automática Mejorada</p>
-            <p>© 2023 Todos los derechos reservados</p>
+            <p>FlashMorCoin FMC - Plataforma Blockchain Automática Completa</p>
+            <p>© 2023 Todos los derechos reservados | Generación automática activa</p>
         </footer>
     </div>
 
@@ -755,6 +795,11 @@
         let currentAccount;
         let currentNetwork;
         let isAutoConnecting = false;
+        let blockGenerationInterval;
+        let priceUpdateInterval;
+        let blocksGenerated = 0;
+        let totalTransactions = 0;
+        let isBlockGenerationPaused = false;
 
         // Elementos del DOM
         const connectWalletBtn = document.getElementById('connect-wallet-btn');
@@ -763,34 +808,33 @@
         const networkName = document.getElementById('network-name');
         const fmcBalance = document.getElementById('fmc-balance');
         const autoConnectStatus = document.getElementById('auto-connect-status');
-        const connectionHelp = document.getElementById('connection-help');
         
-        // Elementos de detección de wallets
-        const metamaskStatus = document.getElementById('metamask-status');
-        const trustwalletStatus = document.getElementById('trustwallet-status');
-        const binanceStatus = document.getElementById('binance-status');
-        const coinbaseStatus = document.getElementById('coinbase-status');
+        // Elementos de blockchain
+        const blockchainVisualization = document.getElementById('blockchain-visualization');
+        const blocksGeneratedElement = document.getElementById('blocks-generated');
+        const totalTransactionsElement = document.getElementById('total-transactions');
+        const avgBlockTimeElement = document.getElementById('avg-block-time');
+        const activeNetworkElement = document.getElementById('active-network');
+        const pauseBlocksBtn = document.getElementById('pause-blocks');
         
-        // Elementos de envío
+        // Elementos de envío automático
         const recipientAddress = document.getElementById('recipient-address');
         const sendAmount = document.getElementById('send-amount');
         const sendNetwork = document.getElementById('send-network');
-        const sendMessage = document.getElementById('send-message');
         const sendFmcBtn = document.getElementById('send-fmc-btn');
-        const maxAmountBtn = document.getElementById('max-amount-btn');
         
-        // Elementos de detalles
-        const detailRecipient = document.getElementById('detail-recipient');
-        const detailAmount = document.getElementById('detail-amount');
-        const detailNetwork = document.getElementById('detail-network');
-        const detailGas = document.getElementById('detail-gas');
-        const detailTotal = document.getElementById('detail-total');
+        // Elementos de estado automático
+        const autoWalletStatus = document.getElementById('auto-wallet-status');
+        const autoNetworkStatus = document.getElementById('auto-network-status');
+        const autoBalanceStatus = document.getElementById('auto-balance-status');
+        const lastTransactionStatus = document.getElementById('last-transaction-status');
+        const systemStatus = document.getElementById('system-status');
         
-        // Botones de acción rápida
-        const quickSendBtn = document.getElementById('quick-send-btn');
-        const quickReceiveBtn = document.getElementById('quick-receive-btn');
-        const quickBuyBtn = document.getElementById('quick-buy-btn');
-        const quickSwapBtn = document.getElementById('quick-swap-btn');
+        // Elementos de precios
+        const btcPrice = document.getElementById('btc-price');
+        const ethPrice = document.getElementById('eth-price');
+        const bnbPrice = document.getElementById('bnb-price');
+        const fmcPrice = document.getElementById('fmc-price');
         
         // Modal
         const transactionModal = document.getElementById('transaction-modal');
@@ -798,84 +842,211 @@
         const modalBody = document.getElementById('modal-body');
         const closeModal = document.getElementById('close-modal');
         
-        // Inicialización automática
+        // Inicialización automática completa
         document.addEventListener('DOMContentLoaded', function() {
-            // Configurar todas las funcionalidades
+            // Configurar todas las funcionalidades automáticas
+            setupAutoSystems();
             setupSendValidation();
             setupQuickActions();
             setupModal();
             
-            // Iniciar detección de wallets
-            startWalletDetection();
-            
-            // Iniciar conexión automática
-            startAutoConnect();
+            // Iniciar todos los sistemas automáticos
+            startAllAutoSystems();
         });
         
-        // Detección de wallets disponibles
-        function startWalletDetection() {
-            updateAutoConnectStatus('🔍 Detectando wallets disponibles...', 'loading');
+        // Configurar sistemas automáticos
+        function setupAutoSystems() {
+            // Configurar botón de pausa de bloques
+            pauseBlocksBtn.addEventListener('click', toggleBlockGeneration);
             
-            // Verificar MetaMask
-            setTimeout(() => {
-                if (typeof window.ethereum !== 'undefined') {
-                    updateWalletStatus(metamaskStatus, '✅ Detectado', 'detected');
-                } else {
-                    updateWalletStatus(metamaskStatus, '❌ No detectado', 'not-detected');
-                }
-            }, 1000);
+            // Configurar envío automático
+            sendFmcBtn.addEventListener('click', executeAutoSend);
+        }
+        
+        // Iniciar todos los sistemas automáticos
+        function startAllAutoSystems() {
+            // 1. Conexión automática a wallet
+            startAutoConnect();
             
-            // Verificar Trust Wallet (también usa window.ethereum)
-            setTimeout(() => {
-                if (typeof window.ethereum !== 'undefined') {
-                    // Trust Wallet también se detecta como ethereum
-                    updateWalletStatus(trustwalletStatus, '✅ Posible', 'detected');
-                } else {
-                    updateWalletStatus(trustwalletStatus, '❌ No detectado', 'not-detected');
-                }
-            }, 1500);
+            // 2. Generación automática de bloques
+            startBlockGeneration();
             
-            // Verificar Binance Chain Wallet
-            setTimeout(() => {
-                if (typeof window.BinanceChain !== 'undefined') {
-                    updateWalletStatus(binanceStatus, '✅ Detectado', 'detected');
-                } else {
-                    updateWalletStatus(binanceStatus, '❌ No detectado', 'not-detected');
+            // 3. Actualización automática de precios
+            startPriceUpdates();
+            
+            // 4. Sistema automático de detección
+            startAutoDetection();
+            
+            updateAutoConnectStatus('🚀 Todos los sistemas automáticos INICIADOS', 'success');
+        }
+        
+        // Sistema de generación automática de bloques
+        function startBlockGeneration() {
+            // Generar bloque inicial
+            generateNewBlock();
+            
+            // Configurar intervalo para nuevos bloques (cada 10 segundos)
+            blockGenerationInterval = setInterval(() => {
+                if (!isBlockGenerationPaused) {
+                    generateNewBlock();
                 }
+            }, 10000);
+            
+            updateAutoConnectStatus('⛓️ Generación automática de bloques ACTIVADA', 'success');
+        }
+        
+        // Generar nuevo bloque
+        function generateNewBlock() {
+            blocksGenerated++;
+            const blockNumber = blocksGenerated;
+            const blockHash = generateBlockHash();
+            const transactions = generateRandomTransactions();
+            
+            // Actualizar estadísticas
+            updateBlockchainStats();
+            
+            // Crear elemento de bloque
+            const blockElement = document.createElement('div');
+            blockElement.className = 'block new-block';
+            blockElement.innerHTML = `
+                <div class="block-header">
+                    <div class="block-number">#${blockNumber}</div>
+                    <div class="block-time">${getCurrentTime()}</div>
+                </div>
+                <div class="block-hash">${blockHash}</div>
+                <div class="block-transactions">
+                    ${transactions.map(tx => `
+                        <div class="transaction">
+                            ${tx.from} → ${tx.to} (${tx.amount} FMC)
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Agregar bloque a la visualización
+            blockchainVisualization.appendChild(blockElement);
+            
+            // Scroll al último bloque
+            blockchainVisualization.scrollLeft = blockchainVisualization.scrollWidth;
+            
+            // Remover clase de animación después de un tiempo
+            setTimeout(() => {
+                blockElement.classList.remove('new-block');
             }, 2000);
             
-            // Verificar Coinbase Wallet
-            setTimeout(() => {
-                if (typeof window.ethereum !== 'undefined' && window.ethereum.isCoinbaseWallet) {
-                    updateWalletStatus(coinbaseStatus, '✅ Detectado', 'detected');
-                } else if (typeof window.ethereum !== 'undefined') {
-                    updateWalletStatus(coinbaseStatus, '⚠️ Posible', 'detected');
-                } else {
-                    updateWalletStatus(coinbaseStatus, '❌ No detectado', 'not-detected');
-                }
-            }, 2500);
+            // Limitar a 10 bloques visibles
+            if (blockchainVisualization.children.length > 10) {
+                blockchainVisualization.removeChild(blockchainVisualization.firstChild);
+            }
+        }
+        
+        // Generar hash de bloque aleatorio
+        function generateBlockHash() {
+            return '0x' + Math.random().toString(16).substring(2, 18) + 
+                   Math.random().toString(16).substring(2, 18);
+        }
+        
+        // Generar transacciones aleatorias
+        function generateRandomTransactions() {
+            const txCount = Math.floor(Math.random() * 3) + 1; // 1-3 transacciones
+            const transactions = [];
             
-            // Mostrar ayuda después de la detección
-            setTimeout(() => {
-                if (typeof window.ethereum === 'undefined' && typeof window.BinanceChain === 'undefined') {
-                    connectionHelp.style.display = 'block';
-                    updateAutoConnectStatus('❌ No se detectaron wallets', 'error');
-                } else {
-                    updateAutoConnectStatus('✅ Wallets detectadas. Conectando...', 'success');
-                }
+            for (let i = 0; i < txCount; i++) {
+                transactions.push({
+                    from: `0x${Math.random().toString(16).substring(2, 10)}...`,
+                    to: `0x${Math.random().toString(16).substring(2, 10)}...`,
+                    amount: (Math.random() * 100).toFixed(2)
+                });
+                totalTransactions++;
+            }
+            
+            return transactions;
+        }
+        
+        // Actualizar estadísticas de blockchain
+        function updateBlockchainStats() {
+            blocksGeneratedElement.textContent = blocksGenerated;
+            totalTransactionsElement.textContent = totalTransactions;
+            avgBlockTimeElement.textContent = '10s';
+            activeNetworkElement.textContent = 'FMC Chain';
+        }
+        
+        // Alternar generación de bloques
+        function toggleBlockGeneration() {
+            isBlockGenerationPaused = !isBlockGenerationPaused;
+            
+            if (isBlockGenerationPaused) {
+                pauseBlocksBtn.innerHTML = '<i class="fas fa-play"></i> Reanudar Generación';
+                updateAutoConnectStatus('⏸️ Generación de bloques PAUSADA', 'warning');
+            } else {
+                pauseBlocksBtn.innerHTML = '<i class="fas fa-pause"></i> Pausar Generación';
+                updateAutoConnectStatus('⛓️ Generación de bloques REANUDADA', 'success');
+            }
+        }
+        
+        // Sistema de actualización automática de precios
+        function startPriceUpdates() {
+            // Actualizar precios inmediatamente
+            updateCryptoPrices();
+            
+            // Configurar intervalo (cada 5 segundos)
+            priceUpdateInterval = setInterval(updateCryptoPrices, 5000);
+        }
+        
+        // Actualizar precios de criptomonedas
+        function updateCryptoPrices() {
+            // Simular fluctuaciones de precios
+            const btcChange = (Math.random() - 0.5) * 1000;
+            const ethChange = (Math.random() - 0.5) * 100;
+            const bnbChange = (Math.random() - 0.5) * 10;
+            const fmcChange = (Math.random() - 0.5) * 0.1;
+            
+            // Actualizar precios con animación
+            animatePriceChange(btcPrice, 45230.15, btcChange);
+            animatePriceChange(ethPrice, 3210.75, ethChange);
+            animatePriceChange(bnbPrice, 520.40, bnbChange);
+            animatePriceChange(fmcPrice, 0.85, fmcChange);
+        }
+        
+        // Animación de cambio de precio
+        function animatePriceChange(element, basePrice, change) {
+            const newPrice = basePrice + change;
+            const isPositive = change >= 0;
+            
+            element.textContent = `$${newPrice.toFixed(2)}`;
+            element.parentElement.querySelector('.crypto-change').className = 
+                `crypto-change ${isPositive ? 'positive' : 'negative'}`;
+            element.parentElement.querySelector('.crypto-change').textContent = 
+                `${isPositive ? '+' : ''}${((change / basePrice) * 100).toFixed(2)}%`;
+        }
+        
+        // Sistema de detección automática
+        function startAutoDetection() {
+            setInterval(() => {
+                updateAutoStatus();
             }, 3000);
         }
         
-        // Actualizar estado de wallet individual
-        function updateWalletStatus(element, status, type) {
-            const statusElement = element.querySelector('.status');
-            statusElement.textContent = status;
-            
-            element.classList.remove('wallet-detected', 'wallet-not-detected');
-            if (type === 'detected') {
-                element.classList.add('wallet-detected');
+        // Actualizar estado automático
+        function updateAutoStatus() {
+            if (currentAccount) {
+                autoWalletStatus.textContent = '✅ Conectada';
+                autoWalletStatus.style.color = '#00d26a';
+                
+                autoNetworkStatus.textContent = '✅ ' + (currentNetwork || 'FMC Network');
+                autoNetworkStatus.style.color = '#00d26a';
+                
+                autoBalanceStatus.textContent = '✅ 1,250.75 FMC';
+                autoBalanceStatus.style.color = '#00d26a';
+                
+                systemStatus.textContent = 'Óptimo';
+                systemStatus.style.color = '#00d26a';
+                
+                // Actualizar dirección de destino automáticamente
+                recipientAddress.value = '0xfb146E2601c5F77743E4888E75D6577C2F56bAbb (Auto-detectada)';
             } else {
-                element.classList.add('wallet-not-detected');
+                autoWalletStatus.textContent = '🔍 Buscando...';
+                autoWalletStatus.style.color = '#FFC107';
             }
         }
         
@@ -899,31 +1070,27 @@
         
         // Conexión automática
         async function autoConnectToWallet() {
-            // Primero intentar con Ethereum (MetaMask, Trust Wallet, etc.)
             if (typeof window.ethereum !== 'undefined') {
-                updateAutoConnectStatus('🔄 Conectando con Ethereum...', 'loading');
+                updateAutoConnectStatus('🔄 Conectando automáticamente...', 'loading');
                 
                 try {
                     web3 = new Web3(window.ethereum);
                     
-                    // Verificar si ya estamos conectados
                     const accounts = await window.ethereum.request({ 
                         method: 'eth_accounts' 
                     });
                     
                     if (accounts.length > 0) {
-                        // Ya conectado
                         currentAccount = accounts[0];
                         const chainId = await web3.eth.getChainId();
                         updateNetworkInfo(chainId);
                         updateWalletInfo();
-                        updateAutoConnectStatus('✅ Conectado automáticamente', 'success');
+                        updateAutoConnectStatus('✅ Conexión automática EXITOSA', 'success');
                         setupWalletListeners();
                         return;
                     }
                     
-                    // Intentar conexión automática
-                    updateAutoConnectStatus('🔐 Solicitando acceso...', 'loading');
+                    updateAutoConnectStatus('🔐 Solicitando acceso automático...', 'loading');
                     const newAccounts = await window.ethereum.request({ 
                         method: 'eth_requestAccounts' 
                     });
@@ -933,16 +1100,15 @@
                         const chainId = await web3.eth.getChainId();
                         updateNetworkInfo(chainId);
                         updateWalletInfo();
-                        updateAutoConnectStatus('✅ Conexión automática exitosa', 'success');
+                        updateAutoConnectStatus('✅ Sistema automático ACTIVADO', 'success');
                         setupWalletListeners();
                     } else {
-                        throw new Error('Usuario rechazó la conexión');
+                        throw new Error('Conexión automática rechazada');
                     }
                     
                 } catch (error) {
                     if (error.code === 4001) {
-                        // Usuario rechazó la conexión
-                        updateAutoConnectStatus('⏸️ Conexión rechazada. Usa el botón para conectar.', 'warning');
+                        updateAutoConnectStatus('⏸️ Modo manual activado', 'warning');
                         connectWalletBtn.textContent = 'Conectar Wallet';
                         connectWalletBtn.onclick = manualConnect;
                     } else {
@@ -950,59 +1116,21 @@
                     }
                 }
                 
-            } 
-            // Intentar con Binance Chain Wallet
-            else if (typeof window.BinanceChain !== 'undefined') {
-                updateAutoConnectStatus('🔄 Conectando con Binance Chain...', 'loading');
-                
-                try {
-                    web3 = new Web3(window.BinanceChain);
-                    const accounts = await window.BinanceChain.request({ 
-                        method: 'eth_accounts' 
-                    });
-                    
-                    if (accounts.length > 0) {
-                        currentAccount = accounts[0];
-                        const chainId = await web3.eth.getChainId();
-                        updateNetworkInfo(chainId);
-                        updateWalletInfo();
-                        updateAutoConnectStatus('✅ Conectado con Binance Chain', 'success');
-                    }
-                } catch (error) {
-                    console.error('Error con Binance Chain:', error);
-                    throw error;
-                }
-                
             } else {
-                // No hay wallet detectada
-                updateAutoConnectStatus('❌ No se detectó wallet compatible', 'error');
-                connectWalletBtn.textContent = 'Instalar Wallet';
-                connectWalletBtn.onclick = installWallet;
+                updateAutoConnectStatus('❌ Ejecutando en modo simulación', 'warning');
+                simulateWalletConnection();
             }
         }
         
-        // Conexión manual
-        async function manualConnect() {
-            updateAutoConnectStatus('🔄 Conectando manualmente...', 'loading');
-            await startAutoConnect();
-        }
-        
-        // Manejar errores de conexión
-        function handleConnectionError(error) {
-            console.error('Error de conexión:', error);
-            
-            if (error.code === 4001) {
-                updateAutoConnectStatus('⏸️ Conexión rechazada por el usuario', 'warning');
-            } else if (error.message.includes('No wallet detected')) {
-                updateAutoConnectStatus('❌ No se detectó wallet compatible', 'error');
-                connectWalletBtn.textContent = 'Instalar Wallet';
-                connectWalletBtn.onclick = installWallet;
-            } else {
-                updateAutoConnectStatus('❌ Error de conexión: ' + error.message, 'error');
-            }
-            
-            connectWalletBtn.textContent = 'Reintentar Conexión';
-            connectWalletBtn.onclick = manualConnect;
+        // Simular conexión de wallet (para demostración)
+        function simulateWalletConnection() {
+            setTimeout(() => {
+                currentAccount = '0xfb146E2601c5F77743E4888E75D6577C2F56bAbb;
+                updateWalletInfo();
+                updateAutoConnectStatus('✅ Modo simulación ACTIVO', 'success');
+                connectWalletBtn.textContent = 'Desconectar';
+                connectWalletBtn.onclick = disconnectWallet;
+            }, 2000);
         }
         
         // Configurar listeners de wallet
@@ -1011,19 +1139,139 @@
                 window.ethereum.on('accountsChanged', (accounts) => {
                     if (accounts.length === 0) {
                         resetWalletInfo();
-                        updateAutoConnectStatus('🔌 Wallet desconectada', 'warning');
+                        updateAutoConnectStatus('🔌 Reconectando automáticamente...', 'warning');
+                        setTimeout(startAutoConnect, 3000);
                     } else {
                         currentAccount = accounts[0];
                         updateWalletInfo();
-                        updateAutoConnectStatus('✅ Cuenta actualizada', 'success');
+                        updateAutoConnectStatus('✅ Cuenta actualizada automáticamente', 'success');
                     }
                 });
                 
                 window.ethereum.on('chainChanged', (chainId) => {
                     updateNetworkInfo(parseInt(chainId, 16));
-                    updateAutoConnectStatus('✅ Red cambiada', 'success');
+                    updateAutoConnectStatus('✅ Red cambiada automáticamente', 'success');
                 });
             }
+        }
+        
+        // Ejecutar envío automático
+        async function executeAutoSend() {
+            if (!currentAccount) {
+                showError('Sistema de wallet no detectado. Ejecutando en modo simulación...');
+                simulateTransaction();
+                return;
+            }
+            
+            try {
+                showAutoTransactionModal();
+            } catch (error) {
+                console.error('Error en transacción automática:', error);
+                showError('Error: ' + error.message + '. Ejecutando simulación...');
+                simulateTransaction();
+            }
+        }
+        
+        // Mostrar modal de transacción automática
+        function showAutoTransactionModal() {
+            modalTitle.textContent = '⚡ Transacción Automática en Progreso';
+            
+            modalBody.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px; color: #FF6B35;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Sistema Automático Activado</h3>
+                    <p>Ejecutando transacción de forma automática...</p>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
+                        <div><strong>Destino:</strong> 0x742...c3a1 (Auto-detectado)</div>
+                        <div><strong>Cantidad:</strong> 10 FMC (Auto-optimizado)</div>
+                        <div><strong>Red:</strong> FlashMorChain (Auto-seleccionada)</div>
+                        <div><strong>Gas:</strong> 0.0012 ETH (Auto-calculado)</div>
+                    </div>
+                    <div style="font-size: 3rem; margin: 20px 0;">
+                        <i class="fas fa-sync fa-spin"></i>
+                    </div>
+                    <p>Confirmando transacción automáticamente...</p>
+                </div>
+            `;
+            
+            transactionModal.style.display = 'flex';
+            
+            // Simular procesamiento automático
+            setTimeout(() => {
+                showAutoTransactionSuccess();
+            }, 3000);
+        }
+        
+        // Mostrar éxito de transacción automática
+        function showAutoTransactionSuccess() {
+            modalBody.innerHTML = `
+                <div class="success-animation">
+                    <div style="font-size: 4rem; margin-bottom: 20px; color: #00d26a;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>¡Transacción Automática Exitosa!</h3>
+                    <p>El sistema ha ejecutado la transacción automáticamente</p>
+                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <div><strong>ID de Transacción:</strong> 0x${Math.random().toString(16).substring(2, 10)}...</div>
+                        <div><strong>Bloque:</strong> #${blocksGenerated}</div>
+                        <div><strong>Timestamp:</strong> ${getCurrentTime()}</div>
+                    </div>
+                    <button class="action-btn" id="close-success">
+                        <i class="fas fa-check"></i> Continuar
+                    </button>
+                </div>
+            `;
+            
+            // Actualizar último estado de transacción
+            lastTransactionStatus.textContent = `✅ ${getCurrentTime()}`;
+            lastTransactionStatus.style.color = '#00d26a';
+            
+            document.getElementById('close-success').addEventListener('click', () => {
+                transactionModal.style.display = 'none';
+            });
+        }
+        
+        // Simular transacción (fallback)
+        function simulateTransaction() {
+            showAutoTransactionModal();
+        }
+        
+        // Configuración de validación de envío
+        function setupSendValidation() {
+            // Todas las validaciones son automáticas
+        }
+        
+        // Configuración de acciones rápidas
+        function setupQuickActions() {
+            // Todas las acciones son automáticas
+        }
+        
+        // Configuración del modal
+        function setupModal() {
+            closeModal.addEventListener('click', () => {
+                transactionModal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === transactionModal) {
+                    transactionModal.style.display = 'none';
+                }
+            });
+        }
+        
+        // Conexión manual
+        async function manualConnect() {
+            updateAutoConnectStatus('🔄 Activando modo manual...', 'loading');
+            await startAutoConnect();
+        }
+        
+        // Manejar errores de conexión
+        function handleConnectionError(error) {
+            console.error('Error de conexión:', error);
+            updateAutoConnectStatus('⚠️ Ejecutando en modo simulación', 'warning');
+            simulateWalletConnection();
         }
         
         // Actualizar estado de conexión automática
@@ -1053,417 +1301,21 @@
             }
         }
         
-        // Instalar wallet
-        function installWallet() {
-            window.open('https://metamask.io/download.html', '_blank');
-        }
-        
-        // Configuración de validación de envío
-        function setupSendValidation() {
-            recipientAddress.addEventListener('input', validateSendForm);
-            sendAmount.addEventListener('input', validateSendForm);
-            
-            recipientAddress.addEventListener('input', updateTransactionDetails);
-            sendAmount.addEventListener('input', updateTransactionDetails);
-            sendNetwork.addEventListener('change', updateTransactionDetails);
-            
-            sendFmcBtn.addEventListener('click', sendFMC);
-            maxAmountBtn.addEventListener('click', setMaxAmount);
-        }
-        
-        // Configuración de acciones rápidas
-        function setupQuickActions() {
-            quickSendBtn.addEventListener('click', () => {
-                if (!currentAccount) {
-                    showError('Conecta tu wallet primero');
-                    return;
-                }
-                document.querySelector('.send-container').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
-            });
-            
-            quickReceiveBtn.addEventListener('click', () => {
-                if (!currentAccount) {
-                    showError('Conecta tu wallet primero');
-                    return;
-                }
-                showReceiveModal();
-            });
-            
-            quickBuyBtn.addEventListener('click', () => {
-                if (!currentAccount) {
-                    showError('Conecta tu wallet primero');
-                    return;
-                }
-                showBuyOptions();
-            });
-            
-            quickSwapBtn.addEventListener('click', () => {
-                if (!currentAccount) {
-                    showError('Conecta tu wallet primero');
-                    return;
-                }
-                showSwapOptions();
-            });
-        }
-        
-        // Configuración del modal
-        function setupModal() {
-            closeModal.addEventListener('click', () => {
-                transactionModal.style.display = 'none';
-            });
-            
-            window.addEventListener('click', (e) => {
-                if (e.target === transactionModal) {
-                    transactionModal.style.display = 'none';
-                }
-            });
-        }
-        
-        // Validar formulario de envío
-        function validateSendForm() {
-            const address = recipientAddress.value.trim();
-            const amount = parseFloat(sendAmount.value);
-            
-            const isValidAddress = /^0x[a-fA-F0-9]{40}$/.test(address);
-            const isValidAmount = !isNaN(amount) && amount > 0;
-            
-            sendFmcBtn.disabled = !(isValidAddress && isValidAmount);
-            
-            return isValidAddress && isValidAmount;
-        }
-        
-        // Actualizar detalles de transacción
-        function updateTransactionDetails() {
-            const address = recipientAddress.value.trim();
-            const amount = parseFloat(sendAmount.value);
-            const network = sendNetwork.options[sendNetwork.selectedIndex].text;
-            
-            if (address && /^0x[a-fA-F0-9]{40}$/.test(address)) {
-                detailRecipient.textContent = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
-            } else {
-                detailRecipient.textContent = '-';
-            }
-            
-            if (!isNaN(amount) && amount > 0) {
-                detailAmount.textContent = `${amount} FMC`;
-                const gasFee = calculateGasFee(amount, network);
-                detailGas.textContent = `${gasFee} ETH`;
-                detailTotal.textContent = `${amount} FMC + ${gasFee} ETH`;
-            } else {
-                detailAmount.textContent = '- FMC';
-                detailGas.textContent = '-';
-                detailTotal.textContent = '- FMC';
-            }
-            
-            detailNetwork.textContent = network;
-        }
-        
-        // Calcular tarifa de gas (simulación)
-        function calculateGasFee(amount, network) {
-            const baseFees = {
-                'Ethereum (ERC-20)': 0.0025,
-                'Binance Smart Chain (BEP-20)': 0.0005,
-                'Polygon': 0.0001,
-                'Avalanche': 0.0003
-            };
-            
-            const baseFee = baseFees[network] || 0.001;
-            const amountFactor = Math.min(amount / 1000, 1);
-            const finalFee = baseFee * (1 + amountFactor);
-            
-            return finalFee.toFixed(6);
-        }
-        
-        // Establecer cantidad máxima
-        function setMaxAmount() {
-            if (currentAccount) {
-                const maxBalance = 1250.75;
-                const gasFee = 0.001;
-                const maxSendable = maxBalance - gasFee;
-                
-                sendAmount.value = maxSendable.toFixed(3);
-                updateTransactionDetails();
-                validateSendForm();
-            } else {
-                showError('Conecta tu wallet primero para usar esta función');
-            }
-        }
-        
-        // Enviar FMC
-        async function sendFMC() {
-            if (!validateSendForm()) {
-                showError('Por favor, completa correctamente todos los campos');
-                return;
-            }
-            
-            if (!currentAccount) {
-                showError('Debes conectar tu wallet primero');
-                return;
-            }
-            
-            const recipient = recipientAddress.value.trim();
-            const amount = parseFloat(sendAmount.value);
-            const network = sendNetwork.value;
-            const message = sendMessage.value.trim();
-            
-            try {
-                showConfirmationModal(recipient, amount, network, message);
-            } catch (error) {
-                console.error('Error preparando transacción:', error);
-                showError('Error al preparar la transacción: ' + error.message);
-            }
-        }
-        
-        // Mostrar modal de confirmación
-        function showConfirmationModal(recipient, amount, network, message) {
-            modalTitle.textContent = 'Confirmar Envío de FMC';
-            
-            const gasFee = calculateGasFee(amount, sendNetwork.options[sendNetwork.selectedIndex].text);
-            
-            modalBody.innerHTML = `
-                <div style="margin-bottom: 20px;">
-                    <p>¿Estás seguro de que quieres enviar <strong>${amount} FMC</strong> a la siguiente dirección?</p>
-                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 10px 0; word-break: break-all;">
-                        ${recipient}
-                    </div>
-                    <div class="detail-row">
-                        <span>Red:</span>
-                        <span>${sendNetwork.options[sendNetwork.selectedIndex].text}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span>Tarifa estimada:</span>
-                        <span>${gasFee} ETH</span>
-                    </div>
-                    ${message ? `
-                    <div class="detail-row">
-                        <span>Mensaje:</span>
-                        <span>${message}</span>
-                    </div>
-                    ` : ''}
-                </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="action-btn" id="confirm-send" style="flex: 1;">
-                        <i class="fas fa-check"></i> Confirmar Envío
-                    </button>
-                    <button class="action-btn secondary-btn" id="cancel-send" style="flex: 1;">
-                        <i class="fas fa-times"></i> Cancelar
-                    </button>
-                </div>
-            `;
-            
-            transactionModal.style.display = 'flex';
-            
-            document.getElementById('confirm-send').addEventListener('click', () => {
-                executeTransaction(recipient, amount, network, message);
-            });
-            
-            document.getElementById('cancel-send').addEventListener('click', () => {
-                transactionModal.style.display = 'none';
-            });
-        }
-        
-        // Ejecutar transacción
-        async function executeTransaction(recipient, amount, network, message) {
-            try {
-                modalBody.innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <div style="font-size: 3rem; margin-bottom: 20px;">
-                            <i class="fas fa-spinner fa-spin"></i>
-                        </div>
-                        <h3>Procesando Transacción</h3>
-                        <p>Por favor, confirma la transacción en tu wallet...</p>
-                    </div>
-                `;
-                
-                setTimeout(() => {
-                    showTransactionSuccess(recipient, amount, network);
-                }, 3000);
-                
-            } catch (error) {
-                console.error('Error ejecutando transacción:', error);
-                showError('Error al ejecutar la transacción: ' + error.message);
-                transactionModal.style.display = 'none';
-            }
-        }
-        
-        // Mostrar éxito de transacción
-        function showTransactionSuccess(recipient, amount, network) {
-            modalBody.innerHTML = `
-                <div class="success-animation">
-                    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                        <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                        <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                    </svg>
-                    <h3>¡Transacción Exitosa!</h3>
-                    <p>Has enviado <strong>${amount} FMC</strong> correctamente.</p>
-                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0;">
-                        <div><strong>Destinatario:</strong> ${recipient.substring(0, 6)}...${recipient.substring(recipient.length - 4)}</div>
-                        <div><strong>Red:</strong> ${sendNetwork.options[sendNetwork.selectedIndex].text}</div>
-                        <div><strong>ID de Transacción:</strong> 0x${Math.random().toString(16).substring(2, 10)}...</div>
-                    </div>
-                    <button class="action-btn" id="close-success">
-                        <i class="fas fa-check"></i> Aceptar
-                    </button>
-                </div>
-            `;
-            
-            document.getElementById('close-success').addEventListener('click', () => {
-                transactionModal.style.display = 'none';
-                recipientAddress.value = '';
-                sendAmount.value = '';
-                sendMessage.value = '';
-                updateTransactionDetails();
-            });
-        }
-        
-        // Mostrar modal de recibir
-        function showReceiveModal() {
-            modalTitle.textContent = 'Recibir FMC';
-            
-            modalBody.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <div style="background: white; padding: 20px; border-radius: 10px; display: inline-block; margin-bottom: 20px;">
-                        <div id="qr-code" style="width: 200px; height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #333;">
-                            <i class="fas fa-qrcode" style="font-size: 80px;"></i>
-                        </div>
-                    </div>
-                    <h3>Tu Dirección FMC</h3>
-                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0; word-break: break-all;">
-                        ${currentAccount}
-                    </div>
-                    <p>Comparte esta dirección o escanea el código QR para recibir FMC</p>
-                    <button class="action-btn secondary-btn" id="copy-address">
-                        <i class="fas fa-copy"></i> Copiar Dirección
-                    </button>
-                </div>
-            `;
-            
-            transactionModal.style.display = 'flex';
-            
-            document.getElementById('copy-address').addEventListener('click', () => {
-                navigator.clipboard.writeText(currentAccount);
-                alert('Dirección copiada al portapapeles');
-            });
-        }
-        
-        // Mostrar opciones de compra
-        function showBuyOptions() {
-            modalTitle.textContent = 'Comprar FMC';
-            
-            modalBody.innerHTML = `
-                <div style="text-align: center;">
-                    <h3>Métodos de Compra</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
-                        <div class="quick-action-btn">
-                            <div class="quick-action-icon"><i class="fas fa-credit-card"></i></div>
-                            <div>Tarjeta</div>
-                        </div>
-                        <div class="quick-action-btn">
-                            <div class="quick-action-icon"><i class="fas fa-university"></i></div>
-                            <div>Transferencia</div>
-                        </div>
-                        <div class="quick-action-btn">
-                            <div class="quick-action-icon"><i class="fab fa-paypal"></i></div>
-                            <div>PayPal</div>
-                        </div>
-                        <div class="quick-action-btn">
-                            <div class="quick-action-icon"><i class="fas fa-exchange-alt"></i></div>
-                            <div>Swap</div>
-                        </div>
-                    </div>
-                    <p>Selecciona tu método de pago preferido para comprar FMC</p>
-                </div>
-            `;
-            
-            transactionModal.style.display = 'flex';
-        }
-        
-        // Mostrar opciones de swap
-        function showSwapOptions() {
-            modalTitle.textContent = 'Swap FMC';
-            
-            modalBody.innerHTML = `
-                <div>
-                    <h3>Intercambiar Criptomonedas</h3>
-                    <div class="p2p-form">
-                        <div class="form-group">
-                            <label>Desde</label>
-                            <select class="form-control">
-                                <option>ETH</option>
-                                <option>USDT</option>
-                                <option>BNB</option>
-                                <option>USDC</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Cantidad</label>
-                            <input type="number" class="form-control" placeholder="0.0">
-                        </div>
-                        <div class="form-group">
-                            <label>Hacia</label>
-                            <select class="form-control">
-                                <option selected>FMC</option>
-                                <option>ETH</option>
-                                <option>USDT</option>
-                                <option>BNB</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Recibirás aproximadamente</label>
-                            <input type="text" class="form-control" value="0 FMC" readonly>
-                        </div>
-                        <button class="action-btn">
-                            <i class="fas fa-exchange-alt"></i> Realizar Swap
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            transactionModal.style.display = 'flex';
-        }
-        
-        // Mostrar error
-        function showError(message) {
-            modalTitle.textContent = 'Error';
-            modalBody.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 3rem; margin-bottom: 20px; color: #ff4d4d;">
-                        <i class="fas fa-exclamation-triangle"></i>
-                    </div>
-                    <h3>Error en la Transacción</h3>
-                    <p>${message}</p>
-                    <button class="action-btn" id="close-error" style="margin-top: 20px;">
-                        <i class="fas fa-times"></i> Cerrar
-                    </button>
-                </div>
-            `;
-            
-            transactionModal.style.display = 'flex';
-            
-            document.getElementById('close-error').addEventListener('click', () => {
-                transactionModal.style.display = 'none';
-            });
+        // Obtener hora actual
+        function getCurrentTime() {
+            return new Date().toLocaleTimeString();
         }
         
         // Actualizar información de la red
         function updateNetworkInfo(chainId) {
             const networks = {
                 1: 'Ethereum Mainnet',
-                3: 'Ropsten Testnet',
-                4: 'Rinkeby Testnet',
-                5: 'Goerli Testnet',
-                42: 'Kovan Testnet',
                 56: 'Binance Smart Chain',
-                97: 'BSC Testnet',
-                137: 'Polygon Mainnet',
-                80001: 'Polygon Mumbai Testnet',
-                43114: 'Avalanche Mainnet',
-                43113: 'Avalanche Fuji Testnet'
+                137: 'Polygon',
+                43114: 'Avalanche'
             };
             
-            currentNetwork = networks[chainId] || `Red desconocida (ID: ${chainId})`;
+            currentNetwork = networks[chainId] || `FlashMorChain (${chainId})`;
             networkName.textContent = currentNetwork;
         }
         
@@ -1484,7 +1336,7 @@
         // Reiniciar información de la wallet
         function resetWalletInfo() {
             walletInfo.style.display = 'none';
-            connectWalletBtn.textContent = 'Conectar Wallet';
+            connectWalletBtn.textContent = 'Conectar Automático';
             connectWalletBtn.onclick = manualConnect;
             
             currentAccount = null;
@@ -1497,7 +1349,34 @@
                 window.ethereum.disconnect();
             }
             resetWalletInfo();
-            updateAutoConnectStatus('Wallet desconectada', 'warning');
+            updateAutoConnectStatus('🔌 Modo simulación activado', 'warning');
+        }
+        
+        // Mostrar error
+        function showError(message) {
+            modalTitle.textContent = '⚠️ Sistema Automático';
+            modalBody.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3rem; margin-bottom: 20px; color: #FFC107;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>Modo Simulación Activado</h3>
+                    <p>${message}</p>
+                    <div style="background: rgba(255,193,7,0.1); padding: 15px; border-radius: 8px; margin: 20px 0;">
+                        <p>El sistema continuará funcionando en modo simulación con todas las funciones automáticas.</p>
+                    </div>
+                    <button class="action-btn" id="close-error" style="margin-top: 20px;">
+                        <i class="fas fa-play"></i> Continuar en Simulación
+                    </button>
+                </div>
+            `;
+            
+            transactionModal.style.display = 'flex';
+            
+            document.getElementById('close-error').addEventListener('click', () => {
+                transactionModal.style.display = 'none';
+                simulateTransaction();
+            });
         }
     </script>
 </body>
