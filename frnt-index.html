@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlashMorCoin FMC - Generación Automática</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #0f1b3a 0%, #1a2a6c 50%, #2d1b69 100%);
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        
+        /* Header */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 20px 40px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .fmc-logo {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500, #FF8C00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255, 165, 0, 0.5);
+            border: 2px solid #FFA500;
+        }
+
+        .logo-design {
+            text-align: center;
+            color: #8B4513;
+            text-shadow: 1px 1px 2px rgba(255, 215, 0, 0.5);
+        }
+
+        .logo-symbol {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 9px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .brand-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Cards */
+        .card { 
+            background: rgba(255,255,255,0.05); 
+            backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 20px; 
+            margin: 25px 0; 
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .action-btn { 
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            color: white; 
+            border: none; 
+            padding: 15px 25px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            margin: 12px 0; 
+            font-weight: 600; 
+            width: 100%;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(255, 107, 53, 0.4);
+        }
+        
+        .secondary-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .secondary-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .success-btn {
+            background: linear-gradient(45deg, #00d26a, #00b357);
+        }
+        
+        .success-btn:hover {
+            box-shadow: 0 7px 15px rgba(0, 210, 106, 0.4);
+        }
+        
+        /* Mining Section */
+        .mining-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .mining-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .mining-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FF6B35;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Mining Animation */
+        .mining-animation {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #FF6B35;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mining-graphic {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            height: 80px;
+        }
+        
+        .mining-progress {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        /* Staking Section */
+        .staking-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .staking-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .staking-card:hover {
+            transform: translateY(-5px);
+            border-color: #FF6B35;
+        }
+        
+        .staking-card.active {
+            border-color: #00d26a;
+            background: rgba(0,210,106,0.1);
+        }
+        
+        .staking-apy {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #00d26a;
+            margin: 10px 0;
+        }
+        
+        /* Generated Coins List */
+        .generated-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .generated-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .coin-amount {
+            font-weight: bold;
+            color: #FF6B35;
+        }
+        
+        .coin-time {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .quick-action-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action-btn:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-3px);
+        }
+        
+        .quick-action-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+            color: #FF6B35;
+        }
+        
+        /* Form Controls */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .form-control {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px 15px;
+            color: white;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #FF6B35;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .brand-text {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-container">
+                <div class="fmc-logo">
+                    <div class="logo-design">
+                        <div class="logo-symbol">⚡</div>
+                        <div class="logo-text">FMC</div>
+                    </div>
+                </div>
+                <div class="brand-text">FlashMorCoin FMC</div>
+            </div>
+            
+            <div class="wallet-info" id="wallet-info">
+                <div><strong>🌐 Red:</strong> <span id="network-name">FlashMorChain</span></div>
+                <div><strong>💰 Balance:</strong> <span id="fmc-balance">12,458.75 FMC</span></div>
+                <div><strong>⛏️ Generando:</strong> <span id="mining-rate">15.2 FMC/día</span></div>
+            </div>
+            
+            <button class="action-btn success-btn" style="width: auto; padding: 10px 20px;">
+                <i class="fas fa-bolt"></i> Generando Cripto
+            </button>
+        </header>
+
+        <!-- Sistema de Generación Automática -->
+        <div class="card">
+            <h1><i class="fas fa-robot"></i> Generación Automática de FMC</h1>
+            <p>Sistema automático de minería y staking - Genera FMC las 24 horas</p>
+            
+            <div class="mining-stats">
+                <div class="stat-card">
+                    <div class="stat-label">FMC Generados Hoy</div>
+                    <div class="stat-value" id="today-generated">8.45</div>
+                    <div class="stat-label">+15.2 FMC estimados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tasa Actual</div>
+                    <div class="stat-value" id="current-rate">0.63</div>
+                    <div class="stat-label">FMC por hora</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">APY Anual</div>
+                    <div class="stat-value" id="current-apy">89.5%</div>
+                    <div class="stat-label">Rendimiento</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Tiempo Activo</div>
+                    <div class="stat-value" id="uptime">13:24:15</div>
+                    <div class="stat-label">Horas:Minutos:Segundos</div>
+                </div>
+            </div>
+            
+            <!-- Animación de Minería -->
+            <div class="mining-animation">
+                <div class="mining-graphic" id="mining-graphic">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3 id="mining-status">🟢 Minería Activa - Generando FMC</h3>
+                <div class="mining-progress">
+                    <div class="progress-bar" id="mining-progress"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                    <span>Progreso del Ciclo</span>
+                    <span id="progress-text">0%</span>
+                </div>
+                <button class="action-btn secondary-btn" id="toggle-mining" style="margin-top: 20px;">
+                    <i class="fas fa-pause"></i> Pausar Generación
+                </button>
+            </div>
+        </div>
+
+        <!-- Opciones de Staking y Minería -->
+        <div class="card">
+            <h1><i class="fas fa-layer-group"></i> Modos de Generación</h1>
+            <p>Selecciona cómo quieres generar FMC automáticamente</p>
+            
+            <div class="staking-options">
+                <div class="staking-card active" onclick="selectStakingOption('staking', this)">
+                    <div class="quick-action-icon"><i class="fas fa-lock"></i></div>
+                    <h3>Staking Básico</h3>
+                    <div class="staking-apy">45% APY</div>
+                    <div class="stat-label">Mínimo: 100 FMC</div>
+                    <div class="stat-label">Sin bloqueo</div>
+                    <div class="stat-label">Retiros instantáneos</div>
+                </div>
+                
+                <div class="staking-card" onclick="selectStakingOption('staking_plus', this)">
+                    <div class="quick-action-icon"><i class="fas fa-gem"></i></div>
+                    <h3>Staking Plus</h3>
+                    <div class="staking-apy">67% APY</div>
+                    <div class="stat-label">Mínimo: 1,000 FMC</div>
+                    <div class="stat-label">Bloqueo 30 días</div>
+                    <div class="stat-label">Bonos extra</div>
+                </div>
+                
+                <div class="staking-card" onclick="selectStakingOption('mining', this)">
+                    <div class="quick-action-icon"><i class="fas fa-microchip"></i></div>
+                    <h3>Minería Cloud</h3>
+                    <div class="staking-apy">89% APY</div>
+                    <div class="stat-label">Mínimo: 5,000 FMC</div>
+                    <div class="stat-label">Potencia dedicada</div>
+                    <div class="stat-label">Máxima generación</div>
+                </div>
+                
+                <div class="staking-card" onclick="selectStakingOption('validator', this)">
+                    <div class="quick-action-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Validador</h3>
+                    <div class="staking-apy">112% APY</div>
+                    <div class="stat-label">Mínimo: 10,000 FMC</div>
+                    <div class="stat-label">Bloqueo 90 días</div>
+                    <div class="stat-label">Recompensas de red</div>
+                </div>
+            </div>
+            
+            <div class="mining-container" style="margin-top: 30px;">
+                <div>
+                    <h3>Configurar Generación</h3>
+                    <div class="form-group">
+                        <label for="stake-amount">Cantidad de FMC a Stakear</label>
+                        <input type="number" id="stake-amount" class="form-control" placeholder="Ej: 5000" min="100" max="12458" value="5000">
+                        <small>Máximo disponible: 12,458 FMC</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="staking-period">Período de Staking</label>
+                        <select id="staking-period" class="form-control">
+                            <option value="30">30 días (45% APY)</option>
+                            <option value="60">60 días (67% APY)</option>
+                            <option value="90">90 días (89% APY)</option>
+                            <option value="180">180 días (112% APY)</option>
+                        </select>
+                    </div>
+                    
+                    <div style="background: rgba(0,210,106,0.1); padding: 15px; border-radius: 10px; margin: 20px 0; border: 1px solid rgba(0,210,106,0.3);">
+                        <h4><i class="fas fa-calculator"></i> Proyección de Ganancias</h4>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Inversión:</span>
+                            <span id="projection-investment">5,000 FMC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Ganancia 30 días:</span>
+                            <span id="projection-30d" style="color: #00d26a;">+187.5 FMC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Ganancia 1 año:</span>
+                            <span id="projection-1y" style="color: #00d26a;">+2,250 FMC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <span>Total proyectado:</span>
+                            <span id="projection-total" style="color: #FF6B35; font-weight: bold;">7,250 FMC</span>
+                        </div>
+                    </div>
+                    
+                    <button class="action-btn success-btn" id="start-staking">
+                        <i class="fas fa-play"></i> Iniciar Generación
+                    </button>
+                </div>
+                
+                <div>
+                    <h3>FMC Generados en Tiempo Real</h3>
+                    <div class="generated-list" id="generated-list">
+                        <!-- Lista de FMC generados -->
+                    </div>
+                    
+                    <div style="background: rgba(255,107,53,0.1); padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px solid rgba(255,107,53,0.3);">
+                        <h4><i class="fas fa-chart-line"></i> Estadísticas de Generación</h4>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Total Generado:</span>
+                            <span style="color: #FF6B35;">1,245.80 FMC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Valor Generado:</span>
+                            <span style="color: #00d26a;">$1,058.93 USD</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Días Consecutivos:</span>
+                            <span>47 días</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin: 10px 0;">
+                            <span>Eficiencia:</span>
+                            <span style="color: #00d26a;">98.7%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones Rápidas -->
+        <div class="card">
+            <h1><i class="fas fa-bolt"></i> Acciones de Generación</h1>
+            
+            <div class="quick-actions">
+                <div class="quick-action-btn" onclick="boostMining()">
+                    <div class="quick-action-icon"><i class="fas fa-rocket"></i></div>
+                    <div>Boost x2</div>
+                    <small>24 horas</small>
+                </div>
+                <div class="quick-action-btn" onclick="compoundRewards()">
+                    <div class="quick-action-icon"><i class="fas fa-snowflake"></i></div>
+                    <div>Compounding</div>
+                    <small>Auto-reinvertir</small>
+                </div>
+                <div class="quick-action-btn" onclick="claimRewards()">
+                    <div class="quick-action-icon"><i class="fas fa-download"></i></div>
+                    <div>Reclamar</div>
+                    <small>Retirar ganancias</small>
+                </div>
+                <div class="quick-action-btn" onclick="showReferral()">
+                    <div class="quick-action-icon"><i class="fas fa-users"></i></div>
+                    <div>Referidos</div>
+                    <small>+5% por amigo</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historial de Generación -->
+        <div class="card">
+            <h1><i class="fas fa-history"></i> Historial de Generación</h1>
+            
+            <div class="generated-list">
+                <div class="generated-item">
+                    <div>
+                        <div class="coin-amount">+2.45 FMC</div>
+                        <div class="coin-time">Hace 2 minutos - Minería Cloud</div>
+                    </div>
+                    <div style="color: #00d26a;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <div class="generated-item">
+                    <div>
+                        <div class="coin-amount">+1.89 FMC</div>
+                        <div class="coin-time">Hace 17 minutos - Staking Plus</div>
+                    </div>
+                    <div style="color: #00d26a;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <div class="generated-item">
+                    <div>
+                        <div class="coin-amount">+3.12 FMC</div>
+                        <div class="coin-time">Hace 32 minutos - Bonus Referido</div>
+                    </div>
+                    <div style="color: #00d26a;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+                
+                <div class="generated-item">
+                    <div>
+                        <div class="coin-amount">+0.87 FMC</div>
+                        <div class="coin-time">Hace 47 minutos - Staking Básico</div>
+                    </div>
+                    <div style="color: #00d26a;">
+                        <i class="fas fa-check"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>FlashMorCoin FMC - Sistema Automático de Generación de Criptomonedas</p>
+            <p>© 2023 Todos los derechos reservados | Generando FMC 24/7</p>
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, #0f1b3a 0%, #1a2a6c 100%); border-radius: 20px; padding: 30px; width: 90%; max-width: 500px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="color: #FF6B35;" id="modal-title">Modal</h3>
+                <button onclick="closeModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="modal-content">
+                <!-- Contenido del modal -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentBalance = 12458.75;
+        let isMiningActive = true;
+        let miningProgress = 0;
+        let generatedToday = 8.45;
+        let currentAPY = 89.5;
+        let currentStakingOption = 'staking';
+        let miningInterval;
+        let uptimeSeconds = 0;
+        let totalGenerated = 1245.80;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Sistema de Generación FMC - Iniciado');
+            
+            // Configurar event listeners
+            setupEventListeners();
+            
+            // Iniciar generación automática
+            startAutoMining();
+            startUptimeCounter();
+            updateProjections();
+            
+            // Mostrar estado de éxito
+            showSuccess('Sistema de generación activado - Generando ' + currentAPY + '% APY');
+        });
+
+        // Configurar event listeners
+        function setupEventListeners() {
+            document.getElementById('toggle-mining').addEventListener('click', toggleMining);
+            document.getElementById('start-staking').addEventListener('click', startStaking);
+            document.getElementById('stake-amount').addEventListener('input', updateProjections);
+            document.getElementById('staking-period').addEventListener('change', updateProjections);
+        }
+
+        // Iniciar generación automática
+        function startAutoMining() {
+            miningInterval = setInterval(function() {
+                if (isMiningActive) {
+                    // Incrementar progreso
+                    miningProgress += 2;
+                    if (miningProgress >= 100) {
+                        miningProgress = 0;
+                        generateFMC();
+                    }
+                    
+                    // Actualizar UI
+                    updateMiningUI();
+                }
+            }, 1000);
+        }
+
+        // Contador de tiempo activo
+        function startUptimeCounter() {
+            setInterval(function() {
+                uptimeSeconds++;
+                const hours = Math.floor(uptimeSeconds / 3600);
+                const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+                const seconds = uptimeSeconds % 60;
+                
+                document.getElementById('uptime').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        // Generar FMC automáticamente
+        function generateFMC() {
+            const baseRate = 0.63; // FMC por hora
+            const boost = currentStakingOption === 'validator' ? 2 : 
+                         currentStakingOption === 'mining' ? 1.5 : 
+                         currentStakingOption === 'staking_plus' ? 1.2 : 1;
+            
+            const generated = (baseRate * boost) / 60; // FMC por minuto
+            
+            // Actualizar estadísticas
+            generatedToday += generated;
+            totalGenerated += generated;
+            currentBalance += generated;
+            
+            // Actualizar UI
+            document.getElementById('today-generated').textContent = generatedToday.toFixed(2);
+            document.getElementById('fmc-balance').textContent = currentBalance.toFixed(2) + ' FMC';
+            
+            // Agregar a la lista
+            addToGeneratedList(generated);
+            
+            // Mostrar notificación ocasional
+            if (Math.random() > 0.7) {
+                showSuccess(`+${generated.toFixed(2)} FMC generados - ¡Sigue así!`);
+            }
+        }
+
+        // Actualizar UI de minería
+        function updateMiningUI() {
+            const progressBar = document.getElementById('mining-progress');
+            const progressText = document.getElementById('progress-text');
+            const miningGraphic = document.getElementById('mining-graphic');
+            
+            progressBar.style.width = miningProgress + '%';
+            progressText.textContent = miningProgress + '%';
+            
+            // Animación del gráfico
+            const icons = ['fa-microchip', 'fa-server', 'fa-bolt', 'fa-cog', 'fa-rocket'];
+            const randomIcon = icons[Math.floor(Math.random() * icons.length)];
+            miningGraphic.innerHTML = `<i class="fas ${randomIcon}"></i>`;
+        }
+
+        // Alternar minería
+        function toggleMining() {
+            isMiningActive = !isMiningActive;
+            const button = document.getElementById('toggle-mining');
+            const status = document.getElementById('mining-status');
+            
+            if (isMiningActive) {
+                button.innerHTML = '<i class="fas fa-pause"></i> Pausar Generación';
+                status.textContent = '🟢 Minería Activa - Generando FMC';
+                status.style.color = '#00d26a';
+                showSuccess('Generación reanudada');
+            } else {
+                button.innerHTML = '<i class="fas fa-play"></i> Reanudar Generación';
+                status.textContent = '⏸️ Generación Pausada';
+                status.style.color = '#FFC107';
+                showSuccess('Generación pausada');
+            }
+        }
+
+        // Seleccionar opción de staking
+        function selectStakingOption(option, element) {
+            currentStakingOption = option;
+            
+            // Remover clase active de todas las tarjetas
+            document.querySelectorAll('.staking-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Agregar clase active a la tarjeta seleccionada
+            element.classList.add('active');
+            
+            // Actualizar APY según la opción
+            switch(option) {
+                case 'staking':
+                    currentAPY = 45;
+                    break;
+                case 'staking_plus':
+                    currentAPY = 67;
+                    break;
+                case 'mining':
+                    currentAPY = 89;
+                    break;
+                case 'validator':
+                    currentAPY = 112;
+                    break;
+            }
+            
+            document.getElementById('current-apy').textContent = currentAPY + '%';
+            updateProjections();
+            showSuccess('Modo de generación cambiado a: ' + getStakingOptionName(option));
+        }
+
+        // Actualizar proyecciones
+        function updateProjections() {
+            const amount = parseFloat(document.getElementById('stake-amount').value) || 0;
+            const period = parseInt(document.getElementById('staking-period').value) || 30;
+            
+            // Calcular ganancias basadas en APY actual
+            const dailyRate = currentAPY / 36500; // Tasa diaria
+            const monthlyGain = amount * dailyRate * 30;
+            const yearlyGain = amount * (currentAPY / 100);
+            const total = amount + yearlyGain;
+            
+            document.getElementById('projection-investment').textContent = amount.toLocaleString() + ' FMC';
+            document.getElementById('projection-30d').textContent = '+' + monthlyGain.toFixed(1) + ' FMC';
+            document.getElementById('projection-1y').textContent = '+' + yearlyGain.toFixed(0) + ' FMC';
+            document.getElementById('projection-total').textContent = total.toFixed(0) + ' FMC';
+        }
+
+        // Iniciar staking
+        function startStaking() {
+            const amount = parseFloat(document.getElementById('stake-amount').value) || 0;
+            const period = parseInt(document.getElementById('staking-period').value) || 30;
+            
+            if (amount < 100) {
+                showError('La cantidad mínima para staking es 100 FMC');
+                return;
+            }
+            
+            if (amount > currentBalance) {
+                showError('No tienes suficientes FMC para stakear');
+                return;
+            }
+            
+            showModal(
+                'Confirmar Staking', 
+                `¿Confirmar staking de ${amount.toLocaleString()} FMC por ${period} días?<br><br>
+                <strong>APY:</strong> ${currentAPY}%<br>
+                <strong>Ganancia estimada:</strong> +${(amount * (currentAPY / 100) * (period / 365)).toFixed(0)} FMC`,
+                function() {
+                    // Simular staking exitoso
+                    currentBalance -= amount;
+                    document.getElementById('fmc-balance').textContent = currentBalance.toFixed(2) + ' FMC';
+                    
+                    showSuccess(`Staking iniciado: ${amount.toLocaleString()} FMC por ${period} días`);
+                    closeModal();
+                }
+            );
+        }
+
+        // Funciones de acciones rápidas
+        function boostMining() {
+            showSuccess('Boost activado x2 por 24 horas!');
+            // En una implementación real, aquí se activaría el boost
+        }
+
+        function compoundRewards() {
+            showSuccess('Compounding activado - Reinvirtiendo automáticamente');
+            // En una implementación real, aquí se activaría el compounding
+        }
+
+        function claimRewards() {
+            const rewards = generatedToday;
+            if (rewards > 0) {
+                currentBalance += rewards;
+                generatedToday = 0;
+                
+                document.getElementById('fmc-balance').textContent = currentBalance.toFixed(2) + ' FMC';
+                document.getElementById('today-generated').textContent = '0.00';
+                
+                showSuccess(`Recompensas reclamadas: +${rewards.toFixed(2)} FMC`);
+            } else {
+                showError('No hay recompensas para reclamar');
+            }
+        }
+
+        function showReferral() {
+            showModal(
+                'Sistema de Referidos',
+                `Comparte tu enlace y gana 5% de las recompensas de tus referidos:<br><br>
+                <strong>Tu enlace:</strong><br>
+                <code style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px; display: block; margin: 10px 0;">
+                    https://flashmorcoin.com/ref/0x742d...c3a1
+                </code><br>
+                <strong>Referidos activos:</strong> 12<br>
+                <strong>Ganancias por referidos:</strong> 245.80 FMC`,
+                function() {
+                    closeModal();
+                }
+            );
+        }
+
+        // Agregar a la lista de generados
+        function addToGeneratedList(amount) {
+            const list = document.getElementById('generated-list');
+            const item = document.createElement('div');
+            item.className = 'generated-item';
+            item.innerHTML = `
+                <div>
+                    <div class="coin-amount">+${amount.toFixed(2)} FMC</div>
+                    <div class="coin-time">${new Date().toLocaleTimeString()} - ${getStakingOptionName(currentStakingOption)}</div>
+                </div>
+                <div style="color: #00d26a;">
+                    <i class="fas fa-check"></i>
+                </div>
+            `;
+            
+            list.insertBefore(item, list.firstChild);
+            
+            // Mantener máximo 10 items
+            if (list.children.length > 10) {
+                list.removeChild(list.lastChild);
+            }
+        }
+
+        // Utilidades
+        function getStakingOptionName(option) {
+            switch(option) {
+                case 'staking': return 'Staking Básico';
+                case 'staking_plus': return 'Staking Plus';
+                case 'mining': return 'Minería Cloud';
+                case 'validator': return 'Validador';
+                default: return 'Desconocido';
+            }
+        }
+
+        function showModal(title, content, confirmCallback) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #FF6B35; margin-bottom: 20px;">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div style="margin-bottom: 25px;">
+                        ${content}
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn success-btn" onclick="modalConfirm()" style="flex: 1;">
+                            <i class="fas fa-check"></i> Confirmar
+                        </button>
+                        <button class="action-btn secondary-btn" onclick="closeModal()" style="flex: 1;">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal').style.display = 'flex';
+            
+            // Guardar callback de confirmación
+            window.modalConfirm = confirmCallback;
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(0,210,106,0.9);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `<i class="fas fa-check"></i> ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function showError(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(255,77,77,0.9);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Agregar estilos de animación
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</body>
+</html>
