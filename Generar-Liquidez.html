@@ -1,0 +1,67 @@
+<!-- Nuevo panel para Generar Liquidez -->
+<div class="control-panel fade-in">
+    <h2>🔄 Generar Liquidez Automática</h2>
+    <div class="p2p-grid">
+        <div class="p2p-section">
+            <h3><i class="fas fa-sync-alt"></i> Swap Automático</h3>
+            
+            <div class="input-group">
+                <label for="swap-exchange">Exchange</label>
+                <select id="swap-exchange">
+                    <option value="auto">Automático (por red)</option>
+                    <option value="pancakeswap">PancakeSwap (BSC)</option>
+                    <option value="uniswap">Uniswap (ETH)</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="swap-amount">Cantidad</label>
+                <input type="number" id="swap-amount" placeholder="0.00" step="0.001">
+            </div>
+            
+            <div class="input-group">
+                <label for="swap-from">De</label>
+                <select id="swap-from">
+                    <option value="native">ETH/BNB</option>
+                    <option value="busd">BUSD</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="swap-to">A</label>
+                <select id="swap-to">
+                    <option value="busd">BUSD</option>
+                    <option value="native">ETH/BNB</option>
+                </select>
+            </div>
+            
+            <div class="gas-estimation">
+                <h4>💰 Estimación</h4>
+                <div class="gas-info">
+                    <span>Recibirás aprox.:</span>
+                    <span id="swap-receive">-</span>
+                </div>
+                <div class="gas-info">
+                    <span>Comisión:</span>
+                    <span id="swap-fee">0.3%</span>
+                </div>
+            </div>
+            
+            <button class="btn-primary" onclick="executeSwap()">
+                🔄 Ejecutar Swap Automático
+            </button>
+        </div>
+        
+        <div class="p2p-section">
+            <h3><i class="fas fa-info-circle"></i> Información</h3>
+            <p>Conecta con los principales DEXs para generar liquidez automáticamente.</p>
+            <div style="margin-top: 15px;">
+                <p><strong>PancakeSwap:</strong> Binance Smart Chain</p>
+                <p><strong>Uniswap:</strong> Ethereum Network</p>
+            </div>
+            <div class="gas-estimation">
+                <p>El sistema detectará automáticamente la red y usará el exchange correspondiente.</p>
+            </div>
+        </div>
+    </div>
+</div>

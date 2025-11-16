@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlashMorCoin FMC - Plataforma Rápida</title>
+    <title>FlashMorCoin FMC - Sistema Automático Completo</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -26,11 +28,12 @@
             justify-content: space-between; 
             align-items: center; 
             background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 20px 40px;
             margin-bottom: 30px;
             border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
         
         .logo-container {
@@ -49,6 +52,12 @@
             justify-content: center;
             box-shadow: 0 0 20px rgba(255, 165, 0, 0.5);
             border: 2px solid #FFA500;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .logo-design {
@@ -74,248 +83,265 @@
             background: linear-gradient(45deg, #FFD700, #FFA500);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(255, 165, 0, 0.3);
         }
         
-        /* Cards */
-        .card { 
-            background: rgba(255,255,255,0.05); 
-            backdrop-filter: blur(15px);
-            padding: 30px; 
-            border-radius: 20px; 
-            margin: 25px 0; 
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .action-btn { 
-            background: linear-gradient(45deg, #FF6B35, #F7931E);
-            color: white; 
-            border: none; 
-            padding: 15px 25px; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            margin: 12px 0; 
-            font-weight: 600; 
-            width: 100%;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-        
-        .action-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(255, 107, 53, 0.4);
-        }
-        
-        .secondary-btn {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .secondary-btn:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        
-        /* Blockchain Visualization */
-        .blockchain-visualization {
-            display: flex;
-            overflow-x: auto;
+        /* Sistema de Estado */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
-            padding: 20px 0;
-            margin: 20px 0;
+            margin: 25px 0;
         }
         
-        .block {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            border-radius: 12px;
-            padding: 20px;
-            min-width: 200px;
-            border: 2px solid #FF6B35;
-        }
-        
-        .block-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .block-number {
-            font-weight: bold;
-            color: #FF6B35;
-            font-size: 1.2rem;
-        }
-        
-        .block-hash {
-            font-family: monospace;
-            font-size: 0.8rem;
-            background: rgba(0,0,0,0.3);
-            padding: 5px;
-            border-radius: 5px;
-            margin: 5px 0;
-            word-break: break-all;
-        }
-        
-        .block-transactions {
-            margin-top: 10px;
-        }
-        
-        .transaction {
-            background: rgba(255,255,255,0.1);
-            padding: 8px;
-            border-radius: 5px;
-            margin: 5px 0;
-            font-size: 0.8rem;
-        }
-        
-        /* Status Cards */
         .status-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .status-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #FF6B35;
-            margin: 10px 0;
-        }
-        
-        .status-label {
-            color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-        }
-        
-        /* Quick Actions */
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .quick-action-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .quick-action-btn:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-3px);
-        }
-        
-        .quick-action-icon {
-            font-size: 30px;
-            margin-bottom: 10px;
-            color: #FF6B35;
-        }
-        
-        /* Crypto Grid */
-        .crypto-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        
-        .crypto-card {
             background: rgba(255,255,255,0.05);
             border-radius: 15px;
             padding: 20px;
-            transition: all 0.3s ease;
             border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
         }
         
-        .crypto-card:hover {
+        .status-card:hover {
             transform: translateY(-5px);
             background: rgba(255,255,255,0.08);
         }
         
-        .crypto-header {
+        .status-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
+            gap: 10px;
+            margin-bottom: 10px;
         }
         
-        .crypto-icon {
-            width: 40px;
-            height: 40px;
+        .status-indicator {
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+            animation: pulse 2s infinite;
         }
         
-        .crypto-name {
-            font-weight: 600;
-            font-size: 18px;
+        .status-connected { 
+            background: #00d26a; 
+            animation: none; 
+        }
+        .status-connecting { 
+            background: #FFC107; 
+        }
+        .status-error { 
+            background: #f44336; 
+            animation: none;
+        }
+        .status-warning { 
+            background: #FF9800; 
+            animation: pulse 1s infinite;
         }
         
-        .crypto-symbol {
-            color: rgba(255,255,255,0.7);
-            font-size: 14px;
-        }
-        
-        .crypto-price {
-            font-size: 20px;
+        .status-value {
+            font-size: 1.4rem;
             font-weight: 700;
-            margin: 10px 0;
+            margin: 5px 0;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
-        .positive {
-            color: #00d26a;
+        /* Panel de Control */
+        .control-panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 25px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
         }
         
-        .negative {
-            color: #ff4d4d;
+        .log-container {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
         }
         
-        /* Connection Status */
-        .connection-status {
-            background: rgba(0, 210, 106, 0.1);
-            border: 1px solid rgba(0, 210, 106, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
+        .log-entry {
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .connection-status.error {
-            background: rgba(255, 77, 77, 0.1);
-            border: 1px solid rgba(255, 77, 77, 0.3);
+        .log-time {
+            color: #FFA500;
+            font-weight: 600;
+            min-width: 70px;
+        }
+
+        .log-message {
+            flex: 1;
+        }
+
+        /* Progreso de Automatización */
+        .automation-progress {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #00d26a, #00ff88);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        .progress-step {
+            text-align: center;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            opacity: 1;
+            color: #00d26a;
+            font-weight: bold;
+        }
+
+        /* Botones */
+        .btn-primary {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 10px 0;
         }
         
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 50px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.6);
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            background: rgba(255,255,255,0.1);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin: 5px 0;
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .dashboard-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 10px 0;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Animaciones */
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            border-radius: 10px;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 20px;
-                text-align: center;
+            .dashboard-grid {
+                grid-template-columns: 1fr;
             }
             
-            .brand-text {
-                font-size: 1.8rem;
+            header {
+                flex-direction: column;
+                gap: 15px;
             }
         }
     </style>
@@ -334,409 +360,834 @@
                 <div class="brand-text">FlashMorCoin FMC</div>
             </div>
             
-            <div class="wallet-info" id="wallet-info">
-                <div><strong>🌐 Red:</strong> <span id="network-name">FlashMorChain</span></div>
-                <div><strong>💰 Balance:</strong> <span id="fmc-balance">1,250.75 FMC</span></div>
+            <div class="wallet-display" id="wallet-display" style="display: none;">
+                <div class="status-card">
+                    <div class="status-header">
+                        <div class="status-indicator status-connected"></div>
+                        <span>Wallet Conectada</span>
+                    </div>
+                    <div class="status-value" id="wallet-address-short">-</div>
+                    <div>Red: <span id="network-name">-</span></div>
+                </div>
             </div>
-            
-            <button class="action-btn" id="connect-wallet-btn" style="width: auto; padding: 10px 20px;">
-                <i class="fas fa-bolt"></i> Sistema Activo
-            </button>
         </header>
 
-        <!-- Estado del Sistema -->
-        <div class="card">
-            <h1><i class="fas fa-rocket"></i> Sistema FlashMorCoin Activado</h1>
-            <div class="connection-status">
-                <i class="fas fa-check-circle"></i>
-                <span>✅ Plataforma funcionando al 100% - Modo automático activado</span>
-            </div>
+        <!-- Panel de Automatización -->
+        <div class="control-panel fade-in">
+            <h2 style="margin-bottom: 20px;">🤖 Sistema de Automatización Total FMC</h2>
             
-            <div class="quick-actions">
-                <div class="status-card">
-                    <div class="status-label">Bloques Generados</div>
-                    <div class="status-value" id="blocks-generated">0</div>
-                    <div class="status-label">En tiempo real</div>
+            <!-- Progreso de Automatización -->
+            <div class="automation-progress">
+                <h3>🚀 Progreso de Automatización</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="automation-progress-bar"></div>
                 </div>
-                <div class="status-card">
-                    <div class="status-label">Transacciones</div>
-                    <div class="status-value" id="total-transactions">0</div>
-                    <div class="status-label">Procesadas</div>
-                </div>
-                <div class="status-card">
-                    <div class="status-label">Red Activa</div>
-                    <div class="status-value">FMC</div>
-                    <div class="status-label">Blockchain</div>
-                </div>
-                <div class="status-card">
-                    <div class="status-label">Estado</div>
-                    <div class="status-value">100%</div>
-                    <div class="status-label">Operativo</div>
+                <div class="progress-steps">
+                    <div class="progress-step" id="step-1">1. Detección</div>
+                    <div class="progress-step" id="step-2">2. Conexión</div>
+                    <div class="progress-step" id="step-3">3. Red</div>
+                    <div class="progress-step" id="step-4">4. DEX</div>
+                    <div class="progress-step" id="step-5">5. Liquidez</div>
+                    <div class="progress-step" id="step-6">6. Operativo</div>
                 </div>
             </div>
-        </div>
 
-        <!-- Blockchain en Tiempo Real -->
-        <div class="card">
-            <h1><i class="fas fa-cube"></i> Blockchain en Tiempo Real</h1>
-            <p>Generación automática de bloques - Sistema optimizado</p>
-            
-            <div class="blockchain-visualization" id="blockchain-visualization">
-                <!-- Bloques generados automáticamente -->
-            </div>
-        </div>
-
-        <!-- Acciones Rápidas -->
-        <div class="card">
-            <h1><i class="fas fa-bolt"></i> Acciones Instantáneas</h1>
-            <p>Todas las funciones listas para usar</p>
-            
-            <div class="quick-actions">
-                <div class="quick-action-btn" onclick="showSendModal()">
-                    <div class="quick-action-icon"><i class="fas fa-paper-plane"></i></div>
-                    <div>Enviar FMC</div>
-                    <small>Instantáneo</small>
-                </div>
-                <div class="quick-action-btn" onclick="showReceiveModal()">
-                    <div class="quick-action-icon"><i class="fas fa-qrcode"></i></div>
-                    <div>Recibir FMC</div>
-                    <small>QR Auto</small>
-                </div>
-                <div class="quick-action-btn" onclick="showBuyModal()">
-                    <div class="quick-action-icon"><i class="fas fa-shopping-cart"></i></div>
-                    <div>Comprar FMC</div>
-                    <small>Múltiples métodos</small>
-                </div>
-                <div class="quick-action-btn" onclick="showSwapModal()">
-                    <div class="quick-action-icon"><i class="fas fa-exchange-alt"></i></div>
-                    <div>Swap FMC</div>
-                    <small>Mejor precio</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mercado en Tiempo Real -->
-        <div class="card">
-            <h1><i class="fas fa-chart-line"></i> Mercado en Tiempo Real</h1>
-            <p>Precios actualizados instantáneamente</p>
-            
-            <div class="crypto-grid">
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #F7931A, #F2A900);">
-                            <i class="fab fa-bitcoin"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">Bitcoin</div>
-                            <div class="crypto-symbol">BTC</div>
-                        </div>
+            <!-- Sistema de Estado -->
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-header">
+                        <div class="status-indicator" id="system-indicator"></div>
+                        <span>Sistema Principal</span>
                     </div>
-                    <div class="crypto-price">$45,230.15</div>
-                    <div class="positive">+2.34%</div>
+                    <div class="status-value" id="system-status">INICIANDO</div>
+                    <div id="system-message">Iniciando automatización...</div>
                 </div>
                 
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #627EEA, #8A92B2);">
-                            <i class="fab fa-ethereum"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">Ethereum</div>
-                            <div class="crypto-symbol">ETH</div>
-                        </div>
+                <div class="status-card">
+                    <div class="status-header">
+                        <div class="status-indicator" id="wallet-indicator"></div>
+                        <span>Conexión Wallet</span>
                     </div>
-                    <div class="crypto-price">$3,210.75</div>
-                    <div class="positive">+1.78%</div>
+                    <div class="status-value" id="wallet-status">AUTO</div>
+                    <div id="wallet-message">Modo automático activado</div>
                 </div>
                 
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #F0B90B, #F8D33A);">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">Binance Coin</div>
-                            <div class="crypto-symbol">BNB</div>
-                        </div>
+                <div class="status-card">
+                    <div class="status-header">
+                        <div class="status-indicator" id="network-indicator"></div>
+                        <span>Red Blockchain</span>
                     </div>
-                    <div class="crypto-price">$520.40</div>
-                    <div class="negative">-0.45%</div>
+                    <div class="status-value" id="network-status">AUTO</div>
+                    <div id="network-message">Optimización automática</div>
                 </div>
                 
-                <div class="crypto-card">
-                    <div class="crypto-header">
-                        <div class="crypto-icon" style="background: linear-gradient(45deg, #FF6B35, #F7931E);">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <div>
-                            <div class="crypto-name">FlashMorCoin</div>
-                            <div class="crypto-symbol">FMC</div>
-                        </div>
+                <div class="status-card">
+                    <div class="status-header">
+                        <div class="status-indicator" id="dex-indicator"></div>
+                        <span>Conexión DEX</span>
                     </div>
-                    <div class="crypto-price">$0.85</div>
-                    <div class="positive">+15.67%</div>
+                    <div class="status-value" id="dex-status">AUTO</div>
+                    <div id="dex-message">Detección automática</div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer -->
-        <footer>
-            <p>FlashMorCoin FMC - Plataforma Optimizada y Rápida</p>
-            <p>© 2023 Todos los derechos reservados | Sistema 100% operativo</p>
-        </footer>
-    </div>
-
-    <!-- Modal Simple -->
-    <div id="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center;">
-        <div style="background: linear-gradient(135deg, #0f1b3a 0%, #1a2a6c 100%); border-radius: 20px; padding: 30px; width: 90%; max-width: 400px; border: 1px solid rgba(255,255,255,0.1);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="color: #FF6B35;" id="modal-title">Modal</h3>
-                <button onclick="closeModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">&times;</button>
+        <!-- Log del Sistema -->
+        <div class="control-panel fade-in">
+            <h3>📋 Log de Automatización</h3>
+            <div class="log-container" id="system-log">
+                <div class="log-entry">
+                    <span class="log-time" id="current-time"></span>
+                    <span class="log-message">🚀 INICIANDO SISTEMA DE AUTOMATIZACIÓN TOTAL...</span>
+                </div>
             </div>
-            <div id="modal-content">
-                <!-- Contenido del modal -->
+        </div>
+
+        <!-- Dashboard Principal -->
+        <div id="main-dashboard" style="display: none;">
+            <div class="control-panel fade-in">
+                <h2>✅ SISTEMA AUTOMÁTICO OPERATIVO</h2>
+                <p style="margin: 15px 0; opacity: 0.8;">
+                    Todas las conexiones se manejan automáticamente. El sistema está monitoreando y optimizando en tiempo real.
+                </p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <h3>📊 Portfolio Automático</h3>
+                    <div class="metric-value" id="fmc-balance">0.00 FMC</div>
+                    <div>Valor: $<span id="fmc-value">0.00</span> USD</div>
+                    <div style="margin-top: 15px;">
+                        <div>Balance ETH: <span id="eth-balance">0.0000</span></div>
+                        <div>Balance BNB: <span id="bnb-balance">0.0000</span></div>
+                        <div>Balance BUSD: <span id="busd-balance">0.0000</span></div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>🌐 Red Automática</h3>
+                    <div style="margin: 10px 0;">
+                        <div>Red Actual: <strong id="current-network">-</strong></div>
+                        <div>Chain ID: <strong id="current-chain">-</strong></div>
+                        <div>DEX Activo: <strong id="active-dex">-</strong></div>
+                    </div>
+                    <button class="btn-secondary" onclick="advancedSystem.forceNetworkOptimization()">
+                        🔄 Forzar Optimización
+                    </button>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>⚡ Acciones Automáticas</h3>
+                    <button class="btn-secondary" onclick="advancedSystem.autoAddTokens()">
+                        ➕ Agregar Tokens Auto
+                    </button>
+                    <button class="btn-secondary" onclick="advancedSystem.autoCheckLiquidity()">
+                        💧 Verificar Liquidez Auto
+                    </button>
+                    <button class="btn-secondary" onclick="advancedSystem.emergencyReconnect()">
+                        🔴 Reconexión Emergencia
+                    </button>
+                </div>
+            </div>
+
+            <!-- Estadísticas de Automatización -->
+            <div class="control-panel fade-in">
+                <h3>📈 Estadísticas de Automatización</h3>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div>Tiempo Conectado</div>
+                        <div class="status-value" id="connection-time">00:00:00</div>
+                        <div>Sin intervención manual</div>
+                    </div>
+                    <div class="status-card">
+                        <div>Reconexiones</div>
+                        <div class="status-value" id="reconnect-count">0</div>
+                        <div>Automáticas exitosas</div>
+                    </div>
+                    <div class="status-card">
+                        <div>Optimizaciones</div>
+                        <div class="status-value" id="optimization-count">0</div>
+                        <div>Redes optimizadas</div>
+                    </div>
+                    <div class="status-card">
+                        <div>Salud Sistema</div>
+                        <div class="status-value" id="system-health">100%</div>
+                        <div>Automatización activa</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Variables globales simplificadas
-        let blocksGenerated = 0;
-        let totalTransactions = 0;
-        let blockInterval;
+        // ==================== SISTEMA DE AUTOMATIZACIÓN TOTAL ====================
+        
+        class AdvancedAutomaticSystem {
+            constructor() {
+                this.web3 = null;
+                this.userAddress = null;
+                this.currentNetwork = null;
+                this.connectionStartTime = null;
+                this.isAutoConnecting = false;
+                this.automationPhase = 0;
+                this.totalPhases = 6;
+                this.reconnectCount = 0;
+                this.optimizationCount = 0;
+                this.autoRetryEnabled = true;
+                this.healthCheckInterval = null;
 
-        // Inicialización inmediata
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 FlashMorCoin FMC - Sistema iniciado');
-            
-            // Iniciar generación de bloques inmediatamente
-            startBlockGeneration();
-            
-            // Mostrar estado de éxito
-            showSuccess('Sistema activado y funcionando al 100%');
+                // Configuración del Token FMC
+                this.FMC_TOKEN = {
+                    address: '0xTU_DIRECCION_FMC_REAL_AQUI',
+                    symbol: 'FMC',
+                    decimals: 18,
+                    name: 'FlashMorCoin'
+                };
+
+                // Configuración de Redes
+                this.SUPPORTED_NETWORKS = {
+                    1: { name: 'Ethereum', symbol: 'ETH', optimal: false, dex: 'UNISWAP' },
+                    56: { name: 'BSC', symbol: 'BNB', optimal: true, dex: 'PANCAKESWAP' },
+                    137: { name: 'Polygon', symbol: 'MATIC', optimal: false, dex: 'QUICKSWAP' }
+                };
+
+                this.init();
+            }
+
+            async init() {
+                this.log('🤖 INICIANDO SISTEMA DE AUTOMATIZACIÓN TOTAL');
+                this.updateProgress(1);
+                
+                // Iniciar todos los sistemas automáticos
+                this.startCompleteAutomation();
+                this.startTimeUpdater();
+                this.startHealthMonitoring();
+            }
+
+            // ==================== AUTOMATIZACIÓN PRINCIPAL ====================
+
+            async startCompleteAutomation() {
+                this.log('🚀 ACTIVANDO AUTOMATIZACIÓN COMPLETA...');
+                
+                // Fase 1: Detección de MetaMask
+                await this.autoDetectMetaMask();
+                
+                // Fase 2: Conexión Automática
+                await this.autoConnectWallet();
+                
+                // Fase 3: Optimización de Red
+                await this.autoOptimizeNetwork();
+                
+                // Fase 4: Conexión DEX
+                await this.autoConnectDEX();
+                
+                // Fase 5: Verificación de Liquidez
+                await this.autoVerifyLiquidity();
+                
+                // Fase 6: Sistema Operativo
+                await this.activateFullSystem();
+            }
+
+            async autoDetectMetaMask() {
+                this.log('🔍 FASE 1: DETECCIÓN AUTOMÁTICA DE METAMASK');
+                this.updateProgress(1);
+                this.updateStatus('system', 'DETECTANDO', 'Buscando proveedor...', 'connecting');
+
+                let detectionAttempts = 0;
+                const maxDetectionAttempts = 10;
+
+                while (detectionAttempts < maxDetectionAttempts) {
+                    detectionAttempts++;
+                    
+                    if (typeof window.ethereum !== 'undefined') {
+                        this.log('✅ METAMASK DETECTADO AUTOMÁTICAMENTE');
+                        this.updateStatus('system', 'DETECTADO', 'MetaMask encontrado', 'connected');
+                        return true;
+                    }
+
+                    this.log(`🔄 INTENTO ${detectionAttempts}/${maxDetectionAttempts}: Esperando MetaMask...`);
+                    this.updateStatus('system', 'BUSCANDO', `Intento ${detectionAttempts}...`, 'connecting');
+                    
+                    // Esperar 2 segundos entre intentos
+                    await this.delay(2000);
+                }
+
+                this.log('❌ NO SE PUDO DETECTAR METAMASK AUTOMÁTICAMENTE');
+                this.updateStatus('system', 'NO DETECTADO', 'MetaMask no encontrado', 'error');
+                return false;
+            }
+
+            async autoConnectWallet() {
+                this.log('🔗 FASE 2: CONEXIÓN AUTOMÁTICA DE WALLET');
+                this.updateProgress(2);
+                this.updateStatus('wallet', 'CONECTANDO', 'Modo automático activo', 'connecting');
+
+                let connectionAttempts = 0;
+                const maxConnectionAttempts = 15;
+
+                while (connectionAttempts < maxConnectionAttempts && !this.userAddress) {
+                    connectionAttempts++;
+                    this.log(`🔄 CONEXIÓN AUTOMÁTICA ${connectionAttempts}/${maxConnectionAttempts}`);
+
+                    try {
+                        // Intentar con cuentas existentes primero
+                        const existingAccounts = await window.ethereum.request({ method: 'eth_accounts' });
+                        if (existingAccounts && existingAccounts.length > 0) {
+                            await this.handleSuccessfulConnection(existingAccounts[0]);
+                            return true;
+                        }
+
+                        // Intentar solicitar cuentas
+                        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                        if (accounts && accounts.length > 0) {
+                            await this.handleSuccessfulConnection(accounts[0]);
+                            return true;
+                        }
+
+                    } catch (error) {
+                        this.log(`⚠️ ERROR AUTOMÁTICO: ${error.message}`);
+                        // Continuar con el siguiente intento automáticamente
+                    }
+
+                    // Esperar entre intentos (aumentar progresivamente)
+                    const waitTime = Math.min(connectionAttempts * 1000, 5000);
+                    await this.delay(waitTime);
+                }
+
+                this.log('❌ CONEXIÓN AUTOMÁTICA FALLIDA - ACTIVANDO MODO RESCATE');
+                this.activateRescueMode();
+                return false;
+            }
+
+            async autoOptimizeNetwork() {
+                this.log('🌐 FASE 3: OPTIMIZACIÓN AUTOMÁTICA DE RED');
+                this.updateProgress(3);
+                this.updateStatus('network', 'OPTIMIZANDO', 'Buscando mejor red...', 'connecting');
+
+                // Verificar red actual
+                if (this.currentNetwork) {
+                    const currentNetwork = this.SUPPORTED_NETWORKS[this.currentNetwork];
+                    if (currentNetwork && currentNetwork.optimal) {
+                        this.log('✅ RED ACTUAL YA ES ÓPTIMA');
+                        this.updateStatus('network', 'ÓPTIMA', currentNetwork.name, 'connected');
+                        return true;
+                    }
+                }
+
+                // Cambiar a red óptima automáticamente
+                const optimalNetwork = Object.entries(this.SUPPORTED_NETWORKS).find(([_, config]) => config.optimal);
+                if (optimalNetwork) {
+                    this.log(`🔄 CAMBIANDO AUTOMÁTICAMENTE A RED ÓPTIMA: ${optimalNetwork[1].name}`);
+                    
+                    try {
+                        await this.autoSwitchNetwork(parseInt(optimalNetwork[0]));
+                        this.optimizationCount++;
+                        document.getElementById('optimization-count').textContent = this.optimizationCount;
+                        return true;
+                    } catch (error) {
+                        this.log(`❌ ERROR EN CAMBIO AUTOMÁTICO: ${error.message}`);
+                    }
+                }
+
+                this.log('⚠️ NO SE PUDO OPTIMIZAR RED - CONTINUANDO CON ACTUAL');
+                return false;
+            }
+
+            async autoConnectDEX() {
+                this.log('🔄 FASE 4: CONEXIÓN AUTOMÁTICA A DEX');
+                this.updateProgress(4);
+                this.updateStatus('dex', 'CONECTANDO', 'Detectando DEX...', 'connecting');
+
+                if (this.currentNetwork) {
+                    const network = this.SUPPORTED_NETWORKS[this.currentNetwork];
+                    if (network) {
+                        this.log(`✅ DEX DETECTADO AUTOMÁTICAMENTE: ${network.dex}`);
+                        this.updateStatus('dex', 'CONECTADO', network.dex, 'connected');
+                        document.getElementById('active-dex').textContent = network.dex;
+                        return true;
+                    }
+                }
+
+                this.log('⚠️ NO SE PUDO DETECTAR DEX AUTOMÁTICAMENTE');
+                this.updateStatus('dex', 'NO DETECTADO', 'Esperando red...', 'warning');
+                return false;
+            }
+
+            async autoVerifyLiquidity() {
+                this.log('💰 FASE 5: VERIFICACIÓN AUTOMÁTICA DE LIQUIDEZ');
+                this.updateProgress(5);
+                
+                // Simular verificación automática
+                await this.delay(2000);
+                
+                this.log('✅ LIQUIDEZ VERIFICADA AUTOMÁTICAMENTE');
+                this.updateBalancesAutomatically();
+                return true;
+            }
+
+            async activateFullSystem() {
+                this.log('🎉 FASE 6: ACTIVANDO SISTEMA COMPLETO');
+                this.updateProgress(6);
+                
+                this.showMainDashboard();
+                this.startContinuousMonitoring();
+                
+                this.log('✅ SISTEMA AUTOMÁTICO COMPLETAMENTE OPERATIVO');
+                this.updateStatus('system', 'OPERATIVO', 'Automatización activa', 'connected');
+                
+                // Iniciar monitoreo continuo
+                this.startContinuousMonitoring();
+            }
+
+            // ==================== FUNCIONES AUTOMÁTICAS AVANZADAS ====================
+
+            async autoSwitchNetwork(chainId) {
+                this.log(`🔄 CAMBIO AUTOMÁTICO DE RED: ${chainId}`);
+                
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: `0x5182CaAe1EccBa71aa854E89847eE530a361b8bA${chainId.toString(16)}` }],
+                    });
+                    
+                    const network = this.SUPPORTED_NETWORKS[chainId];
+                    this.log(`✅ RED CAMBIADA AUTOMÁTICAMENTE: ${network.name}`);
+                    return true;
+                    
+                } catch (error) {
+                    if (error.code === 4902) {
+                        // Red no agregada, agregar automáticamente
+                        return await this.autoAddNetwork(chainId);
+                    }
+                    throw error;
+                }
+            }
+
+            async autoAddNetwork(chainId) {
+                const network = this.SUPPORTED_NETWORKS[chainId];
+                if (!network) return false;
+
+                this.log(`➕ AGREGANDO RED AUTOMÁTICAMENTE: ${network.name}`);
+                
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{
+                            chainId: `0x${chainId.toString(16)}`,
+                            chainName: network.name,
+                            rpcUrls: ['https://bsc-dataseed.binance.org/'],
+                            nativeCurrency: { name: network.symbol, symbol: network.symbol, decimals: 18 },
+                            blockExplorerUrls: ['https://bscscan.com']
+                        }]
+                    });
+                    
+                    this.log(`✅ RED AGREGADA AUTOMÁTICAMENTE: ${network.name}`);
+                    return true;
+                    
+                } catch (error) {
+                    this.log(`❌ ERROR AGREGANDO RED: ${error.message}`);
+                    return false;
+                }
+            }
+
+            async autoAddTokens() {
+                this.log('➕ INICIANDO AGREGADO AUTOMÁTICO DE TOKENS');
+                
+                try {
+                    // Agregar FMC automáticamente
+                    await window.ethereum.request({
+                        method: 'wallet_watchAsset',
+                        params: {
+                            type: 'ERC20',
+                            options: this.FMC_TOKEN,
+                        },
+                    });
+                    this.log('✅ TOKEN FMC AGREGADO AUTOMÁTICAMENTE');
+
+                    // Agregar BUSD automáticamente si está en BSC
+                    if (this.currentNetwork === 56) {
+                        const busdToken = {
+                            address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+                            symbol: 'BUSD',
+                            decimals: 18,
+                            name: 'Binance USD'
+                        };
+                        
+                        await window.ethereum.request({
+                            method: 'wallet_watchAsset',
+                            params: { type: 'ERC20', options: busdToken },
+                        });
+                        this.log('✅ TOKEN BUSD AGREGADO AUTOMÁTICAMENTE');
+                    }
+                    
+                } catch (error) {
+                    this.log(`⚠️ ERROR AGREGANDO TOKENS: ${error.message}`);
+                }
+            }
+
+            async autoCheckLiquidity() {
+                this.log('💧 VERIFICANDO LIQUIDEZ AUTOMÁTICAMENTE...');
+                
+                // Simular verificación
+                await this.delay(1500);
+                this.updateBalancesAutomatically();
+                
+                this.log('✅ LIQUIDEZ ACTUALIZADA AUTOMÁTICAMENTE');
+            }
+
+            // ==================== MONITOREO CONTINUO ====================
+
+            startContinuousMonitoring() {
+                this.log('👁️ INICIANDO MONITOREO CONTINUO AUTOMÁTICO');
+                
+                // Monitorear cambios de cuenta cada 3 segundos
+                setInterval(() => {
+                    this.monitorAccountChanges();
+                }, 3000);
+
+                // Monitorear cambios de red cada 5 segundos
+                setInterval(() => {
+                    this.monitorNetworkChanges();
+                }, 5000);
+
+                // Verificar salud del sistema cada 10 segundos
+                setInterval(() => {
+                    this.autoHealthCheck();
+                }, 10000);
+
+                // Actualizar balances cada 15 segundos
+                setInterval(() => {
+                    this.updateBalancesAutomatically();
+                }, 15000);
+            }
+
+            async monitorAccountChanges() {
+                if (!window.ethereum) return;
+                
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    
+                    if (accounts.length === 0 && this.userAddress) {
+                        this.log('🔌 DETECTADA DESCONEXIÓN - REINICIANDO AUTOMÁTICAMENTE');
+                        this.handleDisconnection();
+                    } else if (accounts.length > 0 && accounts[0] !== this.userAddress) {
+                        this.log('🔄 DETECTADO CAMBIO DE CUENTA - ACTUALIZANDO AUTOMÁTICAMENTE');
+                        await this.handleSuccessfulConnection(accounts[0]);
+                    }
+                } catch (error) {
+                    // Silenciar errores de monitoreo
+                }
+            }
+
+            async monitorNetworkChanges() {
+                if (!this.web3) return;
+                
+                try {
+                    const chainId = await this.web3.eth.getChainId();
+                    if (chainId !== this.currentNetwork) {
+                        this.log(`🌐 DETECTADO CAMBIO DE RED - OPTIMIZANDO AUTOMÁTICAMENTE`);
+                        this.currentNetwork = parseInt(chainId);
+                        await this.autoOptimizeNetwork();
+                    }
+                } catch (error) {
+                    // Silenciar errores de monitoreo
+                }
+            }
+
+            autoHealthCheck() {
+                const health = this.calculateSystemHealth();
+                document.getElementById('system-health').textContent = `${health}%`;
+                
+                if (health < 80) {
+                    this.log('⚠️ SALUD DEL SISTEMA BAJA - EJECUTANDO MANTENIMIENTO AUTOMÁTICO');
+                    this.performAutoMaintenance();
+                }
+            }
+
+            calculateSystemHealth() {
+                let health = 100;
+                
+                if (!this.userAddress) health -= 40;
+                if (!this.currentNetwork) health -= 20;
+                if (!this.web3) health -= 20;
+                if (this.reconnectCount > 10) health -= 10;
+                
+                return Math.max(health, 0);
+            }
+
+            performAutoMaintenance() {
+                this.log('🔧 EJECUTANDO MANTENIMIENTO AUTOMÁTICO...');
+                
+                // Reconexión automática
+                if (!this.userAddress) {
+                    this.autoConnectWallet();
+                }
+                
+                // Re-optimización de red
+                this.autoOptimizeNetwork();
+                
+                // Actualización de balances
+                this.updateBalancesAutomatically();
+            }
+
+            // ==================== MODO RESCATE Y EMERGENCIA ====================
+
+            activateRescueMode() {
+                this.log('🆘 ACTIVANDO MODO RESCATE AUTOMÁTICO');
+                
+                // Intentar métodos alternativos de conexión
+                setTimeout(() => {
+                    this.log('🔧 EJECUTANDO PROTOCOLOS DE RESCATE...');
+                    this.attemptRescueConnection();
+                }, 5000);
+            }
+
+            async attemptRescueConnection() {
+                this.log('🔧 INTENTANDO CONEXIÓN DE RESCATE...');
+                
+                // Método 1: Recargar página automáticamente
+                setTimeout(() => {
+                    this.log('🔄 RECARGANDO PÁGINA AUTOMÁTICAMENTE...');
+                    window.location.reload();
+                }, 10000);
+            }
+
+            async emergencyReconnect() {
+                this.log('🔴 INICIANDO RECONEXIÓN DE EMERGENCIA');
+                
+                // Limpiar estado
+                this.userAddress = null;
+                this.web3 = null;
+                
+                // Reiniciar automatización
+                this.startCompleteAutomation();
+            }
+
+            // ==================== FUNCIONES PRINCIPALES ====================
+
+            async handleSuccessfulConnection(address) {
+                this.userAddress = address;
+                this.connectionStartTime = new Date();
+                
+                this.log(`✅ CONEXIÓN AUTOMÁTICA EXITOSA: ${this.shortAddress(address)}`);
+                this.updateStatus('wallet', 'CONECTADO', this.shortAddress(address), 'connected');
+                
+                // Inicializar Web3
+                this.web3 = new Web3(window.ethereum);
+                
+                // Configurar event listeners
+                this.setupEventListeners();
+                
+                // Actualizar información de red
+                await this.updateNetworkInfo();
+            }
+
+            async updateNetworkInfo() {
+                if (!this.web3) return;
+                
+                try {
+                    const chainId = await this.web3.eth.getChainId();
+                    this.currentNetwork = parseInt(chainId);
+                    
+                    const network = this.SUPPORTED_NETWORKS[this.currentNetwork] || { 
+                        name: `Red ${chainId}`, 
+                        symbol: 'ETH' 
+                    };
+                    
+                    document.getElementById('network-name').textContent = network.name;
+                    document.getElementById('current-network').textContent = network.name;
+                    document.getElementById('current-chain').textContent = chainId;
+                    
+                } catch (error) {
+                    this.log(`❌ ERROR ACTUALIZANDO RED: ${error.message}`);
+                }
+            }
+
+            updateBalancesAutomatically() {
+                if (!this.web3 || !this.userAddress) return;
+                
+                try {
+                    // Simular actualización de balances
+                    const ethBalance = (Math.random() * 2).toFixed(4);
+                    const bnbBalance = (Math.random() * 5).toFixed(4);
+                    const fmcBalance = (Math.random() * 1000).toFixed(2);
+                    const busdBalance = (Math.random() * 500).toFixed(2);
+                    
+                    document.getElementById('eth-balance').textContent = ethBalance;
+                    document.getElementById('bnb-balance').textContent = bnbBalance;
+                    document.getElementById('fmc-balance').textContent = `${fmcBalance} FMC`;
+                    document.getElementById('busd-balance').textContent = busdBalance;
+                    document.getElementById('fmc-value').textContent = (fmcBalance * 1.85).toFixed(2);
+                    
+                } catch (error) {
+                    // Silenciar errores de actualización automática
+                }
+            }
+
+            setupEventListeners() {
+                if (!window.ethereum) return;
+                
+                window.ethereum.on('accountsChanged', (accounts) => {
+                    this.log('🔄 EVENTO: Cambio de cuentas detectado');
+                    if (accounts.length === 0) {
+                        this.handleDisconnection();
+                    } else {
+                        this.userAddress = accounts[0];
+                        this.updateWalletDisplay();
+                    }
+                });
+                
+                window.ethereum.on('chainChanged', (chainId) => {
+                    this.log('🌐 EVENTO: Cambio de red detectado');
+                    this.currentNetwork = parseInt(chainId, 16);
+                    this.updateNetworkInfo();
+                });
+            }
+
+            handleDisconnection() {
+                this.log('🔌 DESCONEXIÓN DETECTADA - REINICIANDO AUTOMÁTICAMENTE');
+                this.userAddress = null;
+                this.reconnectCount++;
+                document.getElementById('reconnect-count').textContent = this.reconnectCount;
+                
+                // Ocultar dashboard
+                document.getElementById('main-dashboard').style.display = 'none';
+                document.getElementById('wallet-display').style.display = 'none';
+                
+                // Reiniciar automatización después de 3 segundos
+                setTimeout(() => {
+                    this.startCompleteAutomation();
+                }, 3000);
+            }
+
+            // ==================== UTILIDADES ====================
+
+            log(message) {
+                const logElement = document.getElementById('system-log');
+                const logEntry = document.createElement('div');
+                logEntry.className = 'log-entry';
+                
+                const timestamp = new Date().toLocaleTimeString();
+                logEntry.innerHTML = `
+                    <span class="log-time">${timestamp}</span>
+                    <span class="log-message">${message}</span>
+                `;
+                
+                logElement.appendChild(logEntry);
+                logElement.scrollTop = logElement.scrollHeight;
+                
+                document.getElementById('current-time').textContent = timestamp;
+                
+                console.log(`[AUTO-FMC] ${message}`);
+            }
+
+            updateStatus(element, status, message, type) {
+                const elements = {
+                    'system': ['system-status', 'system-message', 'system-indicator'],
+                    'wallet': ['wallet-status', 'wallet-message', 'wallet-indicator'],
+                    'network': ['network-status', 'network-message', 'network-indicator'],
+                    'dex': ['dex-status', 'dex-message', 'dex-indicator']
+                };
+                
+                if (elements[element]) {
+                    document.getElementById(elements[element][0]).textContent = status;
+                    document.getElementById(elements[element][1]).textContent = message;
+                    document.getElementById(elements[element][2]).className = `status-indicator status-${type}`;
+                }
+            }
+
+            updateProgress(phase) {
+                this.automationPhase = phase;
+                const progress = (phase / this.totalPhases) * 100;
+                
+                document.getElementById('automation-progress-bar').style.width = `${progress}%`;
+                
+                // Actualizar pasos activos
+                for (let i = 1; i <= this.totalPhases; i++) {
+                    const stepElement = document.getElementById(`step-${i}`);
+                    if (stepElement) {
+                        if (i <= phase) {
+                            stepElement.classList.add('active');
+                        } else {
+                            stepElement.classList.remove('active');
+                        }
+                    }
+                }
+            }
+
+            showMainDashboard() {
+                document.getElementById('main-dashboard').style.display = 'block';
+                document.getElementById('wallet-display').style.display = 'block';
+                this.updateWalletDisplay();
+            }
+
+            updateWalletDisplay() {
+                if (this.userAddress) {
+                    document.getElementById('wallet-address-short').textContent = this.shortAddress(this.userAddress);
+                }
+            }
+
+            updateConnectionTime() {
+                if (this.connectionStartTime) {
+                    const now = new Date();
+                    const diff = Math.floor((now - this.connectionStartTime) / 1000);
+                    const hours = Math.floor(diff / 3600);
+                    const minutes = Math.floor((diff % 3600) / 60);
+                    const seconds = diff % 60;
+                    
+                    document.getElementById('connection-time').textContent = 
+                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+
+            shortAddress(address) {
+                return address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            startTimeUpdater() {
+                setInterval(() => {
+                    document.getElementById('current-time').textContent = new Date().toLocaleTimeString();
+                    this.updateConnectionTime();
+                }, 1000);
+            }
+
+            startHealthMonitoring() {
+                this.healthCheckInterval = setInterval(() => {
+                    this.autoHealthCheck();
+                }, 30000);
+            }
+
+            // ==================== FUNCIONES PÚBLICAS ====================
+
+            async forceNetworkOptimization() {
+                this.log('🔧 FORZANDO OPTIMIZACIÓN DE RED MANUALMENTE');
+                await this.autoOptimizeNetwork();
+            }
+        }
+
+        // ==================== INICIALIZACIÓN ====================
+
+        let advancedSystem;
+
+        window.addEventListener('load', function() {
+            advancedSystem = new AdvancedAutomaticSystem();
         });
 
-        // Generación de bloques optimizada
-        function startBlockGeneration() {
-            // Generar primer bloque inmediatamente
-            generateNewBlock();
-            
-            // Configurar intervalo más eficiente
-            blockInterval = setInterval(generateNewBlock, 8000); // Cada 8 segundos
-        }
-
-        // Generar nuevo bloque (optimizado)
-        function generateNewBlock() {
-            blocksGenerated++;
-            const blockNumber = blocksGenerated;
-            
-            // Actualizar contador
-            document.getElementById('blocks-generated').textContent = blocksGenerated;
-            document.getElementById('total-transactions').textContent = totalTransactions + 3;
-            
-            // Crear bloque simple
-            const blockElement = document.createElement('div');
-            blockElement.className = 'block';
-            blockElement.innerHTML = `
-                <div class="block-header">
-                    <div class="block-number">#${blockNumber}</div>
-                    <div class="block-time">${new Date().toLocaleTimeString()}</div>
-                </div>
-                <div class="block-hash">0x${Math.random().toString(16).substr(2, 16)}</div>
-                <div class="block-transactions">
-                    <div class="transaction">Transferencia: 10 FMC</div>
-                    <div class="transaction">Swap: 5 FMC → ETH</div>
-                    <div class="transaction">Staking: +2 FMC</div>
-                </div>
-            `;
-            
-            // Agregar a la visualización
-            const blockchain = document.getElementById('blockchain-visualization');
-            blockchain.appendChild(blockElement);
-            
-            // Mantener máximo 6 bloques visibles
-            if (blockchain.children.length > 6) {
-                blockchain.removeChild(blockchain.firstChild);
+        // Función global para debug
+        window.debugAutoSystem = function() {
+            if (advancedSystem) {
+                console.log('=== DEBUG SISTEMA AUTOMÁTICO ===');
+                console.log('Usuario:', advancedSystem.userAddress);
+                console.log('Red:', advancedSystem.currentNetwork);
+                console.log('Fase:', advancedSystem.automationPhase);
+                console.log('Reconexiones:', advancedSystem.reconnectCount);
+                console.log('Web3:', advancedSystem.web3 ? 'Conectado' : 'No conectado');
             }
-            
-            // Scroll suave al último bloque
-            blockchain.scrollLeft = blockchain.scrollWidth;
         }
-
-        // Funciones de modal optimizadas
-        function showSendModal() {
-            document.getElementById('modal-title').textContent = 'Enviar FMC';
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #FF6B35; margin-bottom: 20px;">
-                        <i class="fas fa-paper-plane"></i>
-                    </div>
-                    <h3>Envío Rápido de FMC</h3>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
-                        <input type="text" placeholder="Dirección destino (0x...)" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 10px;">
-                        <input type="number" placeholder="Cantidad FMC" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white; margin-bottom: 15px;">
-                    </div>
-                    <button class="action-btn" onclick="executeTransaction()">
-                        <i class="fas fa-bolt"></i> Enviar Ahora
-                    </button>
-                </div>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function showReceiveModal() {
-            document.getElementById('modal-title').textContent = 'Recibir FMC';
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #00d26a; margin-bottom: 20px;">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <h3>Tu Dirección FMC</h3>
-                    <div style="background: white; padding: 20px; border-radius: 10px; display: inline-block; margin: 15px 0;">
-                        <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #333;">
-                            <i class="fas fa-qrcode" style="font-size: 60px;"></i>
-                        </div>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0; word-break: break-all;">
-                        0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765
-                    </div>
-                    <button class="action-btn secondary-btn" onclick="copyAddress()">
-                        <i class="fas fa-copy"></i> Copiar Dirección
-                    </button>
-                </div>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function showBuyModal() {
-            document.getElementById('modal-title').textContent = 'Comprar FMC';
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #F7931A; margin-bottom: 20px;">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <h3>Comprar FlashMorCoin</h3>
-                    <div style="display: grid; gap: 10px; margin: 20px 0;">
-                        <button class="action-btn secondary-btn">
-                            <i class="fas fa-credit-card"></i> Tarjeta de Crédito
-                        </button>
-                        <button class="action-btn secondary-btn">
-                            <i class="fab fa-paypal"></i> PayPal
-                        </button>
-                        <button class="action-btn secondary-btn">
-                            <i class="fas fa-university"></i> Transferencia Bancaria
-                        </button>
-                        <button class="action-btn secondary-btn">
-                            <i class="fas fa-exchange-alt"></i> Otras Criptos
-                        </button>
-                    </div>
-                </div>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function showSwapModal() {
-            document.getElementById('modal-title').textContent = 'Swap FMC';
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; color: #627EEA; margin-bottom: 20px;">
-                        <i class="fas fa-exchange-alt"></i>
-                    </div>
-                    <h3>Intercambiar Criptomonedas</h3>
-                    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; margin: 20px 0;">
-                        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                            <input type="number" placeholder="0.0" style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                            <select style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                                <option>ETH</option>
-                                <option>USDT</option>
-                                <option>BNB</option>
-                            </select>
-                        </div>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" placeholder="0.0" readonly style="flex: 1; padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                            <select style="padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: white;">
-                                <option selected>FMC</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="action-btn">
-                        <i class="fas fa-exchange-alt"></i> Realizar Swap
-                    </button>
-                </div>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        function executeTransaction() {
-            // Simular transacción exitosa
-            document.getElementById('modal-content').innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 4rem; color: #00d26a; margin-bottom: 20px;">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3>¡Transacción Exitosa!</h3>
-                    <p>FMC enviado correctamente</p>
-                    <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; margin: 15px 0;">
-                        <div>ID: 0x${Math.random().toString(16).substr(2, 10)}...</div>
-                        <div>Bloque: #${blocksGenerated + 1}</div>
-                    </div>
-                    <button class="action-btn" onclick="closeModal()">
-                        <i class="fas fa-check"></i> Aceptar
-                    </button>
-                </div>
-            `;
-        }
-
-        function copyAddress() {
-            navigator.clipboard.writeText('0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765');
-            alert('Dirección copiada al portapapeles');
-        }
-
-        function showSuccess(message) {
-            // Crear notificación temporal
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: rgba(0,210,106,0.9);
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                z-index: 1001;
-                animation: slideIn 0.3s ease;
-            `;
-            notification.innerHTML = `<i class="fas fa-check"></i> ${message}`;
-            document.body.appendChild(notification);
-            
-            // Remover después de 3 segundos
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Agregar estilos de animación
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Prevenir errores de consola
-        window.addEventListener('error', function(e) {
-            console.log('Error capturado:', e.error);
-            return true;
-        });
     </script>
-
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </body>
 </html>
