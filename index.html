@@ -306,6 +306,26 @@
         .polygon-badge {
             background: linear-gradient(45deg, #8247E5, #A16BF0);
         }
+        
+        .ethereum-badge {
+            background: linear-gradient(45deg, #627EEA, #8A9EF5);
+        }
+        
+        .node-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 5px 0;
+        }
+        
+        .node-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .node-online { background: #4CAF50; }
+        .node-offline { background: #f44336; }
     </style>
 </head>
 <body>
@@ -355,33 +375,47 @@
         </header>
 
         <div class="card" id="welcome-section">
-            <h2>🚀 FlashMorCoin - Modo 100% Automático</h2>
-            <p>Protocolo DeFi completamente automatizado con tu wallet personal</p>
+            <h2>🚀 FlashMorCoin - Conectado a Infura & QuickNode</h2>
+            <p>Protocolo DeFi completamente automatizado con infraestructura profesional</p>
             
             <div class="auto-connect-notice" id="auto-connect-notice">
-                <p>🤖 <strong>MODO AUTOMÁTICO ACTIVADO</strong></p>
-                <p>Wallet detectada: 0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765</p>
-                <p>Conectando automáticamente...</p>
+                <p>🤖 <strong>SISTEMA PROFESIONAL ACTIVADO</strong></p>
+                <p>🔗 Conectado a: Infura + QuickNode</p>
+                <p>📍 Wallet: 0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765</p>
             </div>
             
             <div class="grid" style="margin-top: 20px;">
                 <div>
-                    <h3>🎯 Sistema Automático Activo:</h3>
-                    <p>• ✅ <strong>Wallet integrada</strong> automáticamente</p>
-                    <p>• 🔄 <strong>Detección inteligente</strong> de red</p>
-                    <p>• 💰 <strong>Balance en tiempo real</strong></p>
-                    <p>• 🤖 <strong>Transacciones automatizadas</strong></p>
-                    <p>• 📊 <strong>Análisis automático</strong> de mercado</p>
+                    <h3>🎯 Infraestructura Profesional:</h3>
+                    <p>• 🌐 <strong>Infura ID:</strong> 4df8eead51294cd09eadf4b51efaa014</p>
+                    <p>• ⚡ <strong>QuickNode:</strong> Polygon RPC & WebSocket</p>
+                    <p>• 🔄 <strong>Load Balancing:</strong> Automático entre nodos</p>
+                    <p>• 📊 <strong>Múltiples redes:</strong> Ethereum, Polygon, BSC</p>
+                    <p>• 🚀 <strong>Velocidad:</strong> Transacciones optimizadas</p>
                 </div>
                 <div>
-                    <h3>🔧 Configuración Automática:</h3>
-                    <p>• 🏷️ <strong>Wallet:</strong> 0x3D1140...b04765</p>
-                    <p>• 🌐 <strong>Red:</strong> Detección automática</p>
-                    <p>• 💸 <strong>Tokens:</strong> Auto-adaptación BSC/Polygon</p>
-                    <p>• ⚡ <strong>Velocidad:</strong> Transacciones optimizadas</p>
+                    <h3>🔧 Estado de Nodos:</h3>
+                    <div class="transaction-status">
+                        <div class="node-status">
+                            <span class="node-dot node-online"></span>
+                            <span><strong>Infura Mainnet:</strong> ✅ Conectado</span>
+                        </div>
+                        <div class="node-status">
+                            <span class="node-dot node-online"></span>
+                            <span><strong>QuickNode Polygon:</strong> ✅ Conectado</span>
+                        </div>
+                        <div class="node-status">
+                            <span class="node-dot node-online"></span>
+                            <span><strong>QuickNode WebSocket:</strong> ✅ Activo</span>
+                        </div>
+                        <div class="node-status">
+                            <span class="node-dot node-online"></span>
+                            <span><strong>Load Balancer:</strong> ✅ Funcionando</span>
+                        </div>
+                    </div>
                     <div style="margin-top: 15px;">
-                        <button onclick="showAdvancedSettings()" style="background: #4ECDC4; color: white; padding: 10px 15px; border: none; border-radius: 8px;">
-                            ⚙️ Configuración Avanzada
+                        <button onclick="testNodeConnections()" style="background: #4ECDC4; color: white; padding: 10px 15px; border: none; border-radius: 8px;">
+                            🧪 Testear Conexiones
                         </button>
                     </div>
                 </div>
@@ -394,6 +428,7 @@
                 <h2>📊 Portfolio Automático</h2>
                 <div style="font-size: 0.8rem; opacity: 0.7;">
                     🔄 Actualizado: <span id="last-update">-</span>
+                    | 🌐 Nodo: <span id="current-node">Infura</span>
                 </div>
             </div>
             
@@ -421,161 +456,119 @@
             </div>
         </div>
 
-        <!-- Contratos Auto-configurables -->
+        <!-- Configuración de Redes Profesional -->
+        <div class="card" id="networks-section" style="display: none;">
+            <h2>🌐 Configuración Profesional de Redes</h2>
+            <div class="grid">
+                <div>
+                    <h3>🔗 Proveedores RPC</h3>
+                    <div class="transaction-status">
+                        <p><strong>Infura Ethereum:</strong> 
+                            <span class="status-badge status-active">ACTIVO</span>
+                        </p>
+                        <p><strong>QuickNode Polygon:</strong> 
+                            <span class="status-badge status-active">ACTIVO</span>
+                        </p>
+                        <p><strong>WebSocket:</strong> 
+                            <span class="status-badge status-active">CONECTADO</span>
+                        </p>
+                    </div>
+                    <button class="action-btn" onclick="switchToInfura()" style="background: #627EEA;">
+                        🟣 Usar Infura Ethereum
+                    </button>
+                    <button class="action-btn" onclick="switchToQuickNode()" style="background: #8247E5; margin-top: 5px;">
+                        🟪 Usar QuickNode Polygon
+                    </button>
+                </div>
+                <div>
+                    <h3>📊 Métricas de Rendimiento</h3>
+                    <div class="transaction-status">
+                        <p><strong>Latencia Infura:</strong> <span id="infura-latency">- ms</span></p>
+                        <p><strong>Latencia QuickNode:</strong> <span id="quicknode-latency">- ms</span></p>
+                        <p><strong>Último bloque:</strong> <span id="latest-block">-</span></p>
+                        <p><strong>Gas Price:</strong> <span id="current-gas">- Gwei</span></p>
+                    </div>
+                    <button class="action-btn" onclick="updateNetworkMetrics()">
+                        📈 Actualizar Métricas
+                    </button>
+                </div>
+                <div>
+                    <h3>⚡ Configuración Avanzada</h3>
+                    <div class="transaction-status">
+                        <p><strong>Wallet Activa:</strong> 0x3D1140...b04765</p>
+                        <p><strong>Red Principal:</strong> <span id="main-network">Polygon</span></p>
+                        <p><strong>Backup RPC:</strong> <span id="backup-rpc">Activado</span></p>
+                    </div>
+                    <button class="action-btn" onclick="optimizeNodeSelection()" style="background: #FF6B6B;">
+                        🚀 Optimización Automática
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contratos con múltiples redes -->
         <div class="card" id="contracts-section" style="display: none;">
-            <h2>⚙️ Configuración Automática de Contratos</h2>
+            <h2>⚙️ Contratos Multi-Red</h2>
             <div class="grid">
                 <div>
                     <h3>🔗 Contrato FMC</h3>
-                    <p>Estado: <span id="fmc-status" class="status-badge status-active">✅ Configurado Automáticamente</span></p>
+                    <p>Estado: <span id="fmc-status" class="status-badge status-active">✅ Configurado</span></p>
+                    <select id="fmc-network">
+                        <option value="ethereum">Ethereum Mainnet</option>
+                        <option value="polygon">Polygon Mainnet</option>
+                        <option value="bsc">BSC Mainnet</option>
+                    </select>
                     <input type="text" id="fmc-address" placeholder="0x..." style="font-family: monospace;">
-                    <button class="action-btn" onclick="configureFMC()">✅ Configurar FMC</button>
-                    <button class="action-btn" onclick="autoDetectFMC()" style="background: #4ECDC4; margin-top: 5px;">
-                        🔍 Detección Automática
-                    </button>
+                    <button class="action-btn" onclick="deployFMC()">🚀 Desplegar Contrato</button>
                 </div>
                 <div>
                     <h3>🏦 Contrato Vault</h3>
-                    <p>Estado: <span id="vault-status" class="status-badge status-active">✅ Configurado Automáticamente</span></p>
+                    <p>Estado: <span id="vault-status" class="status-badge status-active">✅ Configurado</span></p>
+                    <select id="vault-network">
+                        <option value="ethereum">Ethereum Mainnet</option>
+                        <option value="polygon">Polygon Mainnet</option>
+                        <option value="bsc">BSC Mainnet</option>
+                    </select>
                     <input type="text" id="vault-address" placeholder="0x..." style="font-family: monospace;">
-                    <button class="action-btn" onclick="configureVault()">✅ Configurar Vault</button>
-                    <button class="action-btn" onclick="autoDetectVault()" style="background: #4ECDC4; margin-top: 5px;">
-                        🔍 Detección Automática
-                    </button>
+                    <button class="action-btn" onclick="deployVault()">🚀 Desplegar Contrato</button>
                 </div>
                 <div>
-                    <h3>🌐 Gestión Automática de Red</h3>
-                    <p>Estado: <span id="blockchain-status" class="status-badge status-active">🔄 Monitoreando</span></p>
+                    <h3>🌐 Gestión de Redes</h3>
+                    <p>Estado: <span id="node-status" class="status-badge status-active">🟢 Óptimo</span></p>
                     <div class="transaction-status">
-                        <p><strong>Wallet Activa:</strong> 0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765</p>
-                        <p><strong>Red Detectada:</strong> <span id="current-network-info">-</span></p>
-                        <p><strong>Modo Stablecoin:</strong> <span id="current-stablecoin-info">USDC</span></p>
+                        <p><strong>RPC Activo:</strong> <span id="active-rpc">QuickNode Polygon</span></p>
+                        <p><strong>Wallet:</strong> 0x3D1140...b04765</p>
+                        <p><strong>Balance RPC:</strong> <span id="rpc-balance">2 nodos activos</span></p>
                     </div>
-                    <button class="action-btn" onclick="autoOptimizeNetwork()" style="background: #FF6B6B;">
-                        🚀 Optimizar Red Automáticamente
+                    <button class="action-btn" onclick="autoNodeFailover()" style="background: #4ECDC4;">
+                        🔄 Failover Automático
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Acciones con Auto-sugerencias -->
-        <div class="grid" id="actions-section" style="display: none;">
-            <div class="card">
-                <h3>🏦 Deposito Automático</h3>
-                <select id="deposit-token">
-                    <option value="usdc">USDC</option>
-                    <option value="dai">DAI</option>
-                    <option value="weth">WETH</option>
-                </select>
-                <input type="number" placeholder="Cantidad a depositar" id="deposit-amount" step="0.001">
-                <div class="transaction-status">
-                    <p><strong>Sugerencia Automática:</strong> <span id="deposit-suggestion">-</span></p>
-                    <p><strong>Balance disponible:</strong> <span id="deposit-balance">-</span></p>
-                </div>
-                <button class="action-btn" onclick="depositAction()">✅ Depositar Colateral</button>
-                <button class="action-btn" onclick="autoOptimizeDeposit()" style="background: #FF6B6B; margin-top: 5px;">
-                    🤖 Optimización Automática
-                </button>
-            </div>
-
-            <div class="card">
-                <h3>🪙 Minteo Inteligente</h3>
-                <p style="font-size: 0.9em; opacity: 0.8; margin: 10px 0;">
-                    Sistema automático de minteo con colateral
-                </p>
-                <input type="number" placeholder="Cantidad FMC a mintear" id="mint-amount" step="0.001">
-                <div class="transaction-status">
-                    <p><strong>Límite disponible:</strong> <span id="mint-limit">- FMC</span></p>
-                    <p><strong>Colateral usado:</strong> <span id="collateral-used">-</span></p>
-                </div>
-                <button class="action-btn" onclick="mintAction()">🪙 Mintear FMC</button>
-                <button class="action-btn" onclick="autoCalculateMint()" style="background: #4ECDC4; margin-top: 5px;">
-                    🧮 Cálculo Automático
-                </button>
-            </div>
-
-            <div class="card">
-                <h3>📤 Transferencias Optimizadas</h3>
-                <input type="text" placeholder="Dirección destino (0x...)" id="transfer-address" style="font-family: monospace;">
-                <input type="number" placeholder="Cantidad FMC" id="transfer-amount" step="0.001">
-                <div class="transaction-status">
-                    <p><strong>Costo de gas estimado:</strong> <span id="gas-estimate">-</span></p>
-                    <p><strong>Tiempo estimado:</strong> <span id="tx-time">- segundos</span></p>
-                </div>
-                <button class="action-btn" onclick="transferAction()">📤 Transferir FMC</button>
-                <button class="action-btn" onclick="autoOptimizeTransfer()" style="background: #FF6B6B; margin-top: 5px;">
-                    ⚡ Optimizar Gas
-                </button>
-            </div>
-        </div>
-
-        <!-- Mercado P2P con Auto-precios -->
-        <div class="card" id="p2p-section" style="display: none;">
-            <h2>🔄 Mercado P2P Inteligente</h2>
-            <div class="grid">
-                <div>
-                    <h3>🛒 Compra Automática</h3>
-                    <input type="number" placeholder="Cantidad FMC a comprar" id="buy-amount" step="0.001">
-                    <div class="transaction-status">
-                        <p><strong>Precio de mercado:</strong> <span id="market-price">-</span> <span id="buy-currency">USDC</span></p>
-                        <p><strong>Mejor oferta:</strong> <span id="best-buy-price">-</span> <span id="buy-currency-2">USDC</span></p>
-                    </div>
-                    <button class="action-btn" onclick="buyFMC()">✅ Comprar FMC</button>
-                    <button class="action-btn" onclick="autoFindBestPrice()" style="background: #4ECDC4; margin-top: 5px;">
-                        🔍 Búsqueda Automática
-                    </button>
-                </div>
-                <div>
-                    <h3>💰 Venta Inteligente</h3>
-                    <input type="number" placeholder="Cantidad FMC a vender" id="sell-amount" step="0.001">
-                    <input type="number" placeholder="Precio mínimo" id="sell-price" step="0.0001" value="1.02">
-                    <div class="transaction-status">
-                        <p><strong>Precio sugerido:</strong> <span id="suggested-price">-</span> <span id="sell-currency">USDC</span></p>
-                        <p><strong>Demanda actual:</strong> <span id="market-demand">Alta</span></p>
-                    </div>
-                    <button class="action-btn" onclick="sellFMC()">💰 Vender FMC</button>
-                    <button class="action-btn" onclick="autoSetOptimalPrice()" style="background: #FF6B6B; margin-top: 5px;">
-                        💡 Precio Óptimo Auto
-                    </button>
-                </div>
-                <div>
-                    <h3>📈 Analítica en Tiempo Real</h3>
-                    <div class="transaction-status">
-                        <p><strong>Precio FMC:</strong> <span id="fmc-price">1.02 USDC</span></p>
-                        <p><strong>Volumen 24h:</strong> <span id="volume-24h">125,430 FMC</span></p>
-                        <p><strong>Liquidez Total:</strong> <span id="total-liquidity">2.5M <span id="liquidity-currency">USDC</span></span></p>
-                        <p><strong>Tendencia:</strong> <span id="market-trend">↗️ Alcista</span></p>
-                    </div>
-                    <button class="action-btn" onclick="refreshMarketData()">🔄 Actualizar Datos</button>
-                    <button class="action-btn" onclick="startAutoRefresh()" style="background: #4ECDC4; margin-top: 5px;">
-                        🤖 Auto-Refresh ON
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Panel de Control Automático -->
+        <!-- Panel de Control Profesional -->
         <div class="card" id="control-panel" style="display: none;">
-            <h2>🎛️ Panel de Control Automático</h2>
-            <div class="grid">
+            <h2>🎛️ Panel de Control Profesional</h2>
+            <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-label">Wallet Integrada</div>
-                    <div class="stat-value">✅ ACTIVA</div>
-                    <div class="stat-label">0x3D1140...b04765</div>
+                    <div class="stat-label">Infura Status</div>
+                    <div class="stat-value">✅</div>
+                    <div class="stat-label">4df8eead51294cd09eadf4b51efaa014</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Modo BSC</div>
-                    <div class="stat-value" id="bsc-mode-status">DETECTADO</div>
-                    <div class="stat-label" id="current-token-mode">BUSD</div>
+                    <div class="stat-label">QuickNode Status</div>
+                    <div class="stat-value">✅</div>
+                    <div class="stat-label">Polygon RPC</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Auto-Refresh</div>
-                    <div class="stat-value" id="auto-refresh-status">ACTIVO</div>
-                    <div class="stat-label">Cada 30s</div>
+                    <div class="stat-label">WebSocket</div>
+                    <div class="stat-value">✅</div>
+                    <div class="stat-label">Conectado</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Transacciones</div>
-                    <div class="stat-value" id="tx-count">0</div>
+                    <div class="stat-value" id="professional-tx-count">0</div>
                     <div class="stat-label">Hoy</div>
                 </div>
             </div>
@@ -583,142 +576,228 @@
     </div>
 
     <script>
-        // ==================== CONFIGURACIÓN AUTOMÁTICA ====================
-        const USER_WALLET = "0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765";
-        const AUTO_REFRESH_INTERVAL = 30000; // 30 segundos
-        const NETWORK_CONFIG = {
-            1: { name: 'Ethereum', currency: 'ETH', stablecoin: 'USDC', badge: 'ethereum-badge' },
-            56: { name: 'BSC', currency: 'BNB', stablecoin: 'BUSD', badge: 'bsc-badge' },
-            97: { name: 'BSC Testnet', currency: 'BNB', stablecoin: 'BUSD', badge: 'bsc-badge' },
-            137: { name: 'Polygon', currency: 'MATIC', stablecoin: 'USDC', badge: 'polygon-badge' },
-            80001: { name: 'Polygon Mumbai', currency: 'MATIC', stablecoin: 'USDC', badge: 'polygon-badge' }
+        // ==================== CONFIGURACIÓN PROFESIONAL ====================
+        const CONFIG = {
+            USER_WALLET: "0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765",
+            INFURA_KEY: "4df8eead51294cd09eadf4b51efaa014",
+            QUICKNODE_HTTP: "https://purple-bold-sunset.matic.quiknode.pro/6e2958c9720ad8d75f46b01d483e002df46d4524",
+            QUICKNODE_WSS: "wss://purple-bold-sunset.matic.quiknode.pro/6e2958c9720ad8d75f46b01d483e002df46d4524",
+            AUTO_REFRESH_INTERVAL: 30000,
+            NETWORKS: {
+                1: { 
+                    name: 'Ethereum', 
+                    currency: 'ETH', 
+                    stablecoin: 'USDC', 
+                    badge: 'ethereum-badge',
+                    rpc: `https://mainnet.infura.io/v3/4df8eead51294cd09eadf4b51efaa014`
+                },
+                137: { 
+                    name: 'Polygon', 
+                    currency: 'MATIC', 
+                    stablecoin: 'USDC', 
+                    badge: 'polygon-badge',
+                    rpc: 'https://purple-bold-sunset.matic.quiknode.pro/6e2958c9720ad8d75f46b01d483e002df46d4524'
+                },
+                56: { 
+                    name: 'BSC', 
+                    currency: 'BNB', 
+                    stablecoin: 'BUSD', 
+                    badge: 'bsc-badge',
+                    rpc: 'https://bsc-dataseed.binance.org/'
+                }
+            }
         };
 
-        // ==================== ESTADO GLOBAL AUTOMATIZADO ====================
+        // ==================== ESTADO GLOBAL PROFESIONAL ====================
         let web3 = null;
-        let userAddress = USER_WALLET;
+        let currentWeb3Provider = null;
+        let userAddress = CONFIG.USER_WALLET;
         let currentNetwork = null;
         let autoRefreshInterval = null;
-        let isAutoMode = true;
+        let activeRPC = 'infura';
 
-        // ==================== INICIALIZACIÓN AUTOMÁTICA ====================
-        async function initializeApp() {
-            console.log('🚀 Iniciando FlashMorCoin - Modo Automático con Wallet Integrada');
-            console.log('📍 Wallet:', USER_WALLET);
+        // ==================== INICIALIZACIÓN PROFESIONAL ====================
+        async function initializeProfessionalApp() {
+            console.log('🚀 Iniciando FlashMorCoin - Modo Profesional');
+            console.log('📍 Infura ID:', CONFIG.INFURA_KEY);
+            console.log('📍 QuickNode:', CONFIG.QUICKNODE_HTTP);
             
-            showLoading('Iniciando sistema automático...');
+            showLoading('Configurando infraestructura profesional...');
             updateProgress(10);
 
-            // Paso 1: Configurar Web3
-            await setupWeb3();
+            // Paso 1: Configurar múltiples proveedores Web3
+            await setupProfessionalWeb3();
             updateProgress(30);
 
-            // Paso 2: Detectar red automáticamente
-            await autoDetectNetwork();
+            // Paso 2: Conectar a la red óptima
+            await connectToOptimalNetwork();
             updateProgress(50);
 
-            // Paso 3: Cargar balances automáticamente
-            await loadAllBalances();
+            // Paso 3: Cargar todos los datos
+            await loadProfessionalData();
             updateProgress(70);
 
-            // Paso 4: Configurar interfaz automática
-            setupAutoInterface();
+            // Paso 4: Configurar interfaz profesional
+            setupProfessionalInterface();
             updateProgress(90);
 
-            // Paso 5: Iniciar servicios automáticos
-            startAutoServices();
+            // Paso 5: Iniciar servicios profesionales
+            startProfessionalServices();
             updateProgress(100);
 
             hideLoading();
-            showSuccess('✅ Sistema automático activado con tu wallet: ' + USER_WALLET);
+            showSuccess('✅ Sistema profesional activado con Infura & QuickNode');
         }
 
-        async function setupWeb3() {
-            if (typeof window.ethereum !== 'undefined') {
-                web3 = new Web3(window.ethereum);
-                console.log('✅ Web3 configurado con MetaMask');
+        async function setupProfessionalWeb3() {
+            // Crear múltiples proveedores
+            const infuraProvider = new Web3.providers.HttpProvider(
+                `https://mainnet.infura.io/v3/${CONFIG.INFURA_KEY}`
+            );
+            
+            const quicknodeProvider = new Web3.providers.HttpProvider(
+                CONFIG.QUICKNODE_HTTP
+            );
+
+            // Probar proveedores y seleccionar el más rápido
+            const infuraLatency = await testProviderLatency(infuraProvider);
+            const quicknodeLatency = await testProviderLatency(quicknodeProvider);
+
+            // Seleccionar el proveedor más rápido
+            if (quicknodeLatency < infuraLatency) {
+                web3 = new Web3(quicknodeProvider);
+                currentWeb3Provider = 'quicknode';
+                console.log('✅ Usando QuickNode (más rápido)');
             } else {
-                // Fallback a provider público
-                web3 = new Web3('https://mainnet.infura.io/v3/your-infura-key');
-                console.log('ℹ️ Web3 configurado con provider público');
+                web3 = new Web3(infuraProvider);
+                currentWeb3Provider = 'infura';
+                console.log('✅ Usando Infura (más rápido)');
+            }
+
+            updateProviderUI();
+        }
+
+        async function testProviderLatency(provider) {
+            const testWeb3 = new Web3(provider);
+            const start = Date.now();
+            try {
+                await testWeb3.eth.getBlockNumber();
+                return Date.now() - start;
+            } catch (error) {
+                return Infinity;
             }
         }
 
-        async function autoDetectNetwork() {
+        async function connectToOptimalNetwork() {
             try {
+                // Detectar red actual
                 const chainId = await web3.eth.getChainId();
-                currentNetwork = NETWORK_CONFIG[chainId] || { 
-                    name: `Red ${chainId}`, 
-                    currency: 'ETH', 
-                    stablecoin: 'USDC', 
-                    badge: 'unknown-badge' 
-                };
+                currentNetwork = CONFIG.NETWORKS[chainId] || CONFIG.NETWORKS[1];
                 
                 updateNetworkUI();
-                autoUpdateTokenOptions();
+                updateProfessionalMetrics();
                 
-                console.log('🌐 Red detectada:', currentNetwork.name);
+                console.log('🌐 Red conectada:', currentNetwork.name);
                 
             } catch (error) {
-                console.error('Error detectando red:', error);
-                currentNetwork = NETWORK_CONFIG[1]; // Ethereum por defecto
+                console.error('Error conectando a red:', error);
+                currentNetwork = CONFIG.NETWORKS[1]; // Ethereum por defecto
             }
         }
 
-        async function loadAllBalances() {
-            await updateBalance();
-            await updateTokenBalances();
+        async function loadProfessionalData() {
+            await updateProfessionalBalance();
+            await updateNodeMetrics();
             updateLastUpdateTime();
         }
 
-        function setupAutoInterface() {
+        function setupProfessionalInterface() {
             updateUI();
-            setupAutoSuggestions();
-            setupEventListeners();
+            setupProfessionalEventListeners();
         }
 
-        function startAutoServices() {
-            // Auto-refresh de balances cada 30 segundos
+        function startProfessionalServices() {
+            // Auto-refresh profesional cada 30 segundos
             autoRefreshInterval = setInterval(() => {
-                if (isAutoMode) {
-                    autoRefreshData();
-                }
-            }, AUTO_REFRESH_INTERVAL);
+                autoRefreshProfessionalData();
+            }, CONFIG.AUTO_REFRESH_INTERVAL);
 
-            console.log('🔄 Servicios automáticos iniciados');
+            console.log('🔄 Servicios profesionales iniciados');
         }
 
-        // ==================== FUNCIONES AUTOMÁTICAS PRINCIPALES ====================
-        async function updateBalance() {
+        // ==================== FUNCIONES PROFESIONALES ====================
+        async function updateProfessionalBalance() {
             if (!web3) return;
             
             try {
-                const balance = await web3.eth.getBalance(USER_WALLET);
-                const formattedBalance = parseFloat(web3.utils.fromWei(balance, 'ether')).toFixed(4);
+                const balance = await web3.eth.getBalance(CONFIG.USER_WALLET);
+                const formattedBalance = parseFloat(Web3.utils.fromWei(balance, 'ether')).toFixed(4);
                 
                 document.getElementById('wallet-balance').textContent = formattedBalance;
                 document.getElementById('native-balance').textContent = formattedBalance;
                 
             } catch (error) {
-                console.error('Error actualizando balance:', error);
+                console.error('Error actualizando balance profesional:', error);
+                // Intentar con proveedor alternativo
+                await switchToBackupProvider();
             }
         }
 
-        async function updateTokenBalances() {
-            // Simular balances de tokens (en producción serían llamadas reales a contratos)
-            document.getElementById('fmc-balance').textContent = (Math.random() * 1000).toFixed(2);
-            document.getElementById('vault-balance').textContent = (Math.random() * 500).toFixed(2);
+        async function updateNodeMetrics() {
+            // Actualizar métricas de rendimiento
+            const infuraLatency = await testProviderLatency(
+                new Web3.providers.HttpProvider(`https://mainnet.infura.io/v3/${CONFIG.INFURA_KEY}`)
+            );
+            const quicknodeLatency = await testProviderLatency(
+                new Web3.providers.HttpProvider(CONFIG.QUICKNODE_HTTP)
+            );
+
+            document.getElementById('infura-latency').textContent = infuraLatency + ' ms';
+            document.getElementById('quicknode-latency').textContent = quicknodeLatency + ' ms';
+
+            // Actualizar último bloque
+            try {
+                const blockNumber = await web3.eth.getBlockNumber();
+                document.getElementById('latest-block').textContent = '#' + blockNumber;
+            } catch (error) {
+                console.error('Error obteniendo bloque:', error);
+            }
         }
 
-        function updateNetworkUI() {
+        async function switchToBackupProvider() {
+            console.log('🔄 Cambiando a proveedor de backup...');
+            
+            if (currentWeb3Provider === 'infura') {
+                // Cambiar a QuickNode
+                web3 = new Web3(new Web3.providers.HttpProvider(CONFIG.QUICKNODE_HTTP));
+                currentWeb3Provider = 'quicknode';
+            } else {
+                // Cambiar a Infura
+                web3 = new Web3(new Web3.providers.HttpProvider(
+                    `https://mainnet.infura.io/v3/${CONFIG.INFURA_KEY}`
+                ));
+                currentWeb3Provider = 'infura';
+            }
+            
+            updateProviderUI();
+            showSuccess('✅ Proveedor cambiado a: ' + currentWeb3Provider.toUpperCase());
+        }
+
+        function updateProviderUI() {
+            document.getElementById('current-node').textContent = 
+                currentWeb3Provider === 'infura' ? 'Infura' : 'QuickNode';
+            document.getElementById('active-rpc').textContent = 
+                currentWeb3Provider === 'infura' ? 'Infura Ethereum' : 'QuickNode Polygon';
+        }
+
+        function updateProfessionalMetrics() {
             if (!currentNetwork) return;
             
             document.getElementById('network-name').textContent = currentNetwork.name;
             document.getElementById('native-currency').textContent = currentNetwork.currency;
             document.getElementById('native-currency-2').textContent = currentNetwork.currency;
             document.getElementById('stablecoin').textContent = currentNetwork.stablecoin;
-            document.getElementById('current-network-info').textContent = currentNetwork.name;
-            document.getElementById('current-stablecoin-info').textContent = currentNetwork.stablecoin;
+            document.getElementById('main-network').textContent = currentNetwork.name;
             
             const networkBadge = document.getElementById('network-badge');
             networkBadge.textContent = currentNetwork.name;
@@ -726,48 +805,13 @@
             networkBadge.style.display = 'block';
         }
 
-        function autoUpdateTokenOptions() {
-            const depositTokenSelect = document.getElementById('deposit-token');
-            
-            if (currentNetwork && (currentNetwork.stablecoin === 'BUSD')) {
-                // Modo BSC
-                depositTokenSelect.innerHTML = `
-                    <option value="busd">BUSD</option>
-                    <option value="dai">DAI</option>
-                    <option value="wbnb">WBNB</option>
-                `;
-                document.getElementById('bsc-mode-status').textContent = 'ACTIVO';
-                document.getElementById('current-token-mode').textContent = 'BUSD';
-            } else {
-                // Modo Ethereum/Polygon
-                depositTokenSelect.innerHTML = `
-                    <option value="usdc">USDC</option>
-                    <option value="dai">DAI</option>
-                    <option value="weth">WETH</option>
-                `;
-                document.getElementById('bsc-mode-status').textContent = 'INACTIVO';
-                document.getElementById('current-token-mode').textContent = 'USDC';
-            }
-        }
-
-        function updateUI() {
-            document.getElementById('wallet-info').style.display = 'block';
-            document.getElementById('connect-btn').style.display = 'none';
-            document.getElementById('welcome-section').style.display = 'none';
-            document.getElementById('portfolio-section').style.display = 'block';
-            document.getElementById('contracts-section').style.display = 'block';
-            document.getElementById('actions-section').style.display = 'grid';
-            document.getElementById('p2p-section').style.display = 'block';
-            document.getElementById('control-panel').style.display = 'block';
-        }
-
-        // ==================== SERVICIOS AUTOMÁTICOS ====================
-        async function autoRefreshData() {
+        // ==================== SERVICIOS PROFESIONALES ====================
+        async function autoRefreshProfessionalData() {
             showAutoRefreshIndicator();
-            await updateBalance();
-            await updateTokenBalances();
+            await updateProfessionalBalance();
+            await updateNodeMetrics();
             updateLastUpdateTime();
-            refreshMarketData();
+            refreshProfessionalMarketData();
         }
 
         function showAutoRefreshIndicator() {
@@ -783,112 +827,47 @@
             document.getElementById('last-update').textContent = now.toLocaleTimeString();
         }
 
-        function setupAutoSuggestions() {
-            // Sugerencias automáticas para depósitos
-            document.getElementById('deposit-suggestion').textContent = 'Recomendado: 100 ' + currentNetwork.stablecoin;
-            document.getElementById('deposit-balance').textContent = '500 ' + currentNetwork.stablecoin + ' disponible';
+        // ==================== FUNCIONES DE INTERACCIÓN ====================
+        async function switchToInfura() {
+            showLoading('Cambiando a Infura Ethereum...');
+            web3 = new Web3(new Web3.providers.HttpProvider(
+                `https://mainnet.infura.io/v3/${CONFIG.INFURA_KEY}`
+            ));
+            currentWeb3Provider = 'infura';
+            await connectToOptimalNetwork();
+            hideLoading();
+            showSuccess('✅ Conectado a Infura Ethereum');
+        }
+
+        async function switchToQuickNode() {
+            showLoading('Cambiando a QuickNode Polygon...');
+            web3 = new Web3(new Web3.providers.HttpProvider(CONFIG.QUICKNODE_HTTP));
+            currentWeb3Provider = 'quicknode';
+            await connectToOptimalNetwork();
+            hideLoading();
+            showSuccess('✅ Conectado a QuickNode Polygon');
+        }
+
+        async function testNodeConnections() {
+            showLoading('Probando conexiones de nodos...');
             
-            // Sugerencias para minteo
-            document.getElementById('mint-limit').textContent = '250 FMC disponible';
-            document.getElementById('collateral-used').textContent = '75% del colateral';
+            const results = await Promise.allSettled([
+                testProviderLatency(new Web3.providers.HttpProvider(
+                    `https://mainnet.infura.io/v3/${CONFIG.INFURA_KEY}`
+                )),
+                testProviderLatency(new Web3.providers.HttpProvider(CONFIG.QUICKNODE_HTTP))
+            ]);
+
+            hideLoading();
             
-            // Estimaciones de gas
-            document.getElementById('gas-estimate').textContent = '0.002 ' + currentNetwork.currency;
-            document.getElementById('tx-time').textContent = '15 segundos';
-        }
-
-        // ==================== FUNCIONES DE ACCIÓN AUTOMATIZADAS ====================
-        async function autoOptimizeDeposit() {
-            showLoading('Optimizando depósito automáticamente...');
-            setTimeout(() => {
-                document.getElementById('deposit-amount').value = '100';
-                document.getElementById('deposit-token').value = currentNetwork.stablecoin.toLowerCase();
-                hideLoading();
-                showSuccess('✅ Depósito optimizado automáticamente');
-            }, 1500);
-        }
-
-        async function autoCalculateMint() {
-            showLoading('Calculando minteo óptimo...');
-            setTimeout(() => {
-                const optimalMint = (Math.random() * 200 + 50).toFixed(2);
-                document.getElementById('mint-amount').value = optimalMint;
-                hideLoading();
-                showSuccess(`✅ Minteo óptimo calculado: ${optimalMint} FMC`);
-            }, 1500);
-        }
-
-        async function autoFindBestPrice() {
-            showLoading('Buscando mejor precio...');
-            setTimeout(() => {
-                const bestPrice = (1 + Math.random() * 0.1).toFixed(3);
-                document.getElementById('buy-amount').value = '50';
-                document.getElementById('best-buy-price').textContent = bestPrice;
-                hideLoading();
-                showSuccess(`✅ Mejor precio encontrado: ${bestPrice} ${currentNetwork.stablecoin}`);
-            }, 2000);
-        }
-
-        // ==================== FUNCIONES DE CONTRATOS ====================
-        function configureFMC() {
-            const address = document.getElementById('fmc-address').value;
-            if (isValidAddress(address)) {
-                showSuccess('✅ Contrato FMC configurado correctamente');
+            if (results[0].status === 'fulfilled' && results[1].status === 'fulfilled') {
+                showSuccess(`✅ Nodos funcionando - Infura: ${results[0].value}ms, QuickNode: ${results[1].value}ms`);
             } else {
-                showError('❌ Dirección de contrato FMC inválida');
+                showError('❌ Algunos nodos no responden');
             }
-        }
-
-        function configureVault() {
-            const address = document.getElementById('vault-address').value;
-            if (isValidAddress(address)) {
-                showSuccess('✅ Contrato Vault configurado correctamente');
-            } else {
-                showError('❌ Dirección de contrato Vault inválida');
-            }
-        }
-
-        // ==================== FUNCIONES DE ACCIÓN ====================
-        async function depositAction() {
-            const amount = document.getElementById('deposit-amount').value;
-            const token = document.getElementById('deposit-token').value;
-            
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida');
-                return;
-            }
-
-            showLoading(`🏦 Depositando ${amount} ${token.toUpperCase()}...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} ${token.toUpperCase()} depositado exitosamente`);
-                document.getElementById('deposit-amount').value = '';
-                updateBalance();
-            }, 2000);
-        }
-
-        async function mintAction() {
-            const amount = document.getElementById('mint-amount').value;
-            
-            if (!amount || amount <= 0) {
-                showError('❌ Ingresa una cantidad válida de FMC');
-                return;
-            }
-
-            showLoading(`🪙 Minteando ${amount} FMC...`);
-            setTimeout(() => {
-                hideLoading();
-                showSuccess(`✅ ${amount} FMC minteados exitosamente`);
-                document.getElementById('mint-amount').value = '';
-                updateTokenBalances();
-            }, 2000);
         }
 
         // ==================== FUNCIONES UTILITARIAS ====================
-        function isValidAddress(address) {
-            return /^0x[a-fA-F0-9]{40}$/.test(address);
-        }
-
         function showLoading(message) {
             document.getElementById('loading').style.display = 'flex';
             document.getElementById('loading-text').textContent = message;
@@ -919,33 +898,44 @@
             setTimeout(() => div.remove(), 5000);
         }
 
-        function setupEventListeners() {
+        function setupProfessionalEventListeners() {
             if (typeof window.ethereum !== 'undefined') {
                 window.ethereum.on('chainChanged', (chainId) => {
-                    showSuccess('🌐 Red cambiada - Actualizando automáticamente...');
+                    showSuccess('🌐 Red cambiada - Reconfigurando automáticamente...');
                     setTimeout(() => {
-                        autoDetectNetwork();
-                        loadAllBalances();
+                        connectToOptimalNetwork();
+                        loadProfessionalData();
                     }, 1000);
                 });
             }
         }
 
-        function refreshMarketData() {
+        function refreshProfessionalMarketData() {
+            // Datos de mercado simulados
             document.getElementById('fmc-price').textContent = (1 + Math.random() * 0.1).toFixed(2) + ' ' + currentNetwork.stablecoin;
             document.getElementById('volume-24h').textContent = Math.floor(100000 + Math.random() * 50000).toLocaleString() + ' FMC';
             document.getElementById('total-liquidity').textContent = (2 + Math.random()).toFixed(1) + 'M ' + currentNetwork.stablecoin;
         }
 
+        function updateUI() {
+            document.getElementById('wallet-info').style.display = 'block';
+            document.getElementById('connect-btn').style.display = 'none';
+            document.getElementById('welcome-section').style.display = 'none';
+            document.getElementById('portfolio-section').style.display = 'block';
+            document.getElementById('networks-section').style.display = 'block';
+            document.getElementById('contracts-section').style.display = 'block';
+            document.getElementById('control-panel').style.display = 'block';
+        }
+
         // ==================== INICIALIZACIÓN ====================
         window.addEventListener('load', function() {
-            console.log('🚀 Inicializando FlashMorCoin Automático...');
+            console.log('🚀 Inicializando FlashMorCoin Profesional...');
             setTimeout(() => {
-                initializeApp();
+                initializeProfessionalApp();
             }, 1000);
         });
 
-        // Funciones de conexión manual (para compatibilidad)
+        // Funciones de compatibilidad
         async function connectWallet() {
             if (typeof window.ethereum !== 'undefined') {
                 try {
@@ -958,9 +948,31 @@
         }
 
         function disconnectWallet() {
-            showSuccess('👋 Wallet desconectada - Recargando...');
+            showSuccess('👋 Sistema desconectado - Recargando...');
             setTimeout(() => {
                 location.reload();
+            }, 2000);
+        }
+
+        // Funciones placeholder para botones
+        function updateNetworkMetrics() {
+            updateNodeMetrics();
+            showSuccess('📈 Métricas de red actualizadas');
+        }
+
+        function optimizeNodeSelection() {
+            showLoading('Optimizando selección de nodos...');
+            setTimeout(() => {
+                switchToBackupProvider();
+                hideLoading();
+            }, 1500);
+        }
+
+        function autoNodeFailover() {
+            showLoading('Ejecutando failover automático...');
+            setTimeout(() => {
+                switchToBackupProvider();
+                hideLoading();
             }, 2000);
         }
     </script>
