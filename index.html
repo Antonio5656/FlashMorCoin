@@ -538,7 +538,7 @@
 
                 // Configuración del Token FMC
                 this.FMC_TOKEN = {
-                    address: '0xTU_DIRECCION_FMC_REAL_AQUI',
+                    address: '0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765',
                     symbol: 'FMC',
                     decimals: 18,
                     name: 'FlashMorCoin'
@@ -747,7 +747,7 @@
                 try {
                     await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: `0x5182CaAe1EccBa71aa854E89847eE530a361b8bA${chainId.toString(16)}` }],
+                        params: [{ chainId: `0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765${chainId.toString(16)}` }],
                     });
                     
                     const network = this.SUPPORTED_NETWORKS[chainId];
@@ -773,7 +773,7 @@
                     await window.ethereum.request({
                         method: 'wallet_addEthereumChain',
                         params: [{
-                            chainId: `0x${chainId.toString(16)}`,
+                            chainId: `0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765${chainId.toString(16)}`,
                             chainName: network.name,
                             rpcUrls: ['https://bsc-dataseed.binance.org/'],
                             nativeCurrency: { name: network.symbol, symbol: network.symbol, decimals: 18 },
@@ -807,7 +807,7 @@
                     // Agregar BUSD automáticamente si está en BSC
                     if (this.currentNetwork === 56) {
                         const busdToken = {
-                            address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
+                            address: '0x3D114033Ed4C0BeAf9F554A5c84d7C5ca5b04765',
                             symbol: 'BUSD',
                             decimals: 18,
                             name: 'Binance USD'
